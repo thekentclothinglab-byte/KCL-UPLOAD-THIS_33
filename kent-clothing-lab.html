@@ -1,0 +1,5220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231961FF'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' fill='white' font-size='16' font-weight='800' font-family='Arial,sans-serif'%3EK%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, viewport-fit=cover">
+<title>Kent Clothing Lab — Custom Garments, Kent UK</title>
+<meta name="description" content="Custom embroidery, heat press and sublimation printing in Kent. No minimums. Fast turnaround. Get a free quote.">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<style>
+
+/* ════════════════════════════════
+   TOKENS — DARK (default)
+════════════════════════════════ */
+:root {
+  --bg:      #080807;
+  --bg2:     #0E0E0C;
+  --surface: #141412;
+  --raised:  #1C1C1A;
+  --border:  rgba(240,237,232,0.07);
+  --border2: rgba(240,237,232,0.13);
+  --fg:      #F0EDE8;
+  --muted:   #9B9894;
+  --accent:  #1961FF;
+  --accent2: #0040CC;
+  --fd: 'Syne', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --ease: cubic-bezier(.16,1,.3,1);
+
+  /* orb opacity in dark */
+  --orb-opacity: 1;
+  /* nav bg */
+  --nav-bg: rgba(8,8,7,0.75);
+  /* footer bg */
+  --footer-bg: rgba(8,8,7,0.8);
+  /* grain opacity */
+  --grain-op: .032;
+}
+
+/* ════════════════════════════════
+   TOKENS — LIGHT
+════════════════════════════════ */
+html.light {
+  --bg:      #F5F3EE;
+  --bg2:     #EDEAE3;
+  --surface: #E8E4DC;
+  --raised:  #DDD9D0;
+  --border:  rgba(20,20,18,0.09);
+  --border2: rgba(20,20,18,0.16);
+  --fg:      #111110;
+  --muted:   #4A4845;
+  --accent:  #1550EE;
+  --accent2: #0040CC;
+  --orb-opacity: 0.45;
+  --nav-bg: rgba(245,243,238,0.82);
+  --footer-bg: rgba(237,234,227,0.9);
+  --grain-op: .018;
+}
+
+/* ════════════════════════════════
+   RESET
+════════════════════════════════ */
+*, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior:smooth; font-size:16px; overflow-x:hidden; max-width:100vw; }
+body {
+  background: var(--bg);
+  color: var(--fg);
+  font-family: var(--fb);
+  font-weight: 300;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden !important;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  max-width: 100vw;
+}
+a { color:inherit; text-decoration:none; }
+img { display:block; max-width:100%; }
+::-webkit-scrollbar { width:3px; }
+::-webkit-scrollbar-thumb { background:var(--raised); border-radius:4px; }
+
+/* ════════════════════════════════
+   FLOATING BACKGROUND ORBS
+════════════════════════════════ */
+.orb-field {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+  /* Prevent iOS from rendering this above content */
+  isolation: isolate;
+}
+.orb {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(80px);
+  opacity: 0;
+  animation: orbFloat linear infinite;
+}
+.orb-1 {
+  width: 600px; height: 600px;
+  background: radial-gradient(circle, rgba(25,97,255,0.18) 0%, transparent 70%);
+  top: -200px; left: -100px;
+  animation-duration: 18s;
+  animation-delay: 0s;
+  opacity: 0.8;
+}
+.orb-2 {
+  width: 500px; height: 500px;
+  background: radial-gradient(circle, rgba(25,97,255,0.12) 0%, transparent 70%);
+  top: 30%; right: -150px;
+  animation-duration: 22s;
+  animation-delay: -7s;
+  opacity: 0.7;
+}
+.orb-3 {
+  width: 400px; height: 400px;
+  background: radial-gradient(circle, rgba(100,60,255,0.1) 0%, transparent 70%);
+  bottom: 10%; left: 20%;
+  animation-duration: 26s;
+  animation-delay: -12s;
+  opacity: 0.6;
+}
+.orb-4 {
+  width: 350px; height: 350px;
+  background: radial-gradient(circle, rgba(25,97,255,0.09) 0%, transparent 70%);
+  bottom: -100px; right: 10%;
+  animation-duration: 20s;
+  animation-delay: -4s;
+  opacity: 0.5;
+}
+
+@keyframes orbFloat {
+  0%   { transform: translate(0px,  0px)   scale(1); }
+  25%  { transform: translate(30px, -40px) scale(1.04); }
+  50%  { transform: translate(-20px, 30px) scale(0.97); }
+  75%  { transform: translate(40px,  20px) scale(1.02); }
+  100% { transform: translate(0px,  0px)   scale(1); }
+}
+
+/* Noise grain overlay */
+.grain {
+  position: fixed;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  /* iOS fix */
+  isolation: isolate;
+  opacity: var(--grain-op);
+  transition: opacity .4s;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Orb opacity adapts to mode */
+.orb-1 { opacity: calc(0.8 * var(--orb-opacity)); }
+.orb-2 { opacity: calc(0.7 * var(--orb-opacity)); }
+.orb-3 { opacity: calc(0.6 * var(--orb-opacity)); }
+.orb-4 { opacity: calc(0.5 * var(--orb-opacity)); }
+
+/* Subtle horizontal glow line */
+.glow-line {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent 0%, rgba(25,97,255,0.6) 40%, rgba(25,97,255,0.6) 60%, transparent 100%);
+  z-index: 200;
+  animation: glowPulse 4s ease-in-out infinite;
+}
+@keyframes glowPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+/* ════════════════════════════════
+   LAYOUT
+════════════════════════════════ */
+.wrap {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 40px;
+  position: relative;
+  z-index: 2;
+}
+
+.mob-toggle {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+}
+nav {
+  position: fixed;
+  top: 0; left: 0; right: 0;
+  z-index: 100;
+  height: 64px;
+  border-bottom: 1px solid var(--border);
+  background: var(--nav-bg);
+  backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  -webkit-backdrop-filter: blur(24px) saturate(160%);
+  transition: background .4s, border-color .4s;
+}
+.nav-inner {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 32px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  box-sizing: border-box;
+  width: 100%;
+  overflow: hidden;
+}
+.nav-logo {
+  font-family: var(--fd);
+  font-weight: 800;
+  font-size: 15px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--fg);
+}
+.nav-logo-mark {
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border-radius: 3px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0,0,0,.3);
+  transition: box-shadow .3s, transform .3s;
+}
+.nav-logo-mark:hover {
+  box-shadow: 0 3px 14px rgba(0,0,0,.4);
+  transform: scale(1.05);
+}
+.nav-logo-text { display: flex; align-items: center; gap: 5px; }
+.nav-logo-kent  { color: var(--fg); }
+.nav-logo-divider { color: var(--accent); opacity: .4; font-weight: 300; font-size: 18px; line-height: 1; }
+.nav-logo-clothing { color: var(--accent); text-shadow: 0 0 20px rgba(25,97,255,.6); }
+.nav-logo-lab {
+  color: transparent;
+  -webkit-text-stroke: 1px rgba(25,97,255,.6);
+  font-weight: 800;
+  animation: navLabFlicker 3.5s ease-in-out infinite;
+}
+@keyframes navLabFlicker {
+  0%,100% { color:transparent; -webkit-text-stroke:1px rgba(25,97,255,.5); text-shadow:none; }
+  20% { color:rgba(25,97,255,.15); -webkit-text-stroke:1px rgba(25,97,255,1); text-shadow:0 0 8px rgba(25,97,255,1),0 0 20px rgba(25,97,255,.7),0 0 40px rgba(25,97,255,.4); }
+  22% { color:transparent; -webkit-text-stroke:1px rgba(25,97,255,.2); text-shadow:none; }
+  24% { color:rgba(25,97,255,.1); -webkit-text-stroke:1px rgba(25,97,255,1); text-shadow:0 0 8px rgba(25,97,255,1),0 0 24px rgba(25,97,255,.8); }
+  50% { color:transparent; -webkit-text-stroke:1px rgba(0,207,255,.5); text-shadow:0 0 6px rgba(0,207,255,.6),0 0 16px rgba(0,207,255,.3); }
+  52% { color:transparent; -webkit-text-stroke:1px rgba(25,97,255,.4); text-shadow:none; }
+}
+.nav-links {
+  display: flex; gap: 36px; list-style: none;
+}
+.nav-links a {
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); font-weight: 400; transition: color .2s;
+}
+.nav-links a:hover { color: var(--fg); }
+.nav-cta {
+  padding: 10px 22px;
+  background: var(--fg);
+  color: var(--bg);
+  border-radius: 2px;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  transition: all .25s var(--ease);
+  white-space: nowrap;
+}
+.nav-cta:hover { background: var(--accent); color: #fff; }
+.mode-toggle {
+  width: 36px; height: 36px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 50%;
+  font-size: 15px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  transition: all .25s var(--ease);
+  flex-shrink: 0;
+}
+.mode-toggle:hover {
+  background: var(--raised);
+  border-color: rgba(25,97,255,.4);
+  transform: scale(1.08);
+}
+
+/* Smooth theme transition */
+body, nav, footer, .glass, .orb-field, .marquee-section {
+  transition: background .4s, color .4s, border-color .4s;
+}
+.mob-toggle span { display:block; width:22px; height:1.5px; background:var(--fg); transition:all .3s; }
+
+/* ════════════════════════════════
+   HERO
+════════════════════════════════ */
+.hero {
+  min-height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  overflow-x: hidden;
+  padding: 88px 48px 72px;
+  max-width: 1100px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 2;
+  box-sizing: border-box;
+}
+
+/* ── HERO CHIPS ── */
+.hero-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 36px;
+}
+.hero-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 7px 14px;
+  background: rgba(25,97,255,0.08);
+  border: 1px solid rgba(25,97,255,0.2);
+  border-radius: 100px;
+  font-size: 12px;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(240,237,232,0.65);
+  font-weight: 400;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all .25s;
+  white-space: nowrap;
+}
+.hero-chip:hover {
+  background: rgba(25,97,255,0.15);
+  border-color: rgba(25,97,255,0.4);
+  color: var(--fg);
+}
+.hero-chip-live {
+  background: rgba(25,97,255,0.12) !important;
+  border-color: rgba(25,97,255,0.35) !important;
+  color: rgba(25,97,255,0.95) !important;
+  font-weight: 500 !important;
+  box-shadow: 0 0 16px rgba(25,97,255,0.15);
+}
+.hero-chip-dot {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(25,97,255,1);
+  animation: dotPulse 1.8s ease-in-out infinite;
+  flex-shrink: 0;
+}
+
+/* Light mode chips */
+html.light .hero-chip {
+  background: rgba(25,97,255,0.06) !important;
+  border-color: rgba(25,97,255,0.18) !important;
+  color: #444 !important;
+}
+html.light .hero-chip-live {
+  color: var(--accent) !important;
+}
+
+/* Mobile - chips wrap nicely */
+@media (max-width: 600px) {
+  .hero-chips { gap: 6px; margin-bottom: 24px; }
+  .hero-chip { font-size: 10px; padding: 6px 11px; letter-spacing: .08em; }
+}
+
+.hero-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 14px 7px 10px;
+  background: rgba(25,97,255,0.1);
+  border: 1px solid rgba(25,97,255,0.25);
+  border-radius: 100px;
+  margin-bottom: 40px;
+  width: fit-content;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.hero-tag-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent);
+  box-shadow: 0 0 8px rgba(25,97,255,0.8);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+.hero-tag-txt {
+  font-size: 11px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(25,97,255,0.9);
+  font-weight: 500;
+}
+
+.hero-h1 {
+  font-family: var(--fd);
+  font-weight: 800;
+  font-size: clamp(32px, 5vw, 88px);
+  line-height: .90;
+  letter-spacing: -.03em;
+  text-transform: uppercase;
+  margin-bottom: 48px;
+}
+.hero-h1 .line-solid { display: block; color: var(--fg); }
+.hero-h1 .line-blue  {
+  display: block;
+  color: var(--accent);
+  text-shadow: 0 0 60px rgba(25,97,255,0.4), 0 0 120px rgba(25,97,255,0.2);
+}
+.hero-h1 .line-ghost {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(20,20,18,0.18);
+}
+html:not(.light) .hero-h1 .line-ghost {
+  -webkit-text-stroke: 1.5px rgba(240,237,232,0.2);
+}
+html.light .sec-h .ghost { -webkit-text-stroke: 1.5px rgba(20,20,18,0.15); }
+
+.hero-lower {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.hero-desc {
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--muted);
+  max-width: 420px;
+}
+.hero-desc strong { color: var(--fg); font-weight: 400; }
+.hero-btns {
+  display: flex; gap: 12px; flex-shrink: 0; flex-wrap: wrap;
+}
+.btn-hero-p {
+  padding: 15px 32px;
+  background: var(--fg);
+  color: var(--bg);
+  border-radius: 2px;
+  font-size: 13px; font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+  transition: all .25s var(--ease);
+  display: inline-flex; align-items: center; gap: 8px;
+}
+.btn-hero-p:hover { background: var(--accent); color: #fff; transform: translateY(-2px); box-shadow: 0 8px 32px rgba(25,97,255,.3); }
+.btn-hero-o {
+  padding: 14px 32px;
+  border: 1px solid var(--border2);
+  color: var(--muted);
+  border-radius: 2px;
+  font-size: 13px; letter-spacing: .08em; text-transform: uppercase;
+  transition: all .25s var(--ease);
+  display: inline-flex; align-items: center; gap: 8px;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+.btn-hero-o:hover { color: var(--fg); border-color: rgba(240,237,232,.28); transform: translateY(-2px); }
+
+/* HERO STATS */
+.hero-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 56px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(14,14,12,0.6);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  max-width: 100%;
+}
+.h-stat {
+  flex: 1;
+  padding: 24px 28px;
+  border-right: 1px solid var(--border);
+}
+.h-stat:last-child { border-right: none; }
+.h-stat-n {
+  font-family: var(--fd);
+  font-size: 36px; font-weight: 800; line-height: 1;
+  margin-bottom: 4px;
+}
+.h-stat-n.blue { color: var(--accent); text-shadow: 0 0 20px rgba(25,97,255,.4); }
+.h-stat-l {
+  font-size: 11px; letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+
+/* ════════════════════════════════
+   MARQUEE
+════════════════════════════════ */
+.marquee-section {
+  position: relative; z-index: 2;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: rgba(14,14,12,0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  overflow: hidden;
+  padding: 0;
+}
+.marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: scroll 26s linear infinite;
+  padding: 14px 0;
+}
+@keyframes scroll { from{transform:translateX(0)} to{transform:translateX(-50%)} }
+.m-item {
+  display: inline-flex; align-items: center; gap: 16px;
+  padding: 0 28px;
+  font-size: 12px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted);
+}
+.m-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--accent); flex-shrink: 0; box-shadow: 0 0 6px rgba(25,97,255,.6); }
+
+/* ════════════════════════════════
+   SECTION COMMON
+════════════════════════════════ */
+section { position: relative; z-index: 2; }
+/* Ensure content always above orbs on iOS */
+.wrap { position: relative; z-index: 3; }
+
+.sec-row {
+  display: flex; align-items: center; gap: 14px; margin-bottom: 52px;
+}
+.sec-num { font-size: 11px; letter-spacing: .22em; color: var(--accent); font-weight: 500; }
+.sec-lbl { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); }
+.sec-line { flex: 1; height: 1px; background: var(--border); }
+
+.sec-h {
+  font-family: var(--fd);
+  font-weight: 800;
+  font-size: clamp(32px, 4.5vw, 62px);
+  line-height: 1.05;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  margin-bottom: 20px;
+  overflow: visible;
+  padding-bottom: 4px;
+}
+.sec-h .ghost {
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(240,237,232,.18);
+  display: inline;
+}
+.sec-sub {
+  font-size: 15px; color: var(--muted); line-height: 1.75; max-width: 440px; margin-bottom: 56px;
+}
+
+/* ════════════════════════════════
+   GLASS CARD
+════════════════════════════════ */
+.glass {
+  background: rgba(20,20,18,0.6);
+  border: 1px solid var(--border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-radius: 4px;
+  transition: border-color .3s, background .3s;
+}
+.glass:hover {
+  border-color: var(--border2);
+  background: rgba(28,28,26,0.7);
+}
+
+/* ════════════════════════════════
+   SERVICES
+════════════════════════════════ */
+.services { padding: 120px 0; }
+
+.svc-grid {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 12px;
+}
+.svc {
+  padding: 28px 22px;
+  display: flex; flex-direction: column;
+  position: relative; overflow: hidden;
+  cursor: default;
+  border-radius: 4px;
+}
+.svc::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--accent), transparent);
+  opacity: 0; transition: opacity .4s;
+}
+.svc:hover::before { opacity: 1; }
+
+/* Glow on hover */
+.svc::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 30% 0%, rgba(25,97,255,.07) 0%, transparent 60%);
+  opacity: 0; transition: opacity .4s;
+  pointer-events: none;
+}
+.svc:hover::after { opacity: 1; }
+
+.svc-n { font-size: 11px; letter-spacing: .22em; color: var(--accent); font-weight: 500; margin-bottom: 16px; }
+.svc-icon { font-size: 26px; margin-bottom: 12px; display: block; }
+.svc-title {
+  font-family: var(--fd); font-size: 17px; font-weight: 800;
+  text-transform: uppercase; letter-spacing: -.01em; margin-bottom: 10px;
+  line-height: 1.1;
+}
+.svc-desc { font-size: 13px; line-height: 1.75; color: var(--muted); margin-bottom: 20px; flex: 1; }
+.svc-tags { display: flex; flex-wrap: wrap; gap: 5px; }
+.svc-tag {
+  font-size: 10px; letter-spacing: .12em; text-transform: uppercase;
+  padding: 4px 10px; border: 1px solid var(--border); border-radius: 100px; color: var(--muted);
+  transition: all .2s;
+}
+.svc:hover .svc-tag { border-color: rgba(240,237,232,.15); color: rgba(240,237,232,.6); }
+
+/* ════════════════════════════════
+   FEATURE — WHY US
+════════════════════════════════ */
+.why { padding: 0 0 120px; }
+.why-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+.why-card {
+  padding: 32px 28px;
+  display: flex; gap: 18px; align-items: flex-start;
+  border-radius: 4px;
+}
+.why-ico { font-size: 22px; flex-shrink: 0; margin-top: 2px; }
+.why-title {
+  font-family: var(--fd); font-size: 15px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .02em; margin-bottom: 6px;
+}
+.why-desc { font-size: 14px; color: var(--muted); line-height: 1.7; }
+
+/* ════════════════════════════════
+   PROCESS
+════════════════════════════════ */
+.process { padding: 0 0 120px; }
+.steps {
+  display: grid;
+  grid-template-columns: repeat(4,1fr);
+  gap: 12px;
+}
+.step {
+  padding: 32px 24px;
+  border-radius: 4px;
+  transition: border-color .3s, background .3s;
+}
+.step-n {
+  font-family: var(--fd);
+  font-size: 60px; font-weight: 800; color: rgba(25,97,255,.08);
+  line-height: 1; margin-bottom: 20px;
+  transition: color .3s;
+}
+.step:hover .step-n { color: rgba(25,97,255,.18); }
+.step-title {
+  font-family: var(--fd); font-size: 14px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .04em; margin-bottom: 10px;
+}
+.step-desc { font-size: 13px; color: var(--muted); line-height: 1.7; }
+
+/* ════════════════════════════════
+   BIG CTA BAND
+════════════════════════════════ */
+.cta-band { padding: 0 0 120px; }
+.cta-inner {
+  padding: 72px 64px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 48px;
+  flex-wrap: wrap;
+}
+.cta-inner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background:
+    radial-gradient(ellipse at 0% 50%, rgba(25,97,255,.14) 0%, transparent 55%),
+    radial-gradient(ellipse at 100% 50%, rgba(100,60,255,.08) 0%, transparent 55%);
+  pointer-events: none;
+}
+.cta-left {}
+.cta-pre { font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 12px; font-weight: 500; }
+.cta-h {
+  font-family: var(--fd); font-weight: 800; font-size: clamp(32px, 4vw, 52px);
+  text-transform: uppercase; line-height: 1; letter-spacing: -.02em; margin-bottom: 14px;
+  overflow: visible; padding-bottom: 4px;
+}
+.cta-h span { color: var(--accent); text-shadow: 0 0 40px rgba(25,97,255,.5); }
+.cta-p { font-size: 15px; color: var(--muted); line-height: 1.7; max-width: 380px; }
+.cta-right { display: flex; flex-direction: column; gap: 10px; align-items: flex-start; flex-shrink: 0; }
+.cta-note { font-size: 12px; color: var(--muted); }
+
+/* ════════════════════════════════
+   CONTACT
+════════════════════════════════ */
+.contact { padding: 0 0 120px; }
+.contact-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.3fr;
+  gap: 64px;
+  align-items: start;
+}
+.contact-info {
+  margin-top: 36px;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  overflow: hidden;
+  background: rgba(20,20,18,0.5);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+.info-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 15px 18px; border-bottom: 1px solid var(--border);
+  transition: background .2s;
+}
+.info-row:last-child { border-bottom: none; }
+.info-row:hover { background: rgba(240,237,232,.03); }
+.info-l { font-size: 11px; letter-spacing: .15em; text-transform: uppercase; color: var(--muted); }
+.info-v { font-size: 13px; font-weight: 400; }
+
+/* FORM */
+.form-card {
+  padding: 40px;
+  border-radius: 4px;
+}
+.form { display: flex; flex-direction: column; gap: 16px; }
+.f2 { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.field { display: flex; flex-direction: column; gap: 6px; }
+.f-lbl { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.f-inp {
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  padding: 12px 14px;
+  font-family: var(--fb); font-size: 14px; font-weight: 300;
+  color: var(--fg); outline: none; transition: border-color .25s;
+  width: 100%;
+}
+.f-inp:focus { border-color: rgba(240,237,232,.22); }
+.f-inp::placeholder { color: var(--muted); }
+.f-sel {
+  background: var(--raised); border: 1px solid var(--border); border-radius: 3px;
+  padding: 12px 14px; font-family: var(--fb); font-size: 14px; color: var(--muted);
+  outline: none; appearance: none; cursor: pointer; width: 100%;
+}
+.f-sel option { background: #161614; color: var(--fg); }
+textarea.f-inp { resize: vertical; min-height: 110px; line-height: 1.65; }
+.f-submit {
+  padding: 15px 36px; background: var(--fg); color: var(--bg);
+  border: none; border-radius: 2px; font-family: var(--fb); font-size: 13px;
+  font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+  cursor: pointer; transition: all .25s var(--ease); align-self: flex-start;
+}
+.f-submit:hover { background: var(--accent); color: #fff; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(25,97,255,.3); }
+.f-msg { font-size: 13px; padding: 11px 14px; border-radius: 3px; display: none; }
+
+/* ════════════════════════════════
+   FOOTER
+════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--border);
+  background: var(--footer-bg);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  position: relative; z-index: 2;
+}
+.footer-top {
+  display: grid; grid-template-columns: 2fr 1fr 1fr 1fr; gap: 48px;
+  padding: 56px 40px 48px; max-width: 1100px; margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+.ft-logo {
+  display: flex; align-items: center; gap: 10px;
+  margin-bottom: 14px;
+}
+.ft-logo-mark {
+  display: flex; align-items: center; justify-content: center;
+  flex-shrink: 0;
+  border-radius: 2px;
+  overflow: hidden;
+  box-shadow: 0 1px 6px rgba(0,0,0,.25);
+}
+.ft-logo-text {
+  font-family: var(--fd); font-weight: 800; font-size: 14px;
+  text-transform: uppercase; letter-spacing: .08em;
+  display: flex; align-items: center; gap: 5px;
+}
+.ft-logo-text .blue { color: var(--accent); text-shadow: 0 0 16px rgba(25,97,255,.5); }
+.ft-logo-text .dim  { opacity: .35; font-weight: 700; }
+.ft-logo-text .sep  { color: var(--accent); opacity: .35; font-weight: 300; font-size: 16px; }
+.ft-tag { font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 220px; }
+.fc-hd {
+  font-size: 10px; letter-spacing: .22em; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 16px; padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.fc-links { list-style: none; }
+.fc-links li { margin-bottom: 9px; }
+.fc-links a { font-size: 14px; color: rgba(240,237,232,.28); transition: color .2s; font-weight: 300; }
+.fc-links a:hover { color: var(--fg); }
+.footer-btm {
+  max-width: 1100px; margin: 0 auto;
+  padding: 20px 40px;
+  display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;
+}
+.ft-copy { font-size: 12px; color: rgba(240,237,232,.18); letter-spacing: .04em; }
+.ft-loc  { font-size: 12px; color: rgba(240,237,232,.18); letter-spacing: .04em; }
+
+/* ════════════════════════════════
+   NEWSLETTER POPUP
+════════════════════════════════ */
+.nl-popup-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.65);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+  z-index: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .45s var(--ease);
+}
+.nl-popup-overlay.open {
+  opacity: 1;
+  pointer-events: all;
+}
+.nl-popup {
+  width: 100%;
+  max-width: 520px;
+  background: var(--bg2);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+  transform: translateY(32px) scale(.97);
+  transition: transform .5s var(--ease);
+  box-shadow: 0 32px 80px rgba(0,0,0,.6), 0 0 0 1px rgba(25,97,255,.15);
+}
+.nl-popup-overlay.open .nl-popup {
+  transform: translateY(0) scale(1);
+}
+
+/* Top accent bar */
+.nl-popup-bar {
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), #00cfff, var(--accent));
+  background-size: 200%;
+  animation: barShift 3s linear infinite;
+}
+
+  100% { background-position: 200% 0%; }
+}
+
+.nl-popup-inner { padding: 36px; }
+
+/* Close btn */
+.nl-popup-close {
+  position: absolute;
+  top: 14px; right: 14px;
+  width: 32px; height: 32px;
+  background: var(--raised);
+  border: 1px solid var(--border);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 14px; color: var(--muted);
+  cursor: pointer; transition: all .2s;
+  line-height: 1;
+}
+.nl-popup-close:hover { background: var(--raised2); color: var(--fg); }
+
+/* Popup tag */
+.nl-popup-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px 5px 8px;
+  background: rgba(25,97,255,.1); border: 1px solid rgba(25,97,255,.22);
+  border-radius: 100px; margin-bottom: 16px;
+}
+.nl-popup-tag-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 8px rgba(25,97,255,.9);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+.nl-popup-tag-txt { font-size: 11px; letter-spacing: .18em; text-transform: uppercase; color: rgba(25,97,255,.9); font-weight: 500; }
+
+.nl-popup-h {
+  font-family: var(--fd); font-weight: 800;
+  font-size: clamp(24px, 4vw, 36px);
+  line-height: 1; letter-spacing: -.02em;
+  text-transform: uppercase; margin-bottom: 10px;
+}
+.nl-popup-h span { color: var(--accent); text-shadow: 0 0 24px rgba(25,97,255,.5); }
+
+.nl-popup-sub {
+  font-size: 14px; color: var(--muted); line-height: 1.65; margin-bottom: 24px;
+}
+
+/* Perks row */
+.nl-popup-perks {
+  display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;
+}
+.nl-popup-perk {
+  display: flex; align-items: center; gap: 6px;
+  font-size: 12px; color: var(--muted);
+  background: var(--raised); border: 1px solid var(--border);
+  padding: 5px 12px; border-radius: 100px;
+}
+.nl-popup-perk-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--accent); flex-shrink: 0; }
+
+/* Popup form */
+.nl-popup-row { display: flex; gap: 8px; margin-bottom: 10px; }
+.nl-popup-inp {
+  flex: 1; background: var(--raised); border: 1px solid var(--border);
+  border-radius: 3px; padding: 12px 14px;
+  font-family: var(--fb); font-size: 14px; color: var(--fg);
+  outline: none; transition: border-color .25s; min-width: 0;
+}
+.nl-popup-inp:focus { border-color: rgba(25,97,255,.5); }
+.nl-popup-inp::placeholder { color: var(--muted); }
+.nl-popup-btn {
+  padding: 12px 20px; background: var(--accent); border: none;
+  border-radius: 3px; color: #fff; font-family: var(--fb); font-size: 13px;
+  font-weight: 500; letter-spacing: .06em; text-transform: uppercase;
+  cursor: pointer; white-space: nowrap; transition: all .25s var(--ease);
+  flex-shrink: 0;
+}
+.nl-popup-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(25,97,255,.4); }
+.nl-popup-gdpr {
+  font-size: 11px; color: var(--muted); opacity: .6;
+  display: flex; align-items: flex-start; gap: 8px; margin-top: 8px;
+}
+.nl-popup-gdpr input { margin-top: 2px; accent-color: var(--accent); flex-shrink: 0; }
+.nl-popup-msg { font-size: 13px; margin-top: 10px; display: none; padding: 10px 14px; border-radius: 3px; }
+.nl-popup-skip {
+  display: block; text-align: center; margin-top: 14px;
+  font-size: 12px; color: var(--muted); cursor: pointer;
+  transition: color .2s; letter-spacing: .06em;
+}
+.nl-popup-skip:hover { color: var(--fg); }
+
+/* Light mode popup */
+html.light .nl-popup { background: #fff; border-color: rgba(20,20,18,0.14); box-shadow: 0 32px 80px rgba(0,0,0,.2); }
+html.light .nl-popup-close { background: #f4f2fc; border-color: rgba(20,20,18,.1); }
+html.light .nl-popup-inp { background: #f8f7fc; border-color: rgba(20,20,18,.15); color: #0A0A10; }
+html.light .nl-popup-inp::placeholder { color: #999; }
+html.light .nl-popup-sub { color: #333; }
+html.light .nl-popup-perk { background: #f4f2fc; border-color: rgba(20,20,18,.1); color: #333; }
+html.light .nl-popup-gdpr { color: #555; }
+html.light .nl-popup-skip { color: #888; }
+
+@media(max-width: 540px) {
+  .nl-popup-inner { padding: 24px 20px; }
+  .nl-popup-row { flex-direction: column; }
+  .nl-popup-btn { width: 100%; }
+  .nl-popup-perks { display: none; }
+}
+
+/* ════════════════════════════════
+   NEWSLETTER (page section)
+════════════════════════════════ */
+.newsletter { padding: 0 0 120px; }
+
+.nl-inner {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 64px;
+  padding: 64px;
+  border-radius: 4px;
+  position: relative;
+  overflow: hidden;
+}
+.nl-inner::before {
+  content: '';
+  position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 100% 0%, rgba(25,97,255,.1) 0%, transparent 55%);
+  pointer-events: none;
+}
+
+/* Left */
+.nl-tag {
+  display: inline-flex; align-items: center; gap: 8px;
+  padding: 5px 12px 5px 8px;
+  background: rgba(25,97,255,.1); border: 1px solid rgba(25,97,255,.22);
+  border-radius: 100px; margin-bottom: 20px; width: fit-content;
+}
+.nl-tag-dot {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); box-shadow: 0 0 8px rgba(25,97,255,.8);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+.nl-tag-txt { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: rgba(25,97,255,.9); font-weight: 500; }
+
+.nl-h {
+  font-family: var(--fd); font-weight: 800;
+  font-size: clamp(28px, 3.5vw, 44px);
+  line-height: .95; letter-spacing: -.02em;
+  text-transform: uppercase; margin-bottom: 16px;
+}
+.nl-h span { color: var(--accent); text-shadow: 0 0 30px rgba(25,97,255,.4); }
+
+.nl-desc { font-size: 14px; color: var(--muted); line-height: 1.75; margin-bottom: 28px; max-width: 340px; }
+
+.nl-perks { display: flex; flex-direction: column; gap: 10px; }
+.nl-perk {
+  display: flex; align-items: center; gap: 10px;
+  font-size: 13px; color: var(--muted);
+}
+.nl-perk-dot {
+  width: 5px; height: 5px; border-radius: 50%;
+  background: var(--accent); flex-shrink: 0;
+  box-shadow: 0 0 6px rgba(25,97,255,.6);
+}
+
+/* Right — form */
+.nl-form { display: flex; flex-direction: column; gap: 16px; }
+
+.nl-field { display: flex; flex-direction: column; gap: 6px; }
+.nl-label { font-size: 10px; letter-spacing: .2em; text-transform: uppercase; color: var(--muted); }
+.nl-input {
+  background: var(--raised); border: 1px solid var(--border);
+  border-radius: 3px; padding: 12px 14px;
+  font-family: var(--fb); font-size: 14px; font-weight: 300;
+  color: var(--fg); outline: none; transition: border-color .25s; width: 100%;
+}
+.nl-input:focus { border-color: rgba(25,97,255,.4); }
+.nl-input::placeholder { color: var(--muted); }
+
+.nl-checks {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
+  padding: 14px; background: var(--raised);
+  border: 1px solid var(--border); border-radius: 3px;
+}
+.nl-check {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 13px; color: var(--muted); cursor: pointer;
+  transition: color .2s; user-select: none;
+}
+.nl-check:hover { color: var(--fg); }
+.nl-check input[type="checkbox"] {
+  width: 15px; height: 15px; accent-color: var(--accent);
+  cursor: pointer; flex-shrink: 0;
+}
+
+.nl-gdpr {
+  padding: 12px 14px; background: rgba(25,97,255,.05);
+  border: 1px solid rgba(25,97,255,.15); border-radius: 3px;
+}
+.nl-gdpr .nl-check { font-size: 12px; color: var(--muted); line-height: 1.5; align-items: flex-start; }
+
+.nl-btn {
+  padding: 15px 28px; background: var(--accent); color: #fff;
+  border: none; border-radius: 2px; font-family: var(--fb); font-size: 13px;
+  font-weight: 500; letter-spacing: .08em; text-transform: uppercase;
+  cursor: pointer; transition: all .25s var(--ease); width: 100%;
+  box-shadow: 0 4px 20px rgba(25,97,255,.3);
+}
+.nl-btn:hover { background: var(--accent2); transform: translateY(-1px); box-shadow: 0 8px 28px rgba(25,97,255,.4); }
+
+.nl-msg {
+  font-size: 13px; padding: 11px 14px; border-radius: 3px;
+  display: none; line-height: 1.55;
+}
+
+/* ════════════════════════════════
+   AI CHATBOT
+════════════════════════════════ */
+.chat-widget {
+  position: fixed;
+  bottom: 100px;
+  right: 28px;
+  z-index: 160;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 12px;
+}
+
+/* Bubble toggle */
+.chat-bubble {
+  width: 56px; height: 56px;
+  background: var(--accent);
+  border: none; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; color: #fff;
+  box-shadow: 0 4px 24px rgba(25,97,255,.45);
+  transition: all .3s var(--ease);
+  position: relative;
+  animation: waIn .6s var(--ease) 2s both;
+}
+.chat-bubble:hover { transform: scale(1.08); box-shadow: 0 8px 32px rgba(25,97,255,.55); }
+.chat-bubble-icon, .chat-bubble-close { pointer-events: none; }
+.chat-unread {
+  position: absolute; top: -3px; right: -3px;
+  width: 18px; height: 18px; background: #ef4444;
+  border-radius: 50%; border: 2px solid var(--bg);
+  font-size: 10px; font-weight: 700; color: #fff;
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fb);
+  animation: waPulse 2s ease-in-out infinite;
+}
+
+/* Window */
+.chat-window {
+  width: 360px;
+  background: var(--surface);
+  border: 1px solid var(--border2);
+  border-radius: 12px;
+  overflow: hidden;
+  display: none;
+  flex-direction: column;
+  box-shadow: 0 24px 64px rgba(0,0,0,.5), 0 0 0 1px rgba(25,97,255,.1);
+  animation: chatSlideIn .35s var(--ease);
+  max-height: 520px;
+}
+.chat-window.open { display: flex; }
+
+@keyframes chatSlideIn {
+  from { opacity:0; transform:translateY(16px) scale(.97); }
+  to   { opacity:1; transform:translateY(0) scale(1); }
+}
+
+/* Header */
+.chat-header {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 16px;
+  background: var(--accent);
+  flex-shrink: 0;
+}
+.chat-header-left { display: flex; align-items: center; gap: 10px; }
+.chat-avatar {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: rgba(255,255,255,.2);
+  display: flex; align-items: center; justify-content: center;
+  font-family: var(--fd); font-size: 11px; font-weight: 800;
+  color: #fff; letter-spacing: .06em; flex-shrink: 0; position: relative;
+}
+.chat-online {
+  position: absolute; bottom: 0; right: 0;
+  width: 10px; height: 10px; background: #22c55e;
+  border-radius: 50%; border: 2px solid var(--accent);
+}
+.chat-name { font-family: var(--fd); font-size: 14px; font-weight: 700; color: #fff; letter-spacing: .04em; }
+.chat-status { font-size: 11px; color: rgba(255,255,255,.75); margin-top: 1px; }
+.chat-close-btn {
+  background: rgba(255,255,255,.15); border: none; color: #fff;
+  width: 28px; height: 28px; border-radius: 50%; font-size: 13px;
+  cursor: pointer; display: flex; align-items: center; justify-content: center;
+  transition: background .2s;
+}
+.chat-close-btn:hover { background: rgba(255,255,255,.25); }
+
+/* Messages */
+.chat-messages {
+  flex: 1; overflow-y: auto; padding: 16px;
+  display: flex; flex-direction: column; gap: 12px;
+  scroll-behavior: smooth;
+}
+.chat-msg { display: flex; flex-direction: column; gap: 4px; }
+.chat-msg.bot { align-items: flex-start; }
+.chat-msg.user { align-items: flex-end; }
+
+.chat-bubble-msg {
+  max-width: 82%;
+  padding: 10px 14px;
+  border-radius: 14px;
+  font-size: 13px; line-height: 1.65;
+}
+.chat-msg.bot .chat-bubble-msg {
+  background: var(--raised);
+  color: var(--fg);
+  border-bottom-left-radius: 4px;
+  border: 1px solid var(--border);
+}
+.chat-msg.user .chat-bubble-msg {
+  background: var(--accent);
+  color: #fff;
+  border-bottom-right-radius: 4px;
+}
+
+/* Quick suggestions */
+.chat-suggestions {
+  display: flex; flex-direction: column; gap: 6px; margin-top: 4px;
+}
+.chat-suggestions button {
+  background: transparent; border: 1px solid rgba(25,97,255,.3);
+  border-radius: 100px; padding: 6px 14px;
+  font-size: 12px; color: var(--accent); cursor: pointer;
+  text-align: left; transition: all .2s; font-family: var(--fb);
+  width: fit-content;
+}
+.chat-suggestions button:hover {
+  background: rgba(25,97,255,.1); border-color: var(--accent);
+}
+
+/* Typing */
+.chat-typing {
+  padding: 12px 16px 0;
+  display: flex; gap: 4px; align-items: center;
+}
+.typing-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--muted);
+  animation: typingBounce 1.2s ease-in-out infinite;
+}
+.typing-dot:nth-child(2) { animation-delay: .2s; }
+.typing-dot:nth-child(3) { animation-delay: .4s; }
+@keyframes typingBounce {
+  0%,80%,100% { transform:translateY(0); opacity:.4; }
+  40%          { transform:translateY(-6px); opacity:1; }
+}
+
+/* Input row */
+.chat-input-row {
+  display: flex; gap: 8px; padding: 12px 14px;
+  border-top: 1px solid var(--border); flex-shrink: 0;
+  background: var(--surface);
+}
+.chat-input {
+  flex: 1; background: var(--raised); border: 1px solid var(--border);
+  border-radius: 100px; padding: 9px 16px;
+  font-family: var(--fb); font-size: 13px; color: var(--fg);
+  outline: none; transition: border-color .2s;
+}
+.chat-input:focus { border-color: rgba(25,97,255,.4); }
+.chat-input::placeholder { color: var(--muted); }
+.chat-send {
+  width: 36px; height: 36px; flex-shrink: 0;
+  background: var(--accent); border: none; border-radius: 50%;
+  color: #fff; cursor: pointer; display: flex;
+  align-items: center; justify-content: center;
+  transition: all .2s;
+}
+.chat-send:hover { background: var(--accent2); transform: scale(1.06); }
+
+.chat-footer {
+  text-align: center; padding: 6px; font-size: 10px;
+  letter-spacing: .1em; text-transform: uppercase; color: var(--muted);
+  border-top: 1px solid var(--border); background: var(--surface); flex-shrink: 0;
+}
+
+@media(max-width:960px) {
+  .chat-window { width: 320px; }
+  .chat-widget { bottom: 88px; right: 16px; }
+}
+
+/* ════════════════════════════════
+   MOBILE MENU
+════════════════════════════════ */
+.mob-menu {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,8,7,.97); z-index: 90;
+  flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+}
+.mob-menu.open { display: flex; }
+.mob-menu a {
+  font-family: var(--fd); font-size: 28px; font-weight: 800;
+  text-transform: uppercase; color: var(--muted); transition: color .2s;
+}
+.mob-menu a:hover { color: var(--fg); }
+.mob-close {
+  position: absolute; top: 20px; right: 24px; font-size: 22px;
+  color: var(--muted); background: none; border: none; cursor: pointer;
+}
+
+/* ════════════════════════════════
+   REVEAL ANIMATIONS
+════════════════════════════════ */
+.rev {
+  opacity: 1;
+  transform: translateY(0);
+}
+/* Only animate on proper desktop browsers */
+@media (hover: hover) and (pointer: fine) {
+  .rev {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity .8s var(--ease), transform .8s var(--ease);
+  }
+  .rev.in { opacity: 1; transform: translateY(0); }
+}
+
+/* ════════════════════════════════
+   GALLERY
+════════════════════════════════ */
+.gallery { padding: 0 0 120px; }
+
+.gallery-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-end;
+  margin-bottom: 40px;
+  flex-wrap: wrap;
+  gap: 24px;
+}
+
+/* Filter buttons */
+.gallery-filters { display: flex; gap: 6px; flex-wrap: wrap; }
+.gf-btn {
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--muted); cursor: pointer; font-family: var(--fb);
+  transition: all .25s var(--ease);
+}
+.gf-btn:hover { color: var(--fg); border-color: var(--border2); }
+.gf-btn.on { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+
+/* Grid */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-auto-rows: 240px;
+  gap: 10px;
+}
+.g-item {
+  border-radius: 4px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: opacity .35s, transform .35s var(--ease);
+}
+.g-item.hide { opacity: 0; pointer-events: none; transform: scale(.96); }
+.g-item.g-tall { grid-row: span 2; }
+
+.g-img {
+  width: 100%; height: 100%;
+  position: relative; overflow: hidden;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 4px;
+}
+
+/* Placeholder state — replace with real img when ready */
+.g-placeholder {
+  width: 100%; height: 100%;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  gap: 8px;
+  transition: transform .4s var(--ease);
+}
+.g-item:hover .g-placeholder { transform: scale(1.04); }
+.g-ph-icon { font-size: 32px; opacity: .25; }
+.g-ph-txt { font-size: 12px; letter-spacing: .14em; text-transform: uppercase; color: var(--muted); opacity: .5; }
+.g-ph-sub { font-size: 10px; color: var(--muted); opacity: .3; letter-spacing: .08em; }
+
+/* Hover overlay */
+.g-overlay {
+  position: absolute; inset: 0;
+  background: linear-gradient(to top, rgba(8,8,7,.85) 0%, transparent 55%);
+  display: flex; flex-direction: column;
+  justify-content: flex-end;
+  padding: 18px;
+  opacity: 0; transition: opacity .35s;
+}
+.g-item:hover .g-overlay { opacity: 1; }
+.g-cat-tag {
+  display: inline-block; width: fit-content;
+  font-size: 10px; letter-spacing: .16em; text-transform: uppercase;
+  padding: 3px 10px; border-radius: 100px;
+  background: rgba(25,97,255,.8); color: #fff;
+  margin-bottom: 6px;
+}
+.g-title {
+  font-family: var(--fd); font-size: 15px; font-weight: 700;
+  text-transform: uppercase; color: #fff; letter-spacing: .04em;
+}
+
+.gallery-cta {
+  text-align: center; margin-top: 32px;
+  font-size: 15px; color: var(--muted);
+}
+
+/* ════════════════════════════════
+   CURSOR GLOW
+════════════════════════════════ */
+.cursor-glow {
+  position: fixed;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(25,97,255,0.07) 0%, transparent 65%);
+  pointer-events: none;
+  z-index: 1;
+  transform: translate(-50%, -50%);
+  filter: blur(2px);
+  transition: opacity .4s;
+}
+html.light .cursor-glow {
+  background: radial-gradient(circle, rgba(25,97,255,0.045) 0%, transparent 65%);
+}
+
+/* ════════════════════════════════
+   TESTIMONIALS
+════════════════════════════════ */
+.testi { padding: 0 0 120px; }
+.testi-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 12px;
+}
+.testi-card {
+  padding: 36px 30px;
+  border-radius: 4px;
+  display: flex; flex-direction: column; gap: 20px;
+  position: relative; overflow: hidden;
+}
+.testi-card::before {
+  content: '"';
+  position: absolute; top: 12px; right: 22px;
+  font-family: var(--fd); font-size: 100px; font-weight: 800;
+  color: rgba(25,97,255,0.07); line-height: 1; pointer-events: none;
+}
+.testi-stars { font-size: 16px; color: #F5C842; letter-spacing: 2px; text-shadow: 0 0 10px rgba(245,200,66,.4); }
+.testi-quote { font-size: 15px; line-height: 1.75; color: var(--muted); font-style: italic; flex: 1; }
+.testi-author { display: flex; align-items: center; gap: 12px; }
+.testi-avatar {
+  width: 40px; height: 40px; border-radius: 50%;
+  background: rgba(25,97,255,.12); border: 1px solid rgba(25,97,255,.28);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 12px; font-weight: 700; font-family: var(--fd);
+  color: var(--accent); flex-shrink: 0; letter-spacing: .04em;
+}
+.testi-name { font-size: 13px; font-weight: 500; font-family: var(--fd); text-transform: uppercase; letter-spacing: .06em; }
+.testi-role { font-size: 12px; color: var(--muted); margin-top: 3px; }
+
+/* ════════════════════════════════
+   WHATSAPP BUTTON
+════════════════════════════════ */
+.wa-btn {
+  position: fixed; bottom: 28px; right: 28px; z-index: 150;
+  display: flex; align-items: center; gap: 10px;
+  padding: 13px 20px 13px 16px;
+  background: #25D366; color: #fff; border-radius: 100px;
+  font-size: 13px; font-weight: 500; font-family: var(--fb); letter-spacing: .04em;
+  box-shadow: 0 4px 24px rgba(37,211,102,.35);
+  transition: all .3s var(--ease);
+  animation: waIn .6s var(--ease) 1.5s both;
+  text-decoration: none; white-space: nowrap;
+}
+.wa-btn:hover { background: #1fbc5a; transform: translateY(-3px) scale(1.03); box-shadow: 0 10px 36px rgba(37,211,102,.45); }
+.wa-icon { width: 22px; height: 22px; flex-shrink: 0; }
+.wa-pulse {
+  position: absolute; top: -3px; right: -3px;
+  width: 13px; height: 13px; background: #ff4444;
+  border-radius: 50%; border: 2px solid var(--bg);
+  animation: waPulse 2s ease-in-out infinite;
+}
+@keyframes waPulse { 0%,100%{transform:scale(1);box-shadow:0 0 0 0 rgba(255,68,68,.5)} 50%{transform:scale(1.12);box-shadow:0 0 0 7px rgba(255,68,68,0)} }
+@keyframes waIn { from{opacity:0;transform:translateY(20px) scale(.9)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media (max-width: 960px) {
+  .wrap { padding: 0 20px; }
+  .nav-links, .nav-cta { display: none !important; }
+  .mob-toggle { display: flex !important; }
+  /* iOS Chrome specific overrides */
+  nav { height: 56px; padding: 0 20px; }
+  .hero { padding: 100px 20px 60px; }
+  .hero { padding: 120px 24px 72px; }
+  /* hero font handled by base rule */
+  .hero-lower { flex-direction: column; align-items: flex-start; }
+  .hero-stats { flex-wrap: wrap; }
+  .h-stat { min-width: 45%; border-bottom: 1px solid var(--border); }
+  .svc-grid { grid-template-columns: 1fr 1fr; }
+  .why-grid { grid-template-columns: 1fr; }
+  .testi-grid { grid-template-columns: 1fr; }
+  .gallery-grid { grid-template-columns: 1fr 1fr; grid-auto-rows: 200px; }
+  .gallery-header { flex-direction: column; align-items: flex-start; }
+  .nl-inner { grid-template-columns: 1fr; gap: 36px; padding: 36px 28px; }
+  .nl-checks { grid-template-columns: 1fr 1fr; }
+  .wa-btn .wa-label { display: none; }
+  .wa-btn { padding: 14px; }
+  .steps { grid-template-columns: 1fr 1fr; }
+  .cta-inner { padding: 40px 28px; flex-direction: column; }
+  .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .f2 { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr 1fr; gap: 32px; padding: 40px 24px 36px; }
+  .footer-btm { padding: 18px 24px; }
+}
+
+@media (max-width: 540px) {
+  /* hero font handled by base rule */
+  .steps { grid-template-columns: 1fr; }
+  .footer-top { grid-template-columns: 1fr; }
+}
+
+/* ════════════════════════════════
+   iOS / IPHONE FIXES
+════════════════════════════════ */
+* {
+  -webkit-tap-highlight-color: transparent;
+  -webkit-touch-callout: none;
+}
+input, textarea, select, button {
+  -webkit-appearance: none;
+  border-radius: 0;
+}
+.btn-hero-p, .btn-hero-o, .nav-cta, .f-submit,
+.nl-btn, .gf-btn, .search-btn, .mode-toggle,
+.wa-btn, .chat-bubble, .chat-send {
+  -webkit-appearance: none;
+  touch-action: manipulation;
+}
+/* Fix iOS font size auto-zoom on input focus */
+input, select, textarea {
+  font-size: 16px !important;
+}
+/* Fix iOS safe area for notch/dynamic island */
+nav {
+  padding-left: max(40px, env(safe-area-inset-left));
+  padding-right: max(40px, env(safe-area-inset-right));
+}
+.wa-btn {
+  bottom: max(28px, calc(28px + env(safe-area-inset-bottom)));
+  right: max(28px, env(safe-area-inset-right));
+}
+.chat-widget {
+  bottom: max(100px, calc(100px + env(safe-area-inset-bottom)));
+  right: max(28px, env(safe-area-inset-right));
+}
+/* Fix blur on iOS Chrome */
+.glass {
+  transform: translateZ(0);
+}
+nav, footer {
+  transform: translateZ(0);
+}
+
+
+@media (max-width: 960px) {
+  /* Bring back premium orbs on mobile - properly isolated */
+  .orb {
+    display: block;
+    position: fixed;
+    will-change: transform;
+    /* Use smaller orbs on mobile */
+  }
+  .orb-1 { width: 320px; height: 320px; filter: blur(60px); -webkit-filter: blur(60px); }
+  .orb-2 { width: 260px; height: 260px; filter: blur(50px); -webkit-filter: blur(50px); }
+  .orb-3 { width: 200px; height: 200px; filter: blur(50px); -webkit-filter: blur(50px); }
+  .orb-4 { width: 180px; height: 180px; filter: blur(45px); -webkit-filter: blur(45px); }
+  /* Grain back on mobile at lower opacity */
+  .grain { display: block; opacity: .018; }
+  /* Ensure all content visible */
+  .rev { opacity: 1 !important; transform: none !important; }
+}
+
+
+/* ════════════════════════════════
+   SAMSUNG / ANDROID FIXES
+════════════════════════════════ */
+
+/* Fix Samsung Internet font rendering */
+* {
+  -webkit-text-size-adjust: 100%;
+  text-size-adjust: 100%;
+}
+/* Only apply word-break on mobile — breaks desktop headings if global */
+@media (max-width: 960px) {
+  * {
+    word-break: break-word;
+    overflow-wrap: break-word;
+  }
+}
+
+/* Fix overlapping nav elements on Android */
+.nav-inner {
+  flex-wrap: nowrap;
+  overflow: hidden;
+}
+.nav-logo {
+  flex-shrink: 0;
+  min-width: 0;
+  overflow: hidden;
+}
+.nav-logo-text {
+  flex-shrink: 1;
+  min-width: 0;
+  overflow: hidden;
+}
+.nav-logo-kent,
+.nav-logo-clothing,
+.nav-logo-lab {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Fix hero H1 overlapping on tall Android screens */
+.hero-h1 {
+  overflow: hidden;
+  width: 100%;
+}
+.hero-h1 .line-solid,
+.hero-h1 .line-blue,
+.hero-h1 .line-ghost {
+  display: block;
+  overflow: visible;
+}
+
+/* Fix stats row overlapping */
+.hero-stats {
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+.h-stat {
+  min-width: 0;
+  flex: 1 1 45%;
+  overflow: hidden;
+}
+
+/* Fix service cards text overflow */
+.svc-title {
+  white-space: normal;
+  word-break: break-word;
+  hyphens: auto;
+}
+.svc-desc {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Fix marquee overflow on Samsung */
+.marquee-section {
+  overflow: hidden;
+  max-width: 100vw;
+}
+
+/* Fix gallery grid on Samsung */
+.gallery-grid {
+  overflow: hidden;
+}
+.g-item {
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Fix contact form overlapping */
+.contact-grid {
+  overflow: hidden;
+}
+.f2 {
+  overflow: hidden;
+}
+.field-input, .field-select, .f-sel {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Fix newsletter overlapping */
+.nl-inner {
+  overflow: hidden;
+}
+.nl-checks {
+  overflow: hidden;
+}
+
+/* Fix footer overlapping */
+.footer-top {
+  overflow: hidden;
+}
+.footer-btm {
+  flex-wrap: wrap;
+  overflow: hidden;
+}
+
+/* Fix section headers */
+.sec-row {
+  overflow: hidden;
+  flex-wrap: nowrap;
+}
+.sec-line {
+  min-width: 20px;
+  flex-shrink: 1;
+}
+
+/* Fix why-cards overlapping */
+.why-card {
+  overflow: hidden;
+  min-width: 0;
+}
+.why-content {
+  min-width: 0;
+  overflow: hidden;
+}
+.why-title {
+  white-space: normal;
+  word-break: break-word;
+}
+
+/* Fix testimonial cards */
+.testi-card {
+  overflow: hidden;
+  min-width: 0;
+}
+.testi-quote {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Fix chat widget on Samsung */
+.chat-window {
+  max-width: calc(100vw - 32px);
+  overflow: hidden;
+}
+.chat-bubble-msg {
+  word-break: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+}
+
+/* Fix process steps */
+.step {
+  overflow: hidden;
+  min-width: 0;
+}
+.step-title, .step-desc {
+  word-break: break-word;
+}
+
+/* Samsung specific viewport fix - removed min-height to prevent gap */
+
+/* Fix button text wrapping */
+.btn-hero-p, .btn-hero-o, .nav-cta,
+.f-submit, .nl-btn {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  min-width: 0;
+}
+
+/* Fix CTA band */
+.cta-inner {
+  overflow: hidden;
+}
+.cta-h {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Prevent any element from causing horizontal scroll */
+section, footer, nav {
+  max-width: 100%;
+  overflow-x: clip;
+}
+.wrap {
+  max-width: 100%;
+  overflow: visible;
+}
+
+
+/* ── HERO TEXT OVERFLOW PREVENTION ── */
+.hero-h1 {
+  max-width: 100%;
+  width: 100%;
+}
+.hero-h1 .line-solid,
+.hero-h1 .line-blue,
+.hero-h1 .line-ghost {
+  display: block;
+  max-width: 100%;
+  overflow: visible;
+  white-space: normal;
+  word-break: normal;
+}
+/* Specific breakpoints to keep CLOTHING on one line */
+@media (max-width: 1200px) {
+  /* hero font handled by base rule */
+}
+@media (max-width: 960px) {
+  /* hero font handled by base rule */
+}
+@media (max-width: 600px) {
+  /* hero font handled by base rule */
+}
+@media (max-width: 420px) {
+  /* hero font handled by base rule */
+}
+
+
+@media (max-width: 1100px) {
+  .nav-logo-lab { display: none; }
+  .nav-logo-divider:last-of-type { display: none; }
+}
+
+
+
+@media (max-width: 1100px) {
+  .h-stat-n { font-size: 28px; }
+  .h-stat { padding: 18px 20px; }
+}
+@media (max-width: 960px) {
+  .h-stat { flex: 1 1 48%; }
+  .h-stat:nth-child(2) { border-right: none; }
+}
+
+
+/* ════════════ LIGHT MODE FULL CONTRAST FIX ════════════ */
+
+/* Fix dark stats box */
+html.light .hero-stats {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(20,20,18,0.15) !important;
+  box-shadow: 0 4px 20px rgba(20,20,18,0.08) !important;
+}
+html.light .h-stat {
+  border-right: 1px solid rgba(20,20,18,0.1) !important;
+}
+html.light .h-stat-n {
+  color: #0A0A10 !important;
+}
+html.light .h-stat-n.blue {
+  color: var(--accent) !important;
+  text-shadow: none !important;
+}
+html.light .h-stat-l {
+  color: #444 !important;
+}
+
+/* Fix LAB. ghost text - make it visible in light mode */
+html.light .hero-h1 .line-ghost {
+  -webkit-text-stroke: 2px rgba(20,20,18,0.35) !important;
+  color: transparent !important;
+}
+
+/* Fix dark blob/orb behind hero text */
+html.light .orb-1 {
+  background: radial-gradient(circle, rgba(25,97,255,0.22) 0%, transparent 70%) !important;
+  filter: blur(70px) !important;
+  -webkit-filter: blur(70px) !important;
+}
+html.light .orb-2 {
+  background: radial-gradient(circle, rgba(25,97,255,0.18) 0%, transparent 70%) !important;
+  filter: blur(70px) !important;
+  -webkit-filter: blur(70px) !important;
+}
+html.light .orb-3 {
+  background: radial-gradient(circle, rgba(100,60,255,0.14) 0%, transparent 70%) !important;
+  filter: blur(65px) !important;
+  -webkit-filter: blur(65px) !important;
+}
+html.light .orb-4 {
+  background: radial-gradient(circle, rgba(25,97,255,0.12) 0%, transparent 70%) !important;
+  filter: blur(65px) !important;
+  -webkit-filter: blur(65px) !important;
+}
+
+/* Glow line stronger in light mode */
+html.light .glow-line {
+  opacity: 0.7 !important;
+  background: linear-gradient(90deg, transparent, rgba(25,97,255,.8), rgba(25,97,255,.8), transparent) !important;
+}
+
+/* Also boost orb opacity variable in light mode */
+html.light {
+  --orb-opacity: 1 !important;
+}
+
+/* Fix hero tag pill */
+html.light .hero-tag {
+  background: rgba(25,97,255,0.08) !important;
+  border: 1px solid rgba(25,97,255,0.25) !important;
+}
+html.light .hero-tag-txt {
+  color: var(--accent) !important;
+}
+
+/* Fix hero desc text */
+html.light .hero-desc {
+  color: #333 !important;
+}
+html.light .hero-desc strong {
+  color: #0A0A10 !important;
+}
+
+/* Fix ghost text in section headings */
+html.light .sec-h .ghost {
+  -webkit-text-stroke: 2px rgba(20,20,18,0.2) !important;
+}
+
+/* Fix marquee */
+html.light .marquee-section {
+  background: rgba(220,216,240,0.6) !important;
+  border-color: rgba(20,20,18,0.1) !important;
+}
+html.light .m-item {
+  color: #444 !important;
+}
+
+/* Fix all glass cards */
+html.light .glass {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(20,20,18,0.12) !important;
+  box-shadow: 0 2px 16px rgba(20,20,18,0.07) !important;
+}
+html.light .glass:hover {
+  background: #FAFAFA !important;
+  border-color: rgba(25,97,255,0.3) !important;
+  box-shadow: 0 4px 24px rgba(25,97,255,0.1) !important;
+}
+
+/* Fix all card text */
+html.light .svc-desc,
+html.light .why-desc,
+html.light .step-desc,
+html.light .testi-quote {
+  color: #333 !important;
+}
+html.light .svc-title,
+html.light .why-title,
+html.light .step-title {
+  color: #0A0A10 !important;
+}
+html.light .svc-n,
+html.light .svc-num { color: var(--accent) !important; }
+
+/* Fix step numbers */
+html.light .step-n { color: rgba(25,97,255,0.1) !important; }
+html.light .step:hover .step-n { color: rgba(25,97,255,0.2) !important; }
+
+/* Fix why icons */
+html.light .why-ico { filter: none; }
+
+/* Fix process steps */
+html.light .step {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(20,20,18,0.1) !important;
+}
+
+/* Fix section rows */
+html.light .sec-num { color: var(--accent) !important; }
+html.light .sec-lbl { color: #555 !important; }
+html.light .sec-line { background: rgba(20,20,18,0.12) !important; }
+
+/* Fix contact form */
+html.light .form-card {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(20,20,18,0.12) !important;
+}
+html.light .f-inp,
+html.light .f-sel {
+  background: #F8F7FC !important;
+  border: 1px solid rgba(20,20,18,0.15) !important;
+  color: #0A0A10 !important;
+}
+html.light .f-inp:focus { border-color: var(--accent) !important; }
+html.light .f-lbl { color: #555 !important; }
+html.light .f-inp::placeholder { color: #999 !important; }
+
+/* Fix contact info rows */
+html.light .contact-info {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(20,20,18,0.12) !important;
+}
+html.light .info-row { border-color: rgba(20,20,18,0.08) !important; }
+html.light .info-l { color: #666 !important; }
+html.light .info-v { color: #0A0A10 !important; }
+
+/* Fix newsletter */
+html.light .nl-inner {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(20,20,18,0.12) !important;
+}
+html.light .nl-input {
+  background: #F8F7FC !important;
+  border: 1px solid rgba(20,20,18,0.15) !important;
+  color: #0A0A10 !important;
+}
+html.light .nl-checks {
+  background: #F8F7FC !important;
+  border: 1px solid rgba(20,20,18,0.15) !important;
+}
+html.light .nl-check { color: #333 !important; }
+html.light .nl-perk { color: #333 !important; }
+html.light .nl-desc { color: #333 !important; }
+html.light .nl-label { color: #555 !important; }
+html.light .nl-gdpr {
+  background: rgba(25,97,255,0.05) !important;
+  border-color: rgba(25,97,255,0.15) !important;
+}
+
+/* Fix CTA band */
+html.light .cta-inner {
+  background: #FFFFFF !important;
+  border: 1px solid rgba(20,20,18,0.12) !important;
+  box-shadow: 0 4px 24px rgba(20,20,18,0.07) !important;
+}
+html.light .cta-p { color: #333 !important; }
+html.light .cta-note { color: #666 !important; }
+html.light .cta-pre { color: var(--accent) !important; }
+
+/* Fix testimonials */
+html.light .testi-card { background: #FFFFFF !important; border: 1px solid rgba(20,20,18,0.1) !important; }
+html.light .testi-role { color: #666 !important; }
+html.light .testi-card::before { color: rgba(25,97,255,0.08) !important; }
+
+/* Fix footer */
+html.light footer {
+  background: rgba(220,216,240,0.6) !important;
+  border-top: 1px solid rgba(20,20,18,0.1) !important;
+}
+html.light .fc-links a { color: #555 !important; }
+html.light .fc-links a:hover { color: #0A0A10 !important; }
+html.light .fc-hd { color: #666 !important; border-color: rgba(20,20,18,0.1) !important; }
+html.light .ft-tagline { color: #444 !important; }
+html.light .ft-copy, html.light .ft-loc { color: #888 !important; }
+html.light .footer-top { border-color: rgba(20,20,18,0.1) !important; }
+
+/* Fix nav in light mode */
+html.light nav {
+  background: rgba(245,242,255,0.92) !important;
+  border-bottom: 1px solid rgba(20,20,18,0.1) !important;
+}
+html.light .nav-cta {
+  background: #0A0A10 !important;
+  color: #fff !important;
+}
+html.light .nav-cta:hover { background: var(--accent) !important; }
+html.light .mode-btn {
+  background: #FFFFFF !important;
+  border-color: rgba(20,20,18,0.18) !important;
+}
+
+/* Fix btn-hero-o in light */
+html.light .btn-hero-o {
+  border-color: rgba(20,20,18,0.25) !important;
+  color: #333 !important;
+}
+html.light .btn-hero-o:hover {
+  color: #0A0A10 !important;
+  border-color: rgba(20,20,18,0.45) !important;
+}
+
+/* Fix gallery */
+html.light .g-img {
+  background: #E8E5F0 !important;
+  border-color: rgba(20,20,18,0.1) !important;
+}
+html.light .gallery-cta { color: #444 !important; }
+html.light .gf-btn {
+  border-color: rgba(20,20,18,0.15) !important;
+  color: #555 !important;
+}
+html.light .gf-btn:hover { color: #0A0A10 !important; }
+html.light .gf-btn.on { background: #0A0A10 !important; color: #fff !important; border-color: #0A0A10 !important; }
+
+/* Fix hero section bg */
+html.light .hero-h1 .line-solid { color: #0A0A10 !important; }
+html.light .hero-h1 .line-blue {
+  color: var(--accent) !important;
+  text-shadow: none !important;
+}
+
+
+/* ════════════════════════════════
+   MOBILE PREMIUM TYPOGRAPHY
+════════════════════════════════ */
+@media (max-width: 960px) {
+
+  /* Hero heading - keep Syne bold display font strong */
+  .hero-h1 {
+    font-size: clamp(32px, 10vw, 60px) !important;
+    letter-spacing: -.025em !important;
+    line-height: .95 !important;
+  }
+
+  /* Section headings */
+  .sec-h {
+    font-size: clamp(32px, 9vw, 52px) !important;
+    letter-spacing: -.02em !important;
+    line-height: 1 !important;
+  }
+
+  /* Hero description */
+  .hero-desc {
+    font-size: 16px !important;
+    line-height: 1.75 !important;
+  }
+
+  /* Restore glow on CLOTHING */
+  .hero-h1 .line-blue {
+    text-shadow: 0 0 40px rgba(25,97,255,.5), 0 0 80px rgba(25,97,255,.2) !important;
+  }
+
+  /* Restore ghost outline */
+  .hero-h1 .line-ghost {
+    -webkit-text-stroke: 1.5px rgba(240,237,232,.2) !important;
+  }
+
+  /* Fix service card titles */
+  .svc-title { font-size: 18px !important; }
+  .svc-desc { font-size: 14px !important; }
+
+  /* Fix section labels */
+  .sec-lbl { font-size: 11px !important; letter-spacing: .2em !important; }
+  .sec-num { font-size: 11px !important; }
+
+  /* Keep hero tag pill looking premium */
+  .hero-tag {
+    padding: 7px 14px 7px 10px !important;
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
+
+  /* Stats box premium look on mobile */
+  .hero-stats {
+    margin-top: 40px !important;
+    background: rgba(14,14,12,0.7) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+  }
+  .h-stat-n { font-size: 32px !important; }
+  .h-stat-l { font-size: 10px !important; letter-spacing: .12em !important; }
+
+  /* Glow line stays on mobile */
+  .glow-line { display: block !important; }
+
+  /* Nav glass effect on mobile */
+  nav {
+    backdrop-filter: blur(20px) saturate(160%) !important;
+    -webkit-backdrop-filter: blur(20px) saturate(160%) !important;
+  }
+
+  /* Glass cards on mobile */
+  .glass {
+    backdrop-filter: blur(12px) !important;
+    -webkit-backdrop-filter: blur(12px) !important;
+  }
+
+  /* Why cards */
+  .why-title { font-size: 15px !important; }
+  .why-desc { font-size: 14px !important; line-height: 1.7 !important; }
+
+  /* Process steps */
+  .step-n { font-size: 44px !important; }
+  .step-title { font-size: 14px !important; }
+
+  /* CTA band */
+  .cta-h { font-size: clamp(26px, 7vw, 40px) !important; line-height: 1 !important; }
+
+  /* Testimonials */
+  .testi-quote { font-size: 14px !important; line-height: 1.7 !important; }
+  .testi-name { font-size: 13px !important; }
+
+  /* Footer logo */
+  .ft-logo-text { font-size: 14px !important; }
+
+  /* Buttons */
+  .btn-hero-p, .btn-hero-o {
+    font-size: 13px !important;
+    padding: 14px 24px !important;
+  }
+
+  /* Marker marquee items */
+  .m-item { font-size: 12px !important; }
+}
+
+
+/* ════════════════════════════════
+   MOBILE ORB SAFETY
+════════════════════════════════ */
+@media (max-width: 960px) {
+  /* Isolate orb field completely from content */
+  .orb-field {
+    isolation: isolate;
+    z-index: 0 !important;
+  }
+  /* All content sits above orbs */
+  nav, section, footer, .wa-btn, .chat-widget, .nl-popup-overlay {
+    position: relative;
+    z-index: 2;
+    transform: translateZ(0);
+  }
+  /* Orb colours slightly dimmer on mobile to save battery */
+  .orb-1 { opacity: .55 !important; }
+  .orb-2 { opacity: .45 !important; }
+  .orb-3 { opacity: .35 !important; }
+  .orb-4 { opacity: .3 !important; }
+  /* Glow line thinner on mobile */
+  .glow-line { opacity: .6 !important; }
+}
+
+
+@media (max-width: 960px) {
+  .nav-logo { font-size: 11px !important; gap: 6px !important; }
+  .nav-logo-mark svg { width: 26px !important; height: 17px !important; }
+  .nav-logo-divider { font-size: 12px !important; margin: 0 1px !important; }
+  .nav-logo-kent, .nav-logo-clothing, .nav-logo-lab { letter-spacing: .06em !important; }
+  .nav-logo-lab { display: inline !important; opacity: .45; }
+}
+
+
+@media (max-width: 960px) {
+  .hero {
+    padding-top: 20px !important;
+    padding-bottom: 48px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+}
+
+
+@media (max-width: 960px) {
+  .orb-1 {
+    width: 350px !important; height: 350px !important;
+    top: -80px !important; left: -80px !important;
+    opacity: 1 !important;
+    background: radial-gradient(circle, rgba(25,97,255,0.35) 0%, transparent 70%) !important;
+    filter: blur(50px) !important;
+    -webkit-filter: blur(50px) !important;
+    animation: orbFloat 14s linear infinite !important;
+  }
+  .orb-2 {
+    width: 300px !important; height: 300px !important;
+    top: 40% !important; right: -80px !important;
+    opacity: 1 !important;
+    background: radial-gradient(circle, rgba(25,97,255,0.25) 0%, transparent 70%) !important;
+    filter: blur(50px) !important;
+    -webkit-filter: blur(50px) !important;
+    animation: orbFloat 18s linear infinite reverse !important;
+  }
+  .orb-3 {
+    width: 250px !important; height: 250px !important;
+    bottom: 15% !important; left: 10% !important;
+    opacity: 0.8 !important;
+    background: radial-gradient(circle, rgba(100,60,255,0.2) 0%, transparent 70%) !important;
+    filter: blur(45px) !important;
+    -webkit-filter: blur(45px) !important;
+  }
+  .orb-4 { display: none !important; }
+  .grain { display: block !important; opacity: .022 !important; }
+}
+
+
+@media (max-width: 960px) {
+  /* Hero buttons side by side, premium look */
+  .hero-btns {
+    display: flex !important;
+    flex-direction: row !important;
+    gap: 10px !important;
+    flex-wrap: nowrap !important;
+    width: 100% !important;
+  }
+  .btn-hero-p {
+    flex: 1 !important;
+    justify-content: center !important;
+    padding: 14px 16px !important;
+    font-size: 12px !important;
+    background: var(--fg) !important;
+    color: var(--bg) !important;
+    box-shadow: 0 4px 20px rgba(25,97,255,0.25) !important;
+    border-radius: 3px !important;
+  }
+  .btn-hero-o {
+    flex: 1 !important;
+    justify-content: center !important;
+    padding: 13px 16px !important;
+    font-size: 12px !important;
+    border: 1px solid rgba(240,237,232,0.25) !important;
+    border-radius: 3px !important;
+  }
+}
+
+
+@media (max-width: 960px) {
+  /* Stronger blue glow on CLOTHING */
+  .hero-h1 .line-blue {
+    text-shadow: 0 0 30px rgba(25,97,255,0.7), 0 0 60px rgba(25,97,255,0.3) !important;
+  }
+
+  /* Better ghost outline for LAB */
+  .hero-h1 .line-ghost {
+    -webkit-text-stroke: 1.5px rgba(240,237,232,0.25) !important;
+  }
+
+  /* Hero eyebrow pill glow */
+  .hero-tag {
+    background: rgba(25,97,255,0.12) !important;
+    border: 1px solid rgba(25,97,255,0.35) !important;
+    box-shadow: 0 0 20px rgba(25,97,255,0.15) !important;
+  }
+
+  /* Nav glass */
+  nav {
+    background: rgba(8,8,7,0.85) !important;
+    backdrop-filter: blur(20px) !important;
+    -webkit-backdrop-filter: blur(20px) !important;
+    border-bottom: 1px solid rgba(25,97,255,0.15) !important;
+  }
+
+  /* Glow line visible on mobile */
+  .glow-line {
+    display: block !important;
+    opacity: 0.8 !important;
+  }
+
+  /* Hero desc */
+  .hero-desc {
+    font-size: 15px !important;
+    line-height: 1.7 !important;
+    color: rgba(240,237,232,0.6) !important;
+  }
+  .hero-desc strong {
+    color: var(--fg) !important;
+  }
+
+  /* Stats box */
+  .hero-stats {
+    background: rgba(14,14,12,0.8) !important;
+    border: 1px solid rgba(25,97,255,0.15) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+    margin-top: 36px !important;
+  }
+  .h-stat-n { font-size: 30px !important; }
+  .h-stat-n.blue {
+    color: var(--accent) !important;
+    text-shadow: 0 0 14px rgba(25,97,255,0.6) !important;
+  }
+  .h-stat { padding: 20px 18px !important; }
+
+  /* Glass cards premium */
+  .glass {
+    background: rgba(20,20,18,0.65) !important;
+    border: 1px solid rgba(240,237,232,0.09) !important;
+    backdrop-filter: blur(16px) !important;
+    -webkit-backdrop-filter: blur(16px) !important;
+  }
+
+  /* Section headings glow */
+  .sec-num { text-shadow: 0 0 10px rgba(25,97,255,0.5) !important; }
+}
+
+
+/* ════════════════════════════════
+   HERO FONT — ONE CLEAN SYSTEM
+════════════════════════════════ */
+/* Base: desktop */
+.hero-h1 { font-size: clamp(32px, 5vw, 88px) !important; }
+
+/* Laptop 1200px-1400px */
+@media (max-width: 1400px) { .hero-h1 { font-size: clamp(32px, 4.8vw, 80px) !important; } }
+
+/* Medium laptop 960px-1200px */
+@media (max-width: 1200px) { .hero-h1 { font-size: clamp(32px, 4.5vw, 72px) !important; } }
+
+/* Tablet */
+@media (max-width: 960px)  { .hero-h1 { font-size: clamp(32px, 8.5vw, 62px) !important; } }
+
+/* Large phone */
+@media (max-width: 600px)  { .hero-h1 { font-size: clamp(28px, 9vw, 50px) !important; } }
+
+/* Small phone */
+@media (max-width: 400px)  { .hero-h1 { font-size: clamp(24px, 8.5vw, 40px) !important; } }
+
+
+/* ════════════════════════════════
+   HERO TWO COLUMN LAYOUT
+════════════════════════════════ */
+.hero-grid {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 48px;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  padding: 20px 0 48px;
+}
+.hero-left-col {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+}
+.hero-right-col {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 28px;
+  position: relative;
+}
+
+/* ── SPINNING BADGE ── */
+.hero-spin-wrap {
+  position: relative;
+  width: 180px; height: 180px;
+  flex-shrink: 0;
+}
+.hero-spin-ring {
+  width: 180px; height: 180px;
+  animation: spinRing 14s linear infinite;
+}
+@keyframes spinRing { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.hero-spin-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 80px; height: 80px;
+  background: rgba(25,97,255,0.1);
+  border: 1px solid rgba(25,97,255,0.3);
+  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 24px rgba(25,97,255,0.2), inset 0 0 24px rgba(25,97,255,0.05);
+}
+
+/* ── FLOATING SERVICE CARDS ── */
+.hero-float-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  width: 100%;
+}
+.hfc {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 18px;
+  border-radius: 6px;
+  position: relative;
+  transition: transform .3s var(--ease), border-color .3s;
+  animation: floatCard 4s ease-in-out infinite;
+}
+.hfc-1 { animation-delay: 0s; }
+.hfc-2 { animation-delay: .6s; }
+.hfc-3 { animation-delay: 1.2s; }
+.hfc-4 { animation-delay: 1.8s; }
+@keyframes floatCard {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-5px); }
+}
+.hfc:hover {
+  border-color: rgba(25,97,255,0.4) !important;
+  transform: translateY(-4px) scale(1.02) !important;
+}
+.hfc-icon { font-size: 22px; flex-shrink: 0; }
+.hfc-title {
+  font-family: var(--fd); font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em; line-height: 1;
+}
+.hfc-sub { font-size: 11px; color: var(--muted); margin-top: 3px; letter-spacing: .04em; }
+.hfc-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); margin-left: auto; flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(25,97,255,0.8);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+.hfc-2 .hfc-dot { animation-delay: .5s; }
+.hfc-3 .hfc-dot { animation-delay: 1s; }
+.hfc-4 .hfc-dot { animation-delay: 1.5s; }
+
+/* Hero desc spacing */
+.hero-desc { margin-bottom: 28px; margin-top: 24px; }
+.hero-btns { margin-bottom: 36px; }
+
+/* ── HIDE RIGHT COL ON MOBILE ── */
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: 1fr; gap: 0; min-height: auto; padding: 16px 0 40px; }
+  .hero-right-col { display: none; }
+}
+
+
+/* ════════════════════════════════
+   2. PREMIUM BUTTONS
+════════════════════════════════ */
+.btn-hero-p {
+  padding: 16px 36px !important;
+  font-size: 13px !important;
+  font-weight: 600 !important;
+  letter-spacing: .1em !important;
+  border-radius: 3px !important;
+  box-shadow: 0 4px 24px rgba(25,97,255,0.25), 0 0 0 1px rgba(255,255,255,0.1) !important;
+  position: relative;
+  overflow: hidden;
+}
+.btn-hero-p::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.12) 0%, transparent 50%);
+  pointer-events: none;
+}
+.btn-hero-p:hover {
+  box-shadow: 0 8px 32px rgba(25,97,255,0.45), 0 0 0 1px rgba(255,255,255,0.15) !important;
+  transform: translateY(-2px) !important;
+}
+.btn-hero-o {
+  padding: 15px 32px !important;
+  font-size: 13px !important;
+  letter-spacing: .1em !important;
+  border-radius: 3px !important;
+  border: 1px solid rgba(240,237,232,0.2) !important;
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(8px);
+}
+.btn-hero-o::after {
+  content: '';
+  position: absolute; inset: 0;
+  background: linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 50%);
+  pointer-events: none;
+}
+.btn-hero-o:hover {
+  border-color: rgba(25,97,255,0.5) !important;
+  background: rgba(25,97,255,0.08) !important;
+  color: var(--accent) !important;
+}
+
+/* ════════════════════════════════
+   3. GLOWING SECTION DIVIDERS
+════════════════════════════════ */
+.sec-line {
+  height: 1px !important;
+  background: linear-gradient(90deg, rgba(25,97,255,0.6), rgba(25,97,255,0.1), transparent) !important;
+}
+
+/* Glow on section numbers */
+.sec-num {
+  text-shadow: 0 0 12px rgba(25,97,255,0.7) !important;
+  font-size: 12px !important;
+}
+
+/* Glowing border top on service cards hover */
+.svc::before {
+  background: linear-gradient(90deg, transparent, var(--accent), #00cfff, var(--accent), transparent) !important;
+}
+
+/* ════════════════════════════════
+   4. HERO STATS PREMIUM
+════════════════════════════════ */
+.hero-stats {
+  border: 1px solid rgba(25,97,255,0.2) !important;
+  box-shadow: 0 0 30px rgba(25,97,255,0.08), inset 0 1px 0 rgba(255,255,255,0.04) !important;
+}
+.h-stat-n.blue {
+  text-shadow: 0 0 20px rgba(25,97,255,0.7), 0 0 40px rgba(25,97,255,0.3) !important;
+}
+.h-stat:hover .h-stat-n { color: var(--accent); transition: color .2s; }
+
+/* ════════════════════════════════
+   5. ANIMATED ANNOUNCEMENT BAR
+════════════════════════════════ */
+
+ 100%{background-position:300%} }
+
+
+
+
+/* Announcement bar sits above nav - nav scrolls with page */
+
+
+/* ════════════════════════════════
+   EXTRA GLOW TOUCHES
+════════════════════════════════ */
+/* Nav cta glow */
+.nav-cta {
+  box-shadow: 0 2px 16px rgba(0,0,0,0.2) !important;
+}
+.nav-cta:hover {
+  box-shadow: 0 4px 20px rgba(25,97,255,0.4) !important;
+}
+
+/* WhatsApp button more premium */
+.wa-btn {
+  box-shadow: 0 4px 24px rgba(37,211,102,0.4), 0 0 0 1px rgba(255,255,255,0.1) !important;
+}
+
+/* Chat bubble glow */
+.chat-bubble {
+  box-shadow: 0 4px 20px rgba(25,97,255,0.5) !important;
+}
+
+/* Accent dot pulse glow */
+.accent-dot {
+  box-shadow: 0 0 8px rgba(25,97,255,0.9) !important;
+  animation: dotPulse 2s ease-in-out infinite !important;
+}
+
+
+/* ════════════════════════════════
+   SCROLL GAP FIX
+════════════════════════════════ */
+
+/* When bar is showing, sections need extra top margin for anchors */
+
+section[id] {
+  scroll-margin-top: 70px;
+}
+
+/* The hero itself should just have normal padding - no dynamic padding */
+.hero {
+  padding-top: 88px !important;
+}
+
+/* Announcement bar closes properly - no orphan gap */
+
+
+
+/* Nav transition when bar closes */
+nav {
+  transition: top .3s var(--ease), border-color .4s;
+}
+
+
+/* ════════════════════════════════
+   GLOBAL OVERFLOW NUKE
+════════════════════════════════ */
+html, body {
+  overflow-x: hidden !important;
+  max-width: 100% !important;
+}
+/* Every direct child of body clips */
+body > * {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+/* Announce bar never overflows */
+
+/* Nav never overflows */
+nav, .nav-inner {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+/* Hero grid clips */
+.hero, .hero-grid, .hero-left-col {
+  max-width: 100% !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+/* Chips wrap and never overflow */
+.hero-chips {
+  max-width: 100% !important;
+  flex-wrap: wrap !important;
+  overflow: hidden !important;
+}
+.hero-chip {
+  max-width: 100% !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+}
+/* All sections clip */
+section {
+  max-width: 100vw !important;
+  overflow-x: hidden !important;
+}
+/* Wrap never wider than viewport */
+.wrap {
+  max-width: min(1100px, 100%) !important;
+  overflow-x: hidden !important;
+  box-sizing: border-box !important;
+}
+
+
+/* ════════════════════════════════
+   NAV OVERFLOW FIX
+════════════════════════════════ */
+.nav-inner {
+  padding: 0 24px !important;
+}
+/* On medium screens hide some nav links */
+@media (max-width: 1100px) {
+  .nav-links { gap: 20px !important; }
+  .nav-links a { font-size: 11px !important; }
+  .nav-cta { padding: 9px 16px !important; font-size: 11px !important; }
+}
+@media (max-width: 960px) {
+  .nav-inner { padding: 0 16px !important; }
+}
+
+/* Announce bar text never wraps weirdly */
+
+@media (max-width: 700px) {
+  
+}
+
+/* Hero right col - make sure it doesn't push width */
+.hero-right-col {
+  overflow: hidden !important;
+  min-width: 0 !important;
+}
+.hero-grid {
+  overflow: hidden !important;
+}
+
+
+/* ════════ OVERFLOW NUCLEAR OPTION ════════ */
+html {
+  overflow-x: clip !important;
+}
+body {
+  overflow-x: clip !important;
+  position: relative !important;
+}
+/* Marquee MUST be clipped - it's 200% wide */
+.marquee-section, .marquee-track {
+  overflow: hidden !important;
+  max-width: 100vw !important;
+}
+/* Orb field must never cause scroll */
+.orb-field {
+  overflow: hidden !important;
+  max-width: 100vw !important;
+  max-height: 100vh !important;
+}
+/* Grain same */
+.grain {
+  overflow: hidden !important;
+  max-width: 100vw !important;
+}
+/* Remove any translateX animations that go offscreen */
+.hero-float-cards, .hfc {
+  overflow: hidden !important;
+  max-width: 100% !important;
+}
+/* Spinning badge containment */
+.hero-spin-wrap, .hero-spin-ring {
+  overflow: hidden !important;
+  max-width: 180px !important;
+}
+/* Fix any absolute/fixed positioned elements */
+.glow-line {
+  max-width: 100vw !important;
+  overflow: hidden !important;
+}
+
+
+/* ════════ FINAL MARQUEE + SCROLL FIX ════════ */
+.marquee-section {
+  contain: strict !important;
+  overflow: hidden !important;
+  width: 100% !important;
+  max-width: 100vw !important;
+  position: relative !important;
+}
+.marquee-track {
+  display: flex !important;
+  width: max-content !important;
+  overflow: visible !important;
+}
+
+/* Fix any section that might be wider than viewport */
+section,
+.services,
+.gallery,
+.why,
+.process,
+.cta-band,
+.newsletter,
+.contact,
+.testi {
+  overflow-x: hidden !important;
+  max-width: 100vw !important;
+  position: relative !important;
+}
+
+/* The hero section clips hard */
+.hero {
+  overflow-x: clip !important;
+  max-width: 100% !important;
+}
+
+/* Fix hero-right-col floating cards - they might push width */
+.hero-right-col {
+  overflow: clip !important;
+  max-width: 420px !important;
+  min-width: 0 !important;
+}
+
+
+/* ════════════════════════════════
+   ANNOUNCE BAR — DEFINITIVE
+════════════════════════════════ */
+
+@media (max-width: 768px) {
+  
+  
+}
+
+
+
+@media (max-width: 768px) {
+  
+}
+
+
+/* ════════ NAV RESPONSIVE — DEFINITIVE ════════ */
+@media (max-width: 1150px) {
+  .nav-inner { padding: 0 20px !important; gap: 12px !important; }
+  .nav-links { gap: 20px !important; }
+  .nav-links a { font-size: 11px !important; }
+  .nav-cta { padding: 9px 16px !important; font-size: 11px !important; white-space: nowrap; }
+  .mode-toggle { width: 30px !important; height: 30px !important; flex-shrink: 0; }
+}
+@media (max-width: 960px) {
+  .nav-inner { padding: 0 16px !important; }
+  .nav-links { display: none !important; }
+  .nav-cta { display: none !important; }
+  .mob-toggle { display: flex !important; }
+  .mode-toggle { display: flex !important; }
+}
+
+
+/* ════════════════════════════════
+   BLUE ACCENT LINES — LIGHT MODE
+════════════════════════════════ */
+
+/* Left border accent on service cards */
+html.light .svc {
+  border-left: 2px solid rgba(25,97,255,0.3) !important;
+}
+html.light .svc:hover {
+  border-left: 2px solid rgba(25,97,255,0.8) !important;
+  box-shadow: -3px 0 20px rgba(25,97,255,0.15), 0 4px 24px rgba(20,20,18,0.08) !important;
+}
+
+/* Top accent line on why cards */
+html.light .why-card {
+  border-top: 2px solid rgba(25,97,255,0.2) !important;
+}
+html.light .why-card:hover {
+  border-top: 2px solid rgba(25,97,255,0.7) !important;
+}
+
+/* Left border on process steps */
+html.light .step {
+  border-left: 2px solid rgba(25,97,255,0.2) !important;
+}
+html.light .step:hover {
+  border-left: 2px solid rgba(25,97,255,0.7) !important;
+}
+
+/* Blue underline on section numbers */
+html.light .sec-num {
+  border-bottom: 1.5px solid rgba(25,97,255,0.5) !important;
+  padding-bottom: 1px !important;
+}
+
+/* Blue left bar on hero desc */
+html.light .hero-desc {
+  border-left: 3px solid rgba(25,97,255,0.5) !important;
+  padding-left: 16px !important;
+}
+
+/* Blue line under hero h1 */
+html.light .hero-h1 {
+  border-bottom: none !important;
+}
+html.light .hero-h1::after {
+  content: '' !important;
+  display: block !important;
+  width: 80px !important;
+  height: 3px !important;
+  background: linear-gradient(90deg, var(--accent), transparent) !important;
+  margin-top: 12px !important;
+  border-radius: 2px !important;
+}
+
+/* Blue top line on testimonial cards */
+html.light .testi-card {
+  border-top: 2px solid rgba(25,97,255,0.25) !important;
+}
+html.light .testi-card:hover {
+  border-top: 2px solid rgba(25,97,255,0.7) !important;
+}
+
+/* Blue accent on contact info rows */
+html.light .contact-info {
+  border-left: 3px solid rgba(25,97,255,0.4) !important;
+}
+
+/* Blue line on form card */
+html.light .form-card {
+  border-top: 2px solid rgba(25,97,255,0.3) !important;
+}
+
+/* Glowing blue divider lines between sections */
+html.light .sec-line {
+  background: linear-gradient(90deg, rgba(25,97,255,0.5), rgba(25,97,255,0.15), transparent) !important;
+  height: 1.5px !important;
+}
+
+/* Blue accent on nav bottom border */
+html.light nav {
+  border-bottom: 1.5px solid rgba(25,97,255,0.25) !important;
+}
+
+/* Blue left accent on hero chips */
+html.light .hero-chip-live {
+  box-shadow: -2px 0 12px rgba(25,97,255,0.2), 0 0 16px rgba(25,97,255,0.12) !important;
+}
+
+/* Blue line above footer */
+html.light footer {
+  border-top: 2px solid rgba(25,97,255,0.2) !important;
+}
+
+/* Blue accent on newsletter inner */
+html.light .nl-inner {
+  border-left: 3px solid rgba(25,97,255,0.4) !important;
+}
+
+/* Floating cards get blue left border */
+html.light .hfc {
+  border-left: 2px solid rgba(25,97,255,0.3) !important;
+}
+html.light .hfc:hover {
+  border-left: 2px solid rgba(25,97,255,0.8) !important;
+}
+
+/* CTA band blue left accent */
+html.light .cta-inner {
+  border-left: 3px solid rgba(25,97,255,0.5) !important;
+}
+
+/* Stats box blue bottom line */
+html.light .hero-stats {
+  border-bottom: 2px solid rgba(25,97,255,0.3) !important;
+}
+html.light .h-stat {
+  border-right: 1px solid rgba(25,97,255,0.15) !important;
+}
+
+
+/* ════════════════════════════════
+   FUTURISTIC BLUE LINES — LIGHT
+════════════════════════════════ */
+
+/* Scanning line animation */
+@keyframes scanLine {
+  0%   { transform: translateX(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateX(100%); opacity: 0; }
+}
+@keyframes lineGlow {
+  0%,100% { box-shadow: 0 0 4px rgba(25,97,255,.4); }
+  50%      { box-shadow: 0 0 12px rgba(25,97,255,.9), 0 0 24px rgba(25,97,255,.4); }
+}
+@keyframes cornerPulse {
+  0%,100% { opacity: .4; }
+  50%      { opacity: 1; }
+}
+
+/* ── NAV — blue glow bottom line ── */
+html.light nav {
+  border-bottom: none !important;
+  box-shadow: 0 1px 0 rgba(25,97,255,0.35), 0 2px 20px rgba(25,97,255,0.08) !important;
+}
+
+/* ── SECTION DIVIDERS ── */
+html.light .sec-line {
+  height: 1px !important;
+  background: linear-gradient(90deg,
+    rgba(25,97,255,0.8) 0%,
+    rgba(0,207,255,0.6) 40%,
+    rgba(25,97,255,0.2) 80%,
+    transparent 100%
+  ) !important;
+  position: relative !important;
+}
+
+/* ── SERVICE CARDS — corner brackets ── */
+html.light .svc {
+  border: 1px solid rgba(25,97,255,0.1) !important;
+  border-left: none !important;
+  border-top: none !important;
+  position: relative !important;
+  background: #ffffff !important;
+}
+html.light .svc::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0; left: 0; right: 0 !important;
+  height: 1.5px !important;
+  background: linear-gradient(90deg,
+    var(--accent) 0%,
+    rgba(0,207,255,0.8) 50%,
+    transparent 100%
+  ) !important;
+  opacity: 0 !important;
+  transition: opacity .4s !important;
+}
+html.light .svc::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0; left: 0 !important;
+  width: 1.5px !important;
+  height: 100% !important;
+  background: linear-gradient(180deg,
+    var(--accent) 0%,
+    rgba(0,207,255,0.5) 50%,
+    transparent 100%
+  ) !important;
+  opacity: 0 !important;
+  transition: opacity .4s !important;
+}
+html.light .svc:hover {
+  background: rgba(248,249,255,1) !important;
+  border-color: rgba(25,97,255,0.15) !important;
+  box-shadow: 4px 4px 24px rgba(25,97,255,0.08), inset 0 0 32px rgba(25,97,255,0.02) !important;
+  transform: translateY(-3px) !important;
+}
+html.light .svc:hover::before,
+html.light .svc:hover::after { opacity: 1 !important; }
+
+/* ── WHY CARDS — left + top corner ── */
+html.light .why-card {
+  border: 1px solid rgba(25,97,255,0.08) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+html.light .why-card::before {
+  content: '' !important;
+  position: absolute !important;
+  top: 0; left: 0 !important;
+  width: 40px; height: 1.5px !important;
+  background: linear-gradient(90deg, var(--accent), transparent) !important;
+  animation: lineGlow 3s ease-in-out infinite !important;
+}
+html.light .why-card::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0; left: 0 !important;
+  width: 1.5px; height: 40px !important;
+  background: linear-gradient(180deg, var(--accent), transparent) !important;
+  animation: lineGlow 3s ease-in-out infinite !important;
+}
+html.light .why-card:hover {
+  border-color: rgba(25,97,255,0.2) !important;
+  box-shadow: 0 8px 32px rgba(25,97,255,0.08) !important;
+}
+
+/* ── PROCESS STEPS — numbered corner ── */
+html.light .step {
+  border: 1px solid rgba(25,97,255,0.08) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+html.light .step::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0; right: 0 !important;
+  width: 40px; height: 1.5px !important;
+  background: linear-gradient(270deg, var(--accent), transparent) !important;
+  opacity: 0 !important;
+  transition: opacity .4s !important;
+}
+html.light .step:hover::after { opacity: 1 !important; }
+html.light .step:hover {
+  border-color: rgba(25,97,255,0.22) !important;
+  box-shadow: 0 8px 24px rgba(25,97,255,0.07) !important;
+}
+html.light .step-n {
+  color: rgba(25,97,255,0.12) !important;
+  font-style: normal !important;
+}
+html.light .step:hover .step-n {
+  color: rgba(25,97,255,0.28) !important;
+}
+
+/* ── HERO HEADING — scan line ── */
+html.light .line-blue {
+  position: relative !important;
+  display: block !important;
+  overflow: hidden !important;
+}
+html.light .line-blue::after {
+  content: '' !important;
+  position: absolute !important;
+  top: 0; bottom: 0 !important;
+  width: 60px !important;
+  background: linear-gradient(90deg, transparent, rgba(25,97,255,0.15), transparent) !important;
+  animation: scanLine 4s ease-in-out infinite !important;
+}
+
+/* ── HERO DESC — tech sidebar ── */
+html.light .hero-desc {
+  border-left: 2px solid transparent !important;
+  padding-left: 16px !important;
+  border-image: linear-gradient(180deg, var(--accent), rgba(0,207,255,0.3), transparent) 1 !important;
+}
+
+/* ── STATS BOX — circuit line ── */
+html.light .hero-stats {
+  border: 1px solid rgba(25,97,255,0.15) !important;
+  border-top: 2px solid rgba(25,97,255,0.4) !important;
+  box-shadow: 0 4px 24px rgba(25,97,255,0.06), inset 0 1px 0 rgba(25,97,255,0.1) !important;
+  position: relative !important;
+}
+html.light .h-stat {
+  border-right: 1px solid rgba(25,97,255,0.1) !important;
+  position: relative !important;
+}
+html.light .h-stat::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0; left: 0; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(25,97,255,0.2), transparent) !important;
+}
+
+/* ── CONTACT INFO — data readout ── */
+html.light .contact-info {
+  border: 1px solid rgba(25,97,255,0.12) !important;
+  border-left: 2px solid rgba(25,97,255,0.5) !important;
+  box-shadow: -4px 0 16px rgba(25,97,255,0.06) !important;
+}
+html.light .info-row {
+  border-bottom: 1px solid rgba(25,97,255,0.08) !important;
+  transition: background .2s, padding-left .2s !important;
+}
+html.light .info-row:hover {
+  background: rgba(25,97,255,0.04) !important;
+  padding-left: 24px !important;
+}
+
+/* ── TESTIMONIALS — glow on stars ── */
+html.light .testi-stars {
+  letter-spacing: 3px !important;
+}
+html.light .testi-card {
+  border: 1px solid rgba(25,97,255,0.1) !important;
+  border-top: 2px solid rgba(25,97,255,0.3) !important;
+  position: relative !important;
+}
+html.light .testi-card::after {
+  content: '' !important;
+  position: absolute !important;
+  top: -1px; left: 0 !important;
+  width: 0 !important; height: 2px !important;
+  background: linear-gradient(90deg, var(--accent), rgba(0,207,255,0.7)) !important;
+  transition: width .5s var(--ease) !important;
+}
+html.light .testi-card:hover::after { width: 100% !important; }
+
+/* ── FORM CARD — terminal style ── */
+html.light .form-card {
+  border: 1px solid rgba(25,97,255,0.12) !important;
+  border-top: 2px solid rgba(25,97,255,0.4) !important;
+  box-shadow: 0 4px 32px rgba(25,97,255,0.06) !important;
+}
+html.light .f-inp:focus {
+  border-color: rgba(25,97,255,0.5) !important;
+  box-shadow: 0 0 0 3px rgba(25,97,255,0.08) !important;
+}
+
+/* ── CTA BAND — full glow ── */
+html.light .cta-inner {
+  border: 1px solid rgba(25,97,255,0.15) !important;
+  border-left: 3px solid rgba(25,97,255,0.7) !important;
+  box-shadow: -4px 0 20px rgba(25,97,255,0.1), 0 4px 32px rgba(25,97,255,0.06) !important;
+}
+
+/* ── FOOTER ── */
+html.light footer {
+  border-top: 1px solid rgba(25,97,255,0.15) !important;
+  box-shadow: 0 -1px 0 rgba(25,97,255,0.1) !important;
+}
+html.light .footer-top {
+  border-bottom: 1px solid rgba(25,97,255,0.1) !important;
+}
+
+/* ── NAV CTA button ── */
+html.light .nav-cta {
+  position: relative !important;
+  overflow: hidden !important;
+}
+html.light .nav-cta::after {
+  content: '' !important;
+  position: absolute !important;
+  inset: 0 !important;
+  background: linear-gradient(135deg, rgba(255,255,255,0.15) 0%, transparent 60%) !important;
+  pointer-events: none !important;
+}
+
+/* ── HERO CHIPS ── */
+html.light .hero-chip {
+  border: 1px solid rgba(25,97,255,0.2) !important;
+  position: relative !important;
+  overflow: hidden !important;
+}
+html.light .hero-chip::after {
+  content: '' !important;
+  position: absolute !important;
+  bottom: 0; left: 0; right: 0 !important;
+  height: 1px !important;
+  background: linear-gradient(90deg, transparent, rgba(25,97,255,0.4), transparent) !important;
+}
+html.light .hero-chip-live {
+  box-shadow: 0 0 16px rgba(25,97,255,0.15), inset 0 0 16px rgba(25,97,255,0.05) !important;
+}
+
+
+/* ════════════════════════════════
+   GLOBAL READABILITY FIX
+════════════════════════════════ */
+
+/* Base body text - bigger and lighter */
+body {
+  font-size: 15px !important;
+  line-height: 1.7 !important;
+}
+
+/* ALL muted/grey text bigger and lighter */
+.hero-desc {
+  font-size: 17px !important;
+  color: rgba(240,237,232,0.75) !important;
+  line-height: 1.8 !important;
+}
+.hero-desc strong {
+  color: var(--fg) !important;
+  font-weight: 500 !important;
+}
+
+/* Service cards */
+.svc-desc {
+  font-size: 14px !important;
+  color: rgba(240,237,232,0.72) !important;
+  line-height: 1.8 !important;
+}
+.svc-list li {
+  font-size: 13px !important;
+  color: rgba(240,237,232,0.65) !important;
+}
+
+/* Why us cards */
+.why-desc {
+  font-size: 14px !important;
+  color: rgba(240,237,232,0.72) !important;
+  line-height: 1.75 !important;
+}
+
+/* Process steps */
+.step-desc {
+  font-size: 14px !important;
+  color: rgba(240,237,232,0.72) !important;
+  line-height: 1.75 !important;
+}
+
+/* Section subtitles */
+.sec-sub {
+  font-size: 16px !important;
+  color: rgba(240,237,232,0.72) !important;
+  line-height: 1.8 !important;
+}
+
+/* Testimonials */
+.testi-quote {
+  font-size: 15px !important;
+  color: rgba(240,237,232,0.78) !important;
+  line-height: 1.8 !important;
+}
+.testi-role {
+  font-size: 12px !important;
+  color: rgba(240,237,232,0.55) !important;
+}
+
+/* Nav links */
+.nav-links a {
+  color: rgba(240,237,232,0.7) !important;
+  font-size: 12px !important;
+}
+
+/* CTA section */
+.cta-p {
+  font-size: 15px !important;
+  color: rgba(240,237,232,0.72) !important;
+  line-height: 1.8 !important;
+}
+
+/* Newsletter */
+.nl-desc {
+  font-size: 15px !important;
+  color: rgba(240,237,232,0.72) !important;
+  line-height: 1.8 !important;
+}
+.nl-perk {
+  font-size: 13px !important;
+  color: rgba(240,237,232,0.68) !important;
+}
+.nl-check {
+  font-size: 13px !important;
+  color: rgba(240,237,232,0.68) !important;
+}
+
+/* Contact */
+.info-l {
+  font-size: 11px !important;
+  color: rgba(240,237,232,0.58) !important;
+  letter-spacing: .12em !important;
+}
+.info-v {
+  font-size: 14px !important;
+  color: rgba(240,237,232,0.88) !important;
+}
+
+/* Form labels */
+.f-lbl, .nl-label {
+  font-size: 11px !important;
+  color: rgba(240,237,232,0.6) !important;
+  letter-spacing: .18em !important;
+}
+
+/* Form placeholder */
+.f-inp::placeholder { color: rgba(240,237,232,0.35) !important; }
+
+/* Stats labels */
+.h-stat-l {
+  font-size: 12px !important;
+  color: rgba(240,237,232,0.6) !important;
+  letter-spacing: .1em !important;
+}
+
+/* Footer */
+.ft-tag {
+  font-size: 14px !important;
+  color: rgba(240,237,232,0.58) !important;
+  line-height: 1.75 !important;
+}
+.fc-links a {
+  font-size: 14px !important;
+  color: rgba(240,237,232,0.5) !important;
+}
+.fc-links a:hover { color: var(--fg) !important; }
+.fc-hd {
+  font-size: 11px !important;
+  color: rgba(240,237,232,0.45) !important;
+  letter-spacing: .2em !important;
+}
+.ft-copy, .ft-loc {
+  font-size: 12px !important;
+  color: rgba(240,237,232,0.3) !important;
+}
+
+/* Section labels */
+.sec-lbl {
+  font-size: 11px !important;
+  color: rgba(240,237,232,0.55) !important;
+}
+
+/* Marquee */
+.m-item {
+  font-size: 12px !important;
+  color: rgba(240,237,232,0.5) !important;
+}
+
+/* Hero chips */
+.hero-chip {
+  font-size: 12px !important;
+  color: rgba(240,237,232,0.7) !important;
+}
+
+/* Services intro right text */
+.services-header-right {
+  font-size: 15px !important;
+  color: rgba(240,237,232,0.68) !important;
+  line-height: 1.8 !important;
+}
+
+/* Why card titles */
+.why-title {
+  font-size: 15px !important;
+  color: rgba(240,237,232,0.95) !important;
+}
+
+/* Step titles */
+.step-title {
+  font-size: 15px !important;
+  color: rgba(240,237,232,0.95) !important;
+}
+
+/* Contact left text */
+.contact-grid p {
+  font-size: 15px !important;
+  color: rgba(240,237,232,0.7) !important;
+  line-height: 1.8 !important;
+}
+
+/* Gallery cta */
+.gallery-cta {
+  font-size: 15px !important;
+  color: rgba(240,237,232,0.65) !important;
+}
+
+/* Floating hero cards */
+.hfc-sub {
+  font-size: 12px !important;
+  color: rgba(240,237,232,0.6) !important;
+}
+.hfc-title {
+  font-size: 13px !important;
+  color: rgba(240,237,232,0.9) !important;
+}
+
+/* NL GDPR text */
+.nl-gdpr .nl-check {
+  font-size: 12px !important;
+  color: rgba(240,237,232,0.55) !important;
+  line-height: 1.6 !important;
+}
+
+/* Popup */
+.nl-popup-sub {
+  font-size: 14px !important;
+  color: rgba(240,237,232,0.72) !important;
+  line-height: 1.75 !important;
+}
+
+/* Light mode overrides - darker text on white */
+html.light .hero-desc { color: #333 !important; }
+html.light .svc-desc { color: #444 !important; }
+html.light .why-desc { color: #444 !important; }
+html.light .step-desc { color: #444 !important; }
+html.light .sec-sub { color: #444 !important; }
+html.light .testi-quote { color: #444 !important; }
+html.light .cta-p { color: #444 !important; }
+html.light .nl-desc { color: #444 !important; }
+html.light .nl-perk { color: #333 !important; }
+html.light .nl-check { color: #333 !important; }
+html.light .nav-links a { color: #444 !important; }
+html.light .h-stat-l { color: #666 !important; }
+html.light .m-item { color: #555 !important; }
+html.light .fc-links a { color: #555 !important; }
+html.light .sec-lbl { color: #666 !important; }
+html.light .hfc-sub { color: #555 !important; }
+html.light .svc-list li { color: #555 !important; }
+html.light .gallery-cta { color: #444 !important; }
+html.light .contact-grid p { color: #444 !important; }
+html.light .info-l { color: #666 !important; }
+html.light .info-v { color: #111 !important; }
+html.light .ft-tag { color: #555 !important; }
+html.light .f-lbl, html.light .nl-label { color: #555 !important; }
+html.light .services-header-right { color: #444 !important; }
+html.light .hero-chip { color: #333 !important; }
+
+
+/* ════════════════════════════════
+   HERO TWO COLUMN LAYOUT
+════════════════════════════════ */
+.hero-two-col {
+  display: grid;
+  grid-template-columns: 1fr 420px;
+  gap: 60px;
+  align-items: center;
+  min-height: calc(100vh - 64px);
+  padding: 20px 0 48px;
+  box-sizing: border-box;
+}
+.hero-left-content {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+}
+
+/* ── VISUAL RIGHT COL ── */
+.hero-visual-col {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  height: 100%;
+  min-height: 500px;
+}
+
+/* Big background orb */
+.hv-orb {
+  position: absolute;
+  width: 420px; height: 420px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(25,97,255,0.18) 0%, transparent 65%);
+  filter: blur(50px);
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  animation: orbFloat 8s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Spinning badge */
+.hv-spin-wrap {
+  position: relative;
+  width: 170px; height: 170px;
+  flex-shrink: 0;
+  z-index: 2;
+}
+.hv-spin-ring {
+  width: 170px; height: 170px;
+  animation: spinRing 12s linear infinite;
+}
+@keyframes spinRing { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+.hv-spin-center {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%,-50%);
+  width: 76px; height: 76px;
+  border-radius: 50%;
+  background: rgba(25,97,255,0.1);
+  border: 1.5px solid rgba(25,97,255,0.35);
+  display: flex; align-items: center; justify-content: center;
+  box-shadow: 0 0 24px rgba(25,97,255,0.2), inset 0 0 20px rgba(25,97,255,0.05);
+}
+
+/* Floating cards */
+.hv-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+  z-index: 2;
+}
+.hv-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 13px 16px;
+  border-radius: 6px;
+  transition: transform .3s, border-color .3s;
+}
+.hv-c1 { animation: hvcFloat 4s ease-in-out infinite; animation-delay: 0s; }
+.hv-c2 { animation: hvcFloat 4s ease-in-out infinite; animation-delay: .5s; }
+.hv-c3 { animation: hvcFloat 4s ease-in-out infinite; animation-delay: 1s; }
+.hv-c4 { animation: hvcFloat 4s ease-in-out infinite; animation-delay: 1.5s; }
+@keyframes hvcFloat {
+  0%,100% { transform: translateY(0px); }
+  50%      { transform: translateY(-5px); }
+}
+.hv-card:hover {
+  border-color: rgba(25,97,255,0.45) !important;
+  transform: translateY(-3px) scale(1.02) !important;
+}
+.hv-icon { font-size: 22px; flex-shrink: 0; }
+.hv-title {
+  font-family: var(--fd); font-size: 13px; font-weight: 700;
+  text-transform: uppercase; letter-spacing: .06em; color: var(--fg);
+}
+.hv-sub { font-size: 11px; color: var(--muted); margin-top: 2px; }
+.hv-dot {
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--accent); margin-left: auto; flex-shrink: 0;
+  box-shadow: 0 0 8px rgba(25,97,255,0.9);
+  animation: dotPulse 2s ease-in-out infinite;
+}
+.hv-c2 .hv-dot { animation-delay: .5s; }
+.hv-c3 .hv-dot { animation-delay: 1s; }
+.hv-c4 .hv-dot { animation-delay: 1.5s; }
+
+/* Mobile — hide right col */
+@media (max-width: 960px) {
+  .hero-two-col { grid-template-columns: 1fr; gap: 0; min-height: auto; padding: 16px 0 40px; }
+  .hero-visual-col { display: none; }
+}
+
+
+/* ════════════════════════════════
+   HERO BACKGROUND CANVAS
+════════════════════════════════ */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+.hero-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  opacity: .7;
+}
+.hero {
+  position: relative;
+  z-index: 2;
+}
+
+
+/* ════════════════════════════════
+   HERO EMBROIDERY PATTERN BG
+════════════════════════════════ */
+.hero-section {
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-pattern-bg {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* The embroidery SVG pattern */
+.hero-pattern-bg::before {
+  content: '';
+  position: absolute;
+  inset: -10%;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='60' height='60' viewBox='0 0 60 60'%3E%3Cg fill='none'%3E%3C!-- Grid dots --%3E%3Ccircle cx='0' cy='0' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='20' cy='0' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='40' cy='0' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='60' cy='0' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='0' cy='20' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='20' cy='20' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='40' cy='20' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='60' cy='20' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='0' cy='40' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='20' cy='40' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='40' cy='40' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='60' cy='40' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='0' cy='60' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='20' cy='60' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='40' cy='60' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3Ccircle cx='60' cy='60' r='1.2' fill='rgba(25%2C97%2C255%2C0.35)'/%3E%3C!-- Cross stitches --%3E%3Cline x1='13' y1='13' x2='27' y2='27' stroke='rgba(25%2C97%2C255%2C0.45)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='27' y1='13' x2='13' y2='27' stroke='rgba(25%2C97%2C255%2C0.45)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='33' y1='33' x2='47' y2='47' stroke='rgba(25%2C97%2C255%2C0.45)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='47' y1='33' x2='33' y2='47' stroke='rgba(25%2C97%2C255%2C0.45)' stroke-width='1.2' stroke-linecap='round'/%3E%3C!-- Diamond --%3E%3Cpolygon points='30%2C3 37%2C10 30%2C17 23%2C10' stroke='rgba(25%2C97%2C255%2C0.3)' stroke-width='1' fill='none'/%3E%3Cpolygon points='10%2C30 17%2C37 10%2C44 3%2C37' stroke='rgba(25%2C97%2C255%2C0.3)' stroke-width='1' fill='none'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 60px 60px;
+  opacity: 1;
+}
+
+/* Fade edges so pattern blends with page */
+.hero-pattern-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to right, rgba(8,8,7,0.95) 0%, rgba(8,8,7,0.6) 35%, rgba(8,8,7,0.1) 60%, rgba(8,8,7,0) 100%),
+    linear-gradient(to bottom, rgba(8,8,7,0.7) 0%, transparent 15%, transparent 85%, rgba(8,8,7,0.7) 100%);
+}
+
+/* Blue glow on right side to make pattern pop */
+.hero-section::after {
+  content: '';
+  position: absolute;
+  right: -100px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 700px;
+  height: 700px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(25,97,255,0.22) 0%, transparent 65%);
+  filter: blur(60px);
+  pointer-events: none;
+  z-index: 0;
+  animation: orbFloat 8s ease-in-out infinite;
+}
+
+/* Light mode pattern */
+html.light .hero-pattern-bg::before {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='80' height='80' viewBox='0 0 80 80'%3E%3Cg fill='none' stroke='rgba(25%2C97%2C255%2C0.18)' stroke-width='0.8'%3E%3Cline x1='10' y1='10' x2='20' y2='20'/%3E%3Cline x1='20' y1='10' x2='10' y2='20'/%3E%3Cline x1='50' y1='10' x2='60' y2='20'/%3E%3Cline x1='60' y1='10' x2='50' y2='20'/%3E%3Cline x1='10' y1='50' x2='20' y2='60'/%3E%3Cline x1='20' y1='50' x2='10' y2='60'/%3E%3Cline x1='50' y1='50' x2='60' y2='60'/%3E%3Cline x1='60' y1='50' x2='50' y2='60'/%3E%3Cpolygon points='40%2C25 50%2C35 40%2C45 30%2C35' stroke='rgba(25%2C97%2C255%2C0.15)'/%3E%3Ccircle cx='15' cy='40' r='1.5' fill='rgba(25%2C97%2C255%2C0.2)'/%3E%3Ccircle cx='40' cy='15' r='1.5' fill='rgba(25%2C97%2C255%2C0.2)'/%3E%3Ccircle cx='65' cy='40' r='1.5' fill='rgba(25%2C97%2C255%2C0.2)'/%3E%3Ccircle cx='40' cy='65' r='1.5' fill='rgba(25%2C97%2C255%2C0.2)'/%3E%3Crect x='8' y='8' width='4' height='4' fill='none' stroke='rgba(25%2C97%2C255%2C0.15)'/%3E%3Crect x='48' y='8' width='4' height='4' fill='none' stroke='rgba(25%2C97%2C255%2C0.15)'/%3E%3Crect x='8' y='48' width='4' height='4' fill='none' stroke='rgba(25%2C97%2C255%2C0.15)'/%3E%3Crect x='48' y='48' width='4' height='4' fill='none' stroke='rgba(25%2C97%2C255%2C0.15)'/%3E%3C/g%3E%3C/svg%3E");
+}
+html.light .hero-pattern-bg::after {
+  background:
+    radial-gradient(ellipse at 30% 50%, rgba(240,237,248,0) 20%, rgba(240,237,248,0.8) 70%),
+    linear-gradient(to right, rgba(240,237,248,0.95) 0%, rgba(240,237,248,0.4) 40%, rgba(240,237,248,0.1) 100%),
+    linear-gradient(to bottom, rgba(240,237,248,0.7) 0%, transparent 20%, transparent 80%, rgba(240,237,248,0.9) 100%);
+}
+html.light .hero-section::after {
+  background: radial-gradient(circle, rgba(25,97,255,0.08) 0%, transparent 65%);
+}
+
+.hero { position: relative; z-index: 2; }
+
+
+/* ════════════════════════════════
+   SOCIAL LINKS
+════════════════════════════════ */
+.social-strip {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  padding: 28px 0 24px;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 0;
+  flex-wrap: wrap;
+}
+.soc-btn {
+  display: flex; align-items: center; gap: 8px;
+  padding: 10px 20px;
+  border-radius: 100px;
+  font-size: 12px; letter-spacing: .1em; text-transform: uppercase;
+  font-family: var(--fb); font-weight: 500;
+  border: 1px solid var(--border);
+  color: var(--muted);
+  transition: all .25s var(--ease);
+  white-space: nowrap;
+}
+.soc-btn:hover { transform: translateY(-2px); }
+.soc-ig:hover  { border-color: #E1306C; color: #E1306C; box-shadow: 0 4px 20px rgba(225,48,108,.2); }
+.soc-fb:hover  { border-color: #1877F2; color: #1877F2; box-shadow: 0 4px 20px rgba(24,119,242,.2); }
+.soc-wa:hover  { border-color: #25D366; color: #25D366; box-shadow: 0 4px 20px rgba(37,211,102,.2); }
+.soc-tk:hover  { border-color: #fff;    color: #fff;    box-shadow: 0 4px 20px rgba(255,255,255,.1); }
+
+/* Nav social mini icons */
+.nav-socials {
+  display: flex; align-items: center; gap: 8px;
+}
+.nav-soc-icon {
+  width: 30px; height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: center;
+  color: var(--muted); transition: all .2s;
+}
+.nav-soc-icon:hover { border-color: var(--accent); color: var(--accent); transform: scale(1.1); }
+
+@media(max-width:960px) {
+  .social-strip { gap: 8px; }
+  .soc-btn span { display: none; }
+  .soc-btn { padding: 10px 14px; }
+  .nav-socials { display: none; }
+}
+
+
+/* ── SERVICE CARD TITLE MOBILE FIX ── */
+@media (max-width: 960px) {
+  .svc-grid {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+  .svc-title {
+    font-size: 14px !important;
+    word-break: normal !important;
+    overflow-wrap: normal !important;
+    hyphens: none !important;
+    line-height: 1.2 !important;
+    white-space: normal !important;
+  }
+  .svc {
+    padding: 20px 16px !important;
+  }
+  .svc-icon { font-size: 22px !important; margin-bottom: 10px !important; }
+  .svc-desc { font-size: 12px !important; line-height: 1.6 !important; }
+  .svc-tag  { font-size: 9px !important; padding: 3px 8px !important; }
+}
+
+@media (max-width: 480px) {
+  .svc-grid {
+    grid-template-columns: 1fr !important;
+  }
+  .svc-title {
+    font-size: 16px !important;
+  }
+}
+
+
+/* ════ WHATSAPP BUTTON MOBILE FIX ════ */
+@media (max-width: 960px) {
+  .wa-btn {
+    width: 54px !important;
+    height: 54px !important;
+    padding: 0 !important;
+    border-radius: 50% !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    bottom: 20px !important;
+    right: 16px !important;
+    gap: 0 !important;
+  }
+  .wa-btn .wa-label { display: none !important; }
+  .wa-icon { width: 26px !important; height: 26px !important; }
+}
+
+
+/* ════════════════════════════════
+   MOBILE NAV — DEFINITIVE FIX
+════════════════════════════════ */
+@media (max-width: 960px) {
+  /* Hide desktop nav links and cta */
+  .nav-links { display: none !important; }
+  .nav-cta   { display: none !important; }
+  .nav-socials { display: none !important; }
+
+  /* Show hamburger */
+  .mob-toggle {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 5px !important;
+    cursor: pointer !important;
+    padding: 8px !important;
+    background: none !important;
+    border: none !important;
+    flex-shrink: 0 !important;
+    z-index: 101 !important;
+  }
+  .mob-toggle span {
+    display: block !important;
+    width: 24px !important;
+    height: 2px !important;
+    background: var(--fg) !important;
+    border-radius: 2px !important;
+    transition: all .3s !important;
+  }
+
+  /* Keep mode button visible */
+  .mode-toggle, .mode-btn {
+    display: flex !important;
+    flex-shrink: 0 !important;
+  }
+
+  /* Nav inner tight on mobile */
+  .nav-inner {
+    padding: 0 16px !important;
+    gap: 8px !important;
+  }
+
+  /* Logo smaller on mobile */
+  .nav-logo { font-size: 11px !important; gap: 6px !important; }
+}
+
+/* Mobile menu overlay */
+.mob-menu {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(8,8,7,.97);
+  z-index: 200;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 24px;
+  -webkit-backdrop-filter: blur(20px);
+  backdrop-filter: blur(20px);
+}
+.mob-menu.open {
+  display: flex !important;
+}
+.mob-menu a {
+  font-family: var(--fd);
+  font-size: clamp(22px, 6vw, 32px);
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--muted);
+  transition: color .2s;
+  letter-spacing: .04em;
+}
+.mob-menu a:hover,
+.mob-menu a:active { color: var(--fg); }
+.mob-close {
+  position: absolute;
+  top: 20px; right: 24px;
+  font-size: 24px;
+  color: var(--muted);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  z-index: 201;
+}
+html.light .mob-menu { background: rgba(240,237,248,.97); }
+
+
+/* ════════════════════════════════
+   LAB NEON GLOW — GLOBAL
+════════════════════════════════ */
+.lab-glow {
+  animation: globalLabFlicker 3s ease-in-out infinite !important;
+}
+/* For standalone text (not ghost) */
+span.lab-glow:not(.ghost):not(.line-ghost) {
+  color: transparent !important;
+  -webkit-text-stroke: 1px rgba(25,97,255,0.6) !important;
+}
+@keyframes globalLabFlicker {
+  0%,100% {
+    text-shadow: 0 0 8px rgba(25,97,255,.3), 0 0 20px rgba(25,97,255,.15);
+    -webkit-text-stroke-color: rgba(25,97,255,.5);
+  }
+  18% {
+    text-shadow:
+      0 0 10px rgba(25,97,255,1),
+      0 0 25px rgba(25,97,255,.9),
+      0 0 50px rgba(25,97,255,.6),
+      0 0 90px rgba(25,97,255,.3);
+    -webkit-text-stroke-color: rgba(25,97,255,1);
+    filter: brightness(1.3);
+  }
+  20% {
+    text-shadow: none;
+    -webkit-text-stroke-color: rgba(25,97,255,.15);
+    filter: brightness(0.5);
+  }
+  22% {
+    text-shadow:
+      0 0 10px rgba(25,97,255,1),
+      0 0 30px rgba(25,97,255,.85);
+    -webkit-text-stroke-color: rgba(25,97,255,1);
+    filter: brightness(1.2);
+  }
+  50% {
+    text-shadow:
+      0 0 8px rgba(0,207,255,.8),
+      0 0 20px rgba(0,207,255,.5);
+    -webkit-text-stroke-color: rgba(0,207,255,.7);
+  }
+  52% {
+    text-shadow: 0 0 8px rgba(25,97,255,.3);
+    -webkit-text-stroke-color: rgba(25,97,255,.4);
+    filter: brightness(1);
+  }
+}
+
+</style>
+</head>
+<body style="overflow-x:hidden;max-width:100vw">
+
+<!-- Floating BG -->
+<div class="orb-field">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+  <div class="orb orb-3"></div>
+  <div class="orb orb-4"></div>
+</div>
+<div class="grain"></div>
+<div class="glow-line"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-logo">
+      <div class="nav-logo-mark">
+        <svg width="34" height="22" viewBox="0 0 60 38" xmlns="http://www.w3.org/2000/svg" style="border-radius:3px;overflow:hidden;display:block">
+          <!-- Blue background -->
+          <rect width="60" height="38" fill="#012169"/>
+          <!-- White diagonal cross (St Andrew + St Patrick base) -->
+          <path d="M0,0 L60,38 M60,0 L0,38" stroke="white" stroke-width="10"/>
+          <!-- Red diagonal cross (St Patrick) -->
+          <path d="M0,0 L60,38" stroke="#C8102E" stroke-width="6"/>
+          <path d="M60,0 L0,38" stroke="#C8102E" stroke-width="6"/>
+          <!-- White horizontal + vertical cross (St George base) -->
+          <rect x="0" y="14" width="60" height="10" fill="white"/>
+          <rect x="25" y="0" width="10" height="38" fill="white"/>
+          <!-- Red cross (St George) -->
+          <rect x="0" y="15.5" width="60" height="7" fill="#C8102E"/>
+          <rect x="26.5" y="0" width="7" height="38" fill="#C8102E"/>
+        </svg>
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-kent">Kent</span>
+        <span class="nav-logo-divider">|</span>
+        <span class="nav-logo-clothing">Clothing</span>
+        <span class="nav-logo-divider">|</span>
+        <span class="nav-logo-lab">Lab</span>
+      </div>
+    </div>
+    <ul class="nav-links">
+      <li><a href="#services">Services</a></li>
+      <li><a href="#gallery">Gallery</a></li>
+      <li><a href="#process">Process</a></li>
+      <li><a href="kcl-shop.html">🛒 Shop</a></li>
+      <li><a href="#contact">Contact</a></li>
+      <li><a href="kcl-tracker.html">📦 Track</a></li>
+    </ul>
+    <!-- Nav socials -->
+    <div class="nav-socials">
+      <a class="nav-soc-icon" href="https://instagram.com/kent_clothing_lab" target="_blank" rel="noopener" title="Instagram">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      </a>
+      <a class="nav-soc-icon" href="https://facebook.com/kentclothinglab" target="_blank" rel="noopener" title="Facebook">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      </a>
+    </div>
+    <a href="#contact" class="nav-cta">Get a Quote</a>
+    <button class="mode-toggle" onclick="toggleMode()" id="modeBtn" title="Toggle light/dark mode">🌙</button>
+    <div class="mob-toggle" onclick="toggleMob()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</nav>
+
+<!-- Mobile Menu -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="toggleMob()">✕</button>
+    <div style="font-family:var(--fd);font-size:13px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;display:flex;align-items:center;gap:8px;margin-bottom:8px">
+    <div style="width:34px;height:22px;border-radius:3px;overflow:hidden;flex-shrink:0">
+      <svg width="34" height="22" viewBox="0 0 60 38" xmlns="http://www.w3.org/2000/svg">
+        <rect width="60" height="38" fill="#012169"/>
+        <path d="M0,0 L60,38 M60,0 L0,38" stroke="white" stroke-width="10"/>
+        <path d="M0,0 L60,38" stroke="#C8102E" stroke-width="6"/>
+        <path d="M60,0 L0,38" stroke="#C8102E" stroke-width="6"/>
+        <rect x="0" y="14" width="60" height="10" fill="white"/>
+        <rect x="25" y="0" width="10" height="38" fill="white"/>
+        <rect x="0" y="15.5" width="60" height="7" fill="#C8102E"/>
+        <rect x="26.5" y="0" width="7" height="38" fill="#C8102E"/>
+      </svg>
+    </div>
+    <span>Kent <span style="color:var(--accent)">Clothing</span> Lab</span>
+  </div>✕</button>
+  <a href="#services" onclick="toggleMob()">Services</a>
+  <a href="#gallery" onclick="toggleMob()">Gallery</a>
+  <a href="#process" onclick="toggleMob()">Process</a>
+  <a href="kcl-shop.html" onclick="toggleMob()">🛒 Shop</a>
+  <a href="#contact" onclick="toggleMob()">Contact</a>
+  <a href="kcl-tracker.html" onclick="toggleMob()">📦 Track Order</a>
+  <a href="#contact" onclick="toggleMob()" style="font-size:18px;padding:14px 32px;background:var(--accent);color:#fff;border-radius:2px;margin-top:8px">Get a Quote</a>
+</div>
+
+
+<!-- ════════════════════════════════
+  HERO
+════════════════════════════════ -->
+<section class="hero-section">
+  <!-- Hero SVG pattern background -->
+  <div class="hero-pattern-bg" aria-hidden="true"></div>
+
+  <div class="hero">
+
+    <div class="hero-chips rev">
+      <div class="hero-chip hero-chip-live">
+        <span class="hero-chip-dot"></span>
+        <span>Live · Kent, UK</span>
+      </div>
+      <div class="hero-chip">🇬🇧 <span>British Made</span></div>
+      <div class="hero-chip">⚡ <span>48h Turnaround</span></div>
+      <div class="hero-chip">✦ <span>No Minimums</span></div>
+    </div>
+
+    <h1 class="hero-h1">
+      <span class="line-solid rev" style="transition-delay:.05s">The</span>
+      <span class="line-blue  rev" style="transition-delay:.10s">Clothing</span>
+      <span class="line-ghost lab-glow rev" style="transition-delay:.15s">Lab.</span>
+    </h1>
+
+    <div class="hero-lower rev" style="transition-delay:.2s">
+      <p class="hero-desc">
+        <strong>Embroidery. Heat press. Sublimation. DTF.</strong><br>
+        Four precision services under one roof in Kent. Small runs, fast turnaround, no setup fees. Your brand, done right.
+      </p>
+      <div class="hero-btns">
+        <a href="#contact" class="btn-hero-p">Get a Free Quote →</a>
+        <a href="#services" class="btn-hero-o">View Services</a>
+      </div>
+    </div>
+
+    <div class="hero-stats rev" style="transition-delay:.28s">
+      <div class="h-stat">
+        <div class="h-stat-n blue" data-count="4" data-suffix="">4</div>
+        <div class="h-stat-l">In-house Services</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-n" data-count="48" data-suffix="h">48h</div>
+        <div class="h-stat-l">Avg Turnaround</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-n" data-count="0" data-prefix="£" data-suffix="">£0</div>
+        <div class="h-stat-l">Setup Fee</div>
+      </div>
+      <div class="h-stat">
+        <div class="h-stat-n" data-count="1" data-suffix="+">1+</div>
+        <div class="h-stat-l">Minimum Order</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+  MARQUEE
+════════════════════════════════ -->
+<div class="marquee-section">
+  <div class="marquee-track">
+    <span class="m-item">Embroidery <span class="m-dot"></span></span>
+    <span class="m-item">Heat Press &amp; Transfers <span class="m-dot"></span></span>
+    <span class="m-item">Sublimation Printing <span class="m-dot"></span></span>
+    <span class="m-item">DTF Printing <span class="m-dot"></span></span>
+    <span class="m-item">No Minimum Orders <span class="m-dot"></span></span>
+    <span class="m-item">Fast Turnaround <span class="m-dot"></span></span>
+    <span class="m-item">Kent, United Kingdom <span class="m-dot"></span></span>
+    <span class="m-item">Free Quotes <span class="m-dot"></span></span>
+    <span class="m-item">Premium Garments <span class="m-dot"></span></span>
+    <span class="m-item">Embroidery <span class="m-dot"></span></span>
+    <span class="m-item">Heat Press &amp; Transfers <span class="m-dot"></span></span>
+    <span class="m-item">Sublimation Printing <span class="m-dot"></span></span>
+    <span class="m-item">DTF Printing <span class="m-dot"></span></span>
+    <span class="m-item">No Minimum Orders <span class="m-dot"></span></span>
+    <span class="m-item">Fast Turnaround <span class="m-dot"></span></span>
+    <span class="m-item">Kent, United Kingdom <span class="m-dot"></span></span>
+    <span class="m-item">Free Quotes <span class="m-dot"></span></span>
+    <span class="m-item">Premium Garments <span class="m-dot"></span></span>
+  </div>
+</div>
+
+
+<!-- ════════════════════════════════
+  SERVICES
+════════════════════════════════ -->
+<section class="services" id="services">
+  <div class="wrap">
+
+    <div class="sec-row rev">
+      <span class="sec-num">01</span>
+      <span class="sec-lbl">What we do</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <h2 class="sec-h rev">Our <span class="ghost">Services</span></h2>
+    <p class="sec-sub rev">Four specialist processes, all in-house. Each one mastered. Pick one or combine them for your project.</p>
+
+    <div class="svc-grid">
+
+      <div class="svc glass rev">
+        <div class="svc-n">001</div>
+        <span class="svc-icon">🧵</span>
+        <h3 class="svc-title">Embroidery</h3>
+        <p class="svc-desc">Thread stitched directly into the fabric with precision. Durable, professional, and perfect for logos and brand marks that need to last wash after wash.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">Caps</span>
+          <span class="svc-tag">Polo shirts</span>
+          <span class="svc-tag">Workwear</span>
+          <span class="svc-tag">Hoodies</span>
+        </div>
+      </div>
+
+      <div class="svc glass rev" style="transition-delay:.08s">
+        <div class="svc-n">002</div>
+        <span class="svc-icon">🔥</span>
+        <h3 class="svc-title">Heat Press</h3>
+        <p class="svc-desc">High-pressure transfers applied with precision heat. Bold, vivid colour and clean edges — ideal for streetwear drops, events, and brands that need volume fast.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">Vinyl</span>
+          <span class="svc-tag">T-shirts</span>
+          <span class="svc-tag">Hoodies</span>
+          <span class="svc-tag">Joggers</span>
+        </div>
+      </div>
+
+      <div class="svc glass rev" style="transition-delay:.16s">
+        <div class="svc-n">003</div>
+        <span class="svc-icon">🎨</span>
+        <h3 class="svc-title">Sublimation</h3>
+        <p class="svc-desc">Dye bonded into the fabric at a molecular level. Photographic quality, all-over coverage. Zero cracking, zero fading — ever.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">All-over print</span>
+          <span class="svc-tag">Sportswear</span>
+          <span class="svc-tag">Lifestyle</span>
+          <span class="svc-tag">Photographic</span>
+        </div>
+      </div>
+
+      <div class="svc glass rev" style="transition-delay:.24s">
+        <div class="svc-n">004</div>
+        <span class="svc-icon">🖨️</span>
+        <h3 class="svc-title">DTF Printing</h3>
+        <p class="svc-desc">Direct to Film transfers printed in full colour and applied to virtually any fabric. No minimums, no weeding, incredibly detailed results on dark or light garments.</p>
+        <div class="svc-tags">
+          <span class="svc-tag">Full colour</span>
+          <span class="svc-tag">Dark fabrics</span>
+          <span class="svc-tag">No minimums</span>
+          <span class="svc-tag">Any garment</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+  GALLERY
+════════════════════════════════ -->
+<section class="gallery" id="gallery">
+  <div class="wrap">
+
+    <div class="sec-row rev">
+      <span class="sec-num">02</span>
+      <span class="sec-lbl">Our Work</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="gallery-header rev">
+      <div>
+        <h2 class="sec-h">From the <span class="ghost lab-glow">lab.</span></h2>
+        <p class="sec-sub" style="margin-bottom:0">Every piece custom made. Every order quality checked.</p>
+      </div>
+      <div class="gallery-filters" id="galleryFilters">
+        <button class="gf-btn on" onclick="filterGallery('all', this)">All</button>
+        <button class="gf-btn" onclick="filterGallery('embroidery', this)">Embroidery</button>
+        <button class="gf-btn" onclick="filterGallery('heatpress', this)">Heat Press</button>
+        <button class="gf-btn" onclick="filterGallery('sublimation', this)">Sublimation</button>
+        <button class="gf-btn" onclick="filterGallery('dtf', this)">DTF</button>
+      </div>
+    </div>
+
+    <!-- Masonry-style grid -->
+    <div class="gallery-grid" id="galleryGrid">
+
+      <!-- Row 1 — large + 2 small -->
+      <div class="g-item g-tall" data-cat="embroidery">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🧵</span>
+            <span class="g-ph-txt">Embroidery Work</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">Embroidery</span>
+            <span class="g-title">Custom Logo Caps</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-item" data-cat="heatpress">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🔥</span>
+            <span class="g-ph-txt">Heat Press</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">Heat Press</span>
+            <span class="g-title">Streetwear Drop</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-item" data-cat="dtf">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🖨️</span>
+            <span class="g-ph-txt">DTF Print</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">DTF</span>
+            <span class="g-title">Full Colour Transfer</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 2 — 2 small + large -->
+      <div class="g-item" data-cat="sublimation">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🎨</span>
+            <span class="g-ph-txt">Sublimation</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">Sublimation</span>
+            <span class="g-title">Sports Jerseys</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-item" data-cat="embroidery">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🧵</span>
+            <span class="g-ph-txt">Embroidery</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">Embroidery</span>
+            <span class="g-title">Workwear Polos</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-item g-tall" data-cat="heatpress">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🔥</span>
+            <span class="g-ph-txt">Heat Press</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">Heat Press</span>
+            <span class="g-title">Event Hoodies</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Row 3 — 3 equal -->
+      <div class="g-item" data-cat="dtf">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🖨️</span>
+            <span class="g-ph-txt">DTF Print</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">DTF</span>
+            <span class="g-title">Dark Fabric Print</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-item" data-cat="sublimation">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🎨</span>
+            <span class="g-ph-txt">Sublimation</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">Sublimation</span>
+            <span class="g-title">All-Over Print Tee</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="g-item" data-cat="embroidery">
+        <div class="g-img">
+          <div class="g-placeholder">
+            <span class="g-ph-icon">🧵</span>
+            <span class="g-ph-txt">Embroidery</span>
+            <span class="g-ph-sub">Add your photo here</span>
+          </div>
+          <div class="g-overlay">
+            <span class="g-cat-tag">Embroidery</span>
+            <span class="g-title">Chest Logo Hoodie</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="gallery-cta rev">
+      <p>Want to see your design here? <a href="#contact" style="color:var(--accent)">Get a free quote →</a></p>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+  WHY US
+════════════════════════════════ -->
+<section class="why" id="why">
+  <div class="wrap">
+
+    <div class="sec-row rev">
+      <span class="sec-num">03</span>
+      <span class="sec-lbl">Why Kent Clothing Lab</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <h2 class="sec-h rev">Built in <span class="ghost lab-glow">the lab.</span></h2>
+    <p class="sec-sub rev">We're not a platform. We're a real studio with real machines and people who care about getting it right every time.</p>
+
+    <div class="why-grid">
+      <div class="why-card glass rev">
+        <div class="why-ico">⚡</div>
+        <div>
+          <div class="why-title">48h Turnaround</div>
+          <p class="why-desc">Most orders completed within 48–72 hours. We know your deadlines matter and we work to meet them.</p>
+        </div>
+      </div>
+      <div class="why-card glass rev" style="transition-delay:.08s">
+        <div class="why-ico">🎯</div>
+        <div>
+          <div class="why-title">No Minimum Orders</div>
+          <p class="why-desc">One item or a thousand. Every order gets the same level of care and attention regardless of size.</p>
+        </div>
+      </div>
+      <div class="why-card glass rev" style="transition-delay:.12s">
+        <div class="why-ico">🔬</div>
+        <div>
+          <div class="why-title">Everything In-House</div>
+          <p class="why-desc">Embroidery, heat press and sublimation all under one roof. No outsourcing, no delays, full quality control.</p>
+        </div>
+      </div>
+      <div class="why-card glass rev" style="transition-delay:.16s">
+        <div class="why-ico">💬</div>
+        <div>
+          <div class="why-title">Real People</div>
+          <p class="why-desc">You'll speak to a real person. We reply within 24 hours and keep you informed throughout your order.</p>
+        </div>
+      </div>
+      <div class="why-card glass rev" style="transition-delay:.2s">
+        <div class="why-ico">📍</div>
+        <div>
+          <div class="why-title">Local &amp; Nationwide</div>
+          <p class="why-desc">Based in Kent. Collection available locally or delivery anywhere across the UK.</p>
+        </div>
+      </div>
+      <div class="why-card glass rev" style="transition-delay:.24s">
+        <div class="why-ico">✅</div>
+        <div>
+          <div class="why-title">Quality Guaranteed</div>
+          <p class="why-desc">Every order is inspected before it leaves. If something isn't right, we fix it. Simple as that.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+  PROCESS
+════════════════════════════════ -->
+<section class="process" id="process">
+  <div class="wrap">
+
+    <div class="sec-row rev">
+      <span class="sec-num">03</span>
+      <span class="sec-lbl">How it works</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <h2 class="sec-h rev">Brief to <span class="ghost">finished.</span></h2>
+    <p class="sec-sub rev">Four simple steps. No jargon, no surprises.</p>
+
+    <div class="steps">
+      <div class="step glass rev">
+        <div class="step-n">01</div>
+        <div class="step-title">Send Your Brief</div>
+        <p class="step-desc">Tell us your garment, service, quantity and share your artwork. We respond within 24 hours.</p>
+      </div>
+      <div class="step glass rev" style="transition-delay:.08s">
+        <div class="step-n">02</div>
+        <div class="step-title">Get Your Quote</div>
+        <p class="step-desc">Clear, transparent pricing. No hidden fees. We'll advise the best process for your brief and budget.</p>
+      </div>
+      <div class="step glass rev" style="transition-delay:.16s">
+        <div class="step-n">03</div>
+        <div class="step-title">We Produce</div>
+        <p class="step-desc">Your order goes into the studio. We send a proof or sample on larger runs before full production.</p>
+      </div>
+      <div class="step glass rev" style="transition-delay:.24s">
+        <div class="step-n">04</div>
+        <div class="step-title">You Receive</div>
+        <p class="step-desc">Quality checked, packaged and sent. Collection in Kent or UK-wide delivery.</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+  TESTIMONIALS
+════════════════════════════════ -->
+<section class="testi" id="reviews">
+  <div class="wrap">
+
+    <div class="sec-row rev">
+      <span class="sec-num">04</span>
+      <span class="sec-lbl">What customers say</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <h2 class="sec-h rev">Real people.<br><span class="ghost">Real results.</span></h2>
+    <p class="sec-sub rev">Don't just take our word for it.</p>
+
+    <div class="testi-grid">
+
+      <div class="testi-card glass rev">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Ordered custom hoodies for our whole team. The embroidery is flawless — you can tell real care went into it. Delivered in two days. Will 100% be back."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">JM</div>
+          <div>
+            <div class="testi-name">Jamie M.</div>
+            <div class="testi-role">Small Business Owner, Kent</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card glass rev" style="transition-delay:.1s">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Used them for DTF printing on a limited drop. The colours were insane — way better than I expected for the price. Fast, friendly and professional throughout."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">SR</div>
+          <div>
+            <div class="testi-name">Sofia R.</div>
+            <div class="testi-role">Streetwear Brand, London</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="testi-card glass rev" style="transition-delay:.2s">
+        <div class="testi-stars">★★★★★</div>
+        <p class="testi-quote">"Got sublimation jerseys done for our football team. Absolutely mint finish — every detail came out perfect. Couldn't recommend Kent Clothing Lab enough."</p>
+        <div class="testi-author">
+          <div class="testi-avatar">TK</div>
+          <div>
+            <div class="testi-name">Tyler K.</div>
+            <div class="testi-role">Sports Team Captain, Kent</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+  CTA BAND
+════════════════════════════════ -->
+<section class="cta-band">
+  <div class="wrap">
+    <div class="cta-inner glass rev">
+      <div class="cta-left">
+        <div class="cta-pre">Ready to start?</div>
+        <h2 class="cta-h">Let's make<br>something <span>great.</span></h2>
+        <p class="cta-p">From a single custom piece to a full brand rollout — we've got the machines, the skills and the passion to deliver.</p>
+      </div>
+      <div class="cta-right">
+        <a href="#contact" class="btn-hero-p">Get a Free Quote →</a>
+        <span class="cta-note">We reply within 24 hours · No obligation</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+  NEWSLETTER
+════════════════════════════════ -->
+<section class="newsletter">
+  <div class="wrap">
+    <div class="nl-inner glass rev">
+
+      <div class="nl-left">
+        <div class="nl-tag">
+          <span class="nl-tag-dot"></span>
+          <span class="nl-tag-txt">Stay in the loop</span>
+        </div>
+        <h2 class="nl-h">Exclusive offers.<br>New drops. <span>First.</span></h2>
+        <p class="nl-desc">Join the KCL list and get early access to seasonal discounts, limited runs and insider deals — straight to your inbox. No spam, ever.</p>
+        <div class="nl-perks">
+          <div class="nl-perk"><span class="nl-perk-dot"></span>10% off your first order</div>
+          <div class="nl-perk"><span class="nl-perk-dot"></span>Exclusive seasonal deals</div>
+          <div class="nl-perk"><span class="nl-perk-dot"></span>New service announcements</div>
+          <div class="nl-perk"><span class="nl-perk-dot"></span>Behind the scenes content</div>
+        </div>
+      </div>
+
+      <div class="nl-right">
+        <form class="nl-form" onsubmit="nlSubmit(event)">
+          <div class="nl-field">
+            <label class="nl-label" for="nl-name">Your Name</label>
+            <input class="nl-input" id="nl-name" type="text" placeholder="First name" required>
+          </div>
+          <div class="nl-field">
+            <label class="nl-label" for="nl-email">Email Address</label>
+            <input class="nl-input" id="nl-email" type="email" placeholder="you@email.com" required>
+          </div>
+          <div class="nl-field">
+            <label class="nl-label">I'm interested in</label>
+            <div class="nl-checks">
+              <label class="nl-check"><input type="checkbox" value="Embroidery" checked> Embroidery</label>
+              <label class="nl-check"><input type="checkbox" value="Heat Press" checked> Heat Press</label>
+              <label class="nl-check"><input type="checkbox" value="Sublimation"> Sublimation</label>
+              <label class="nl-check"><input type="checkbox" value="DTF"> DTF Printing</label>
+            </div>
+          </div>
+          <div class="nl-gdpr">
+            <label class="nl-check">
+              <input type="checkbox" id="nl-consent" required>
+              I agree to receive marketing emails from Kent Clothing <span class="lab-glow" style="font-size:inherit;font-weight:inherit;font-family:inherit;letter-spacing:inherit">Lab</span>. I can unsubscribe anytime.
+            </label>
+          </div>
+          <button type="submit" class="nl-btn">Subscribe & Get 10% Off →</button>
+          <div class="nl-msg" id="nl-msg"></div>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- ════════════════════════════════
+  CONTACT
+════════════════════════════════ -->
+<section class="contact" id="contact">
+  <div class="wrap">
+
+    <div class="sec-row rev">
+      <span class="sec-num">05</span>
+      <span class="sec-lbl">Get in touch</span>
+      <div class="sec-line"></div>
+    </div>
+
+    <div class="contact-grid">
+
+      <div class="rev">
+        <h2 class="sec-h">Start your<br><span class="ghost">project.</span></h2>
+        <p style="font-size:15px;color:var(--muted);line-height:1.75;margin-bottom:0">Fill in the form and we'll come back to you within 24 hours with a quote. Completely free, no pressure.</p>
+        <div class="contact-info">
+          <div class="info-row">
+            <span class="info-l">Location</span>
+            <span class="info-v">Kent, United Kingdom</span>
+          </div>
+          <div class="info-row">
+            <span class="info-l">Response</span>
+            <span class="info-v">Within 24 hours</span>
+          </div>
+          <div class="info-row">
+            <span class="info-l">Turnaround</span>
+            <span class="info-v">48 – 72 hours</span>
+          </div>
+          <div class="info-row">
+            <span class="info-l">Instagram</span>
+            <span class="info-v">@kentclothinglab</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-card glass rev" style="transition-delay:.12s">
+        <form class="form" onsubmit="sendForm(event)">
+          <div class="f2">
+            <div class="field">
+              <label class="f-lbl" for="fn">Your Name *</label>
+              <input class="f-inp" id="fn" type="text" placeholder="Full name" required>
+            </div>
+            <div class="field">
+              <label class="f-lbl" for="fe">Email *</label>
+              <input class="f-inp" id="fe" type="email" placeholder="you@email.com" required>
+            </div>
+          </div>
+          <div class="f2">
+            <div class="field">
+              <label class="f-lbl" for="fp">Phone (optional)</label>
+              <input class="f-inp" id="fp" type="tel" placeholder="07...">
+            </div>
+            <div class="field">
+              <label class="f-lbl" for="fs">Service Needed</label>
+              <select class="f-sel" id="fs">
+                <option value="">— Select —</option>
+                <option>Embroidery</option>
+                <option>Heat Press / Transfers</option>
+                <option>Sublimation Printing</option>
+                <option>DTF Printing</option>
+                <option>Multiple / Not sure</option>
+              </select>
+            </div>
+          </div>
+          <div class="field">
+            <label class="f-lbl" for="fm">Your Project</label>
+            <textarea class="f-inp" id="fm" placeholder="Tell us about your project — garments, quantities, artwork, timeline..."></textarea>
+          </div>
+          <div id="fmsg" class="f-msg"></div>
+          <button type="submit" class="f-submit">Send Enquiry →</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-top">
+    <div>
+      <div class="ft-logo">
+        <div class="ft-logo-mark">
+          <svg width="28" height="18" viewBox="0 0 60 38" xmlns="http://www.w3.org/2000/svg" style="border-radius:2px;overflow:hidden;display:block">
+            <rect width="60" height="38" fill="#012169"/>
+            <path d="M0,0 L60,38 M60,0 L0,38" stroke="white" stroke-width="10"/>
+            <path d="M0,0 L60,38" stroke="#C8102E" stroke-width="6"/>
+            <path d="M60,0 L0,38" stroke="#C8102E" stroke-width="6"/>
+            <rect x="0" y="14" width="60" height="10" fill="white"/>
+            <rect x="25" y="0" width="10" height="38" fill="white"/>
+            <rect x="0" y="15.5" width="60" height="7" fill="#C8102E"/>
+            <rect x="26.5" y="0" width="7" height="38" fill="#C8102E"/>
+          </svg>
+        </div>
+        <div class="ft-logo-text">
+          <span>Kent</span>
+          <span class="sep">|</span>
+          <span class="blue">Clothing</span>
+          <span class="sep">|</span>
+          <span class="dim">Lab</span>
+        </div>
+      </div>
+      <p class="ft-tag">Custom embroidery, heat press, sublimation and DTF printing — all in-house, all in Kent.</p>
+    </div>
+    <div>
+      <div class="fc-hd">Services</div>
+      <ul class="fc-links">
+        <li><a href="#services">Embroidery</a></li>
+        <li><a href="#services">Heat Press</a></li>
+        <li><a href="#services">Sublimation</a></li>
+        <li><a href="#services">DTF Printing</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="fc-hd">Company</div>
+      <ul class="fc-links">
+        <li><a href="#why">About</a></li>
+        <li><a href="#process">Process</a></li>
+        <li><a href="#contact">Contact</a></li>
+        <li><a href="kcl-tracker.html">Order Tracker</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="fc-hd">Follow</div>
+      <ul class="fc-links">
+        <li><a href="https://instagram.com/kent_clothing_lab" target="_blank">Instagram</a></li>
+        <li><a href="https://tiktok.com/@thekentclothinglab" target="_blank">TikTok</a></li>
+        <li><a href="https://facebook.com/kentclothinglab" target="_blank">Facebook</a></li>
+      </ul>
+    </div>
+  </div>
+  <!-- Social links -->
+  <div class="social-strip">
+    <a class="soc-btn soc-ig" href="https://instagram.com/kent_clothing_lab" target="_blank" rel="noopener" aria-label="Instagram">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      <span>Instagram</span>
+    </a>
+    <a class="soc-btn soc-fb" href="https://facebook.com/kentclothinglab" target="_blank" rel="noopener" aria-label="Facebook">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/></svg>
+      <span>Facebook</span>
+    </a>
+    <a class="soc-btn soc-wa" href="https://wa.me/447744053826?text=Hi%20Kent%20Clothing%20Lab%2C%20I%27d%20like%20a%20quote%20please!" target="_blank" rel="noopener" aria-label="WhatsApp">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      <span>WhatsApp</span>
+    </a>
+    <a class="soc-btn soc-tk" href="https://tiktok.com/@thekentclothinglab" target="_blank" rel="noopener" aria-label="TikTok">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M19.59 6.69a4.83 4.83 0 01-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 01-2.88 2.5 2.89 2.89 0 01-2.89-2.89 2.89 2.89 0 012.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 00-.79-.05 6.34 6.34 0 00-6.34 6.34 6.34 6.34 0 006.34 6.34 6.34 6.34 0 006.33-6.34V8.69a8.17 8.17 0 004.77 1.52V6.76a4.85 4.85 0 01-1-.07z"/></svg>
+      <span>TikTok</span>
+    </a>
+  </div>
+
+  <div class="footer-btm">
+    <span class="ft-copy">© 2025 Kent Clothing <span class="lab-glow" style="font-size:inherit;font-weight:inherit;font-family:inherit;letter-spacing:inherit">Lab</span>. All rights reserved.</span>
+    <span class="ft-loc">📍 Kent, United Kingdom</span>
+  </div>
+</footer>
+
+
+<script>
+/* ── REVEAL FALLBACK (iOS safety net) ── */
+// Force all reveal elements visible after 100ms as safety net
+setTimeout(() => {
+  document.querySelectorAll('.rev').forEach(el => el.classList.add('in'));
+}, 100);
+
+/* ── GALLERY FILTER ── */
+function filterGallery(cat, btn) {
+  document.querySelectorAll('.gf-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  document.querySelectorAll('.g-item').forEach(item => {
+    const match = cat === 'all' || item.dataset.cat === cat;
+    item.classList.toggle('hide', !match);
+  });
+}
+
+/* ── CURSOR GLOW ── */
+const glow = document.createElement('div');
+glow.className = 'cursor-glow';
+document.body.appendChild(glow);
+let mx = -999, my = -999;
+window.addEventListener('mousemove', e => {
+  mx = e.clientX; my = e.clientY;
+  glow.style.left = mx + 'px';
+  glow.style.top  = my + 'px';
+}, { passive:true });
+
+/* ── COUNTER ANIMATION ── */
+function animateCounter(el) {
+  const target = parseInt(el.dataset.count);
+  const prefix = el.dataset.prefix || '';
+  const suffix = el.dataset.suffix || '';
+  if (target === 0) return; // skip £0 and static
+  const duration = 1400;
+  const start = performance.now();
+  const ease = t => t < .5 ? 2*t*t : -1+(4-2*t)*t;
+  function step(now) {
+    const t = Math.min((now - start) / duration, 1);
+    const val = Math.round(ease(t) * target);
+    el.textContent = prefix + val + suffix;
+    if (t < 1) requestAnimationFrame(step);
+    else el.textContent = prefix + target + suffix;
+  }
+  requestAnimationFrame(step);
+}
+
+const counterObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting && e.target.dataset.count !== undefined) {
+      animateCounter(e.target);
+      counterObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.6 });
+document.querySelectorAll('[data-count]').forEach(el => counterObs.observe(el));
+
+/* ── DARK / LIGHT MODE ── */
+const btn = document.getElementById('modeBtn');
+
+function applyMode(mode) {
+  if (mode === 'light') {
+    document.documentElement.classList.add('light');
+    btn.textContent = '☀️';
+    btn.title = 'Switch to dark mode';
+  } else {
+    document.documentElement.classList.remove('light');
+    btn.textContent = '🌙';
+    btn.title = 'Switch to light mode';
+  }
+}
+
+function toggleMode() {
+  const isLight = document.documentElement.classList.contains('light');
+  const next = isLight ? 'dark' : 'light';
+  localStorage.setItem('kcl-mode', next);
+  applyMode(next);
+}
+
+// Load saved preference on boot (respect system preference too)
+const saved = localStorage.getItem('kcl-mode');
+if (saved) {
+  applyMode(saved);
+} else if (window.matchMedia('(prefers-color-scheme: light)').matches) {
+  applyMode('light');
+}
+
+
+/* hero canvas removed */
+
+
+/* ── REVEAL ── */
+const obs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('in'); obs.unobserve(e.target); } });
+}, { threshold: 0, rootMargin: '0px 0px -20px 0px' });
+document.querySelectorAll('.rev').forEach(el => obs.observe(el));
+
+/* ── NAV SCROLL ── */
+window.addEventListener('scroll', () => {
+  document.querySelector('nav').style.borderBottomColor =
+    window.scrollY > 40 ? 'rgba(240,237,232,.11)' : 'rgba(240,237,232,.07)';
+}, { passive:true });
+
+/* ── MOBILE MENU ── */
+function toggleMob() { document.getElementById('mobMenu').classList.toggle('open'); }
+
+/* ── ORB PARALLAX ── */
+window.addEventListener('mousemove', e => {
+  const x = (e.clientX / window.innerWidth  - .5) * 18;
+  const y = (e.clientY / window.innerHeight - .5) * 14;
+  document.querySelector('.orb-1').style.transform = `translate(${x*.8}px, ${y*.8}px)`;
+  document.querySelector('.orb-2').style.transform = `translate(${-x*.6}px, ${y*.6}px)`;
+  document.querySelector('.orb-3').style.transform = `translate(${x*.4}px, ${-y*.4}px)`;
+  document.querySelector('.orb-4').style.transform = `translate(${-x*.5}px, ${-y*.5}px)`;
+}, { passive:true });
+
+/* ── AI CHATBOT ── */
+const KCL_SYSTEM = `You are a friendly, knowledgeable customer service assistant for Kent Clothing Lab — a premium custom garment studio based in Kent, UK.
+
+ABOUT KENT CLOTHING LAB:
+- Based in Kent, United Kingdom
+- Specialise in custom garment printing and embroidery
+- All production is done in-house — no outsourcing
+- Services: Embroidery, Heat Press & Transfers, Sublimation Printing, DTF (Direct to Film) Printing
+- No minimum order quantities on most services
+- Average turnaround: 48–72 hours
+- £0 setup fees
+- Free quotes within 24 hours
+- Collection available locally in Kent, or UK-wide delivery
+- Instagram: @kentclothinglab
+
+SERVICES IN DETAIL:
+1. EMBROIDERY — Thread stitched directly into fabric. Perfect for logos, workwear, caps, polo shirts, hoodies. Durable, wash-resistant, professional finish. Digitisation of your logo included.
+2. HEAT PRESS / TRANSFERS — High-pressure thermal fusion. Vivid full-colour prints. Great for t-shirts, hoodies, streetwear, events. Uses vinyl and DTF transfers.
+3. SUBLIMATION PRINTING — Dye bonded at molecular level into fabric. Photographic quality, all-over print coverage. Never cracks or fades. Best for sportswear, lifestyle wear, polyester garments.
+4. DTF PRINTING (Direct to Film) — Full colour prints transferred to virtually any fabric including dark garments. No minimums, incredible detail, works on cotton and mixed fabrics.
+
+PRICING (approximate, always recommend they get a free quote):
+- Embroidery: typically starts from £5–10 per item depending on stitch count and quantity
+- Heat press: typically from £8–15 per item
+- Sublimation: from £15–25 per item depending on garment
+- DTF: from £3–12 per transfer depending on size
+- All prices depend on quantity, design complexity and garment choice — always offer a free quote
+
+YOUR PERSONALITY:
+- Warm, friendly, helpful and knowledgeable
+- Speak naturally — not too formal, not too casual
+- Always encourage them to get a free quote or contact the team for specifics
+- Keep answers concise and easy to read — use line breaks where helpful
+- If you don't know something specific, say you'll pass the question to the team
+- Never make up prices — give ranges and always direct to a free quote
+- At the end of most responses, offer a next step (get a quote, visit services section, contact us)
+
+CONTACT:
+- Email: thekentclothinglab@gmail.com
+- WhatsApp: available via the button on the website
+- Response time: within 24 hours`;
+
+let chatHistory = [];
+let chatOpen = false;
+let chatReady = true;
+
+function toggleChat() {
+  chatOpen = !chatOpen;
+  const win = document.getElementById('chatWindow');
+  const icon = document.getElementById('bubbleIcon');
+  const close = document.getElementById('bubbleClose');
+  const unread = document.getElementById('chatUnread');
+
+  if (chatOpen) {
+    win.classList.add('open');
+    icon.style.display = 'none';
+    close.style.display = 'block';
+    unread.style.display = 'none';
+    document.getElementById('chatInput').focus();
+  } else {
+    win.classList.remove('open');
+    icon.style.display = 'block';
+    close.style.display = 'none';
+  }
+}
+
+function quickAsk(text) {
+  // Remove suggestion buttons
+  const sugg = document.getElementById('chatSuggestions');
+  if (sugg) sugg.remove();
+  document.getElementById('chatInput').value = text;
+  sendMsg();
+}
+
+function appendMsg(role, text) {
+  const msgs = document.getElementById('chatMessages');
+  const wrap = document.createElement('div');
+  wrap.className = `chat-msg ${role}`;
+  const bubble = document.createElement('div');
+  bubble.className = 'chat-bubble-msg';
+  // Convert **bold** markdown and newlines
+  bubble.innerHTML = text
+    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\n/g, '<br>');
+  wrap.appendChild(bubble);
+  msgs.appendChild(wrap);
+  msgs.scrollTop = msgs.scrollHeight;
+  return bubble;
+}
+
+function showTyping(show) {
+  document.getElementById('chatTyping').style.display = show ? 'flex' : 'none';
+  if (show) {
+    const msgs = document.getElementById('chatMessages');
+    msgs.scrollTop = msgs.scrollHeight;
+  }
+}
+
+async function sendMsg() {
+  const input = document.getElementById('chatInput');
+  const text = input.value.trim();
+  if (!text || !chatReady) return;
+
+  // Remove suggestions if still showing
+  const sugg = document.getElementById('chatSuggestions');
+  if (sugg) sugg.remove();
+
+  input.value = '';
+  appendMsg('user', text);
+  chatHistory.push({ role: 'user', content: text });
+
+  chatReady = false;
+  showTyping(true);
+
+  try {
+    const res = await fetch('https://api.anthropic.com/v1/messages', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        model: 'claude-sonnet-4-20250514',
+        max_tokens: 1000,
+        system: KCL_SYSTEM,
+        messages: chatHistory,
+      }),
+    });
+
+    const data = await res.json();
+    showTyping(false);
+
+    const reply = data.content?.[0]?.text || "Sorry, I couldn't get a response. Please try again or contact us directly at thekentclothinglab@gmail.com";
+    chatHistory.push({ role: 'assistant', content: reply });
+    appendMsg('bot', reply);
+
+  } catch (err) {
+    showTyping(false);
+    appendMsg('bot', "Sorry, something went wrong on my end. Please contact us directly at thekentclothinglab@gmail.com or via WhatsApp and we'll get back to you within 24 hours! 😊");
+  }
+
+  chatReady = true;
+  document.getElementById('chatInput').focus();
+}
+
+/* ── NEWSLETTER POPUP ── */
+function openPopup() {
+  // Don't show if already dismissed or subscribed this session
+  if (sessionStorage.getItem('kcl-popup-dismissed')) return;
+  document.getElementById('nlPopup').classList.add('open');
+}
+function closePopup() {
+  document.getElementById('nlPopup').classList.remove('open');
+  sessionStorage.setItem('kcl-popup-dismissed', '1');
+}
+function popupBgClick(e) {
+  if (e.target === document.getElementById('nlPopup')) closePopup();
+}
+function popupSubmit(e) {
+  e.preventDefault();
+  const name  = document.getElementById('pop-name').value.trim();
+  const email = document.getElementById('pop-email').value.trim();
+  const box   = document.getElementById('pop-msg');
+  const btn   = e.target.querySelector('.nl-popup-btn');
+
+  const sub = encodeURIComponent(`KCL Newsletter Signup — ${name}`);
+  const bod = encodeURIComponent(`New signup:\nName: ${name}\nEmail: ${email}\n\nAdd to mailing list and send 10% discount code.`);
+  window.open(`mailto:thekentclothinglab@gmail.com?subject=${sub}&body=${bod}`);
+
+  btn.textContent = '✓ You\'re in!';
+  btn.disabled = true;
+  btn.style.background = '#16a34a';
+  box.style.display = 'block';
+  box.style.background = 'rgba(22,163,74,.1)';
+  box.style.border = '1px solid rgba(22,163,74,.25)';
+  box.style.color = '#4ade80';
+  box.textContent = `🎉 Welcome ${name}! Check your email for your 10% discount code.`;
+  sessionStorage.setItem('kcl-popup-dismissed', '1');
+  setTimeout(closePopup, 3000);
+}
+
+// Show popup after 7 seconds
+setTimeout(openPopup, 7000);
+
+/* ── NEWSLETTER ── */
+function nlSubmit(e) {
+  e.preventDefault();
+  const name     = document.getElementById('nl-name').value.trim();
+  const email    = document.getElementById('nl-email').value.trim();
+  const consent  = document.getElementById('nl-consent').checked;
+  const interests = [...document.querySelectorAll('.nl-checks input:checked')].map(i => i.value).join(', ');
+  const box      = document.getElementById('nl-msg');
+  const btn      = e.target.querySelector('.nl-btn');
+
+  if (!consent) return;
+
+  // Build a mailto so signups land in your inbox until you connect a proper email tool
+  const sub = encodeURIComponent(`KCL Newsletter Signup — ${name}`);
+  const bod = encodeURIComponent([
+    `New newsletter signup from the KCL website.`, ``,
+    `Name:       ${name}`,
+    `Email:      ${email}`,
+    `Interests:  ${interests || 'Not specified'}`,
+    ``,
+    `Add this person to your mailing list.`,
+  ].join('\n'));
+
+  window.open(`mailto:thekentclothinglab@gmail.com?subject=${sub}&body=${bod}`);
+
+  // Success state
+  btn.textContent = '✓ You\'re on the list!';
+  btn.disabled = true;
+  btn.style.background = '#16a34a';
+  btn.style.boxShadow = '0 4px 20px rgba(22,163,74,.35)';
+
+  box.style.display = 'block';
+  box.style.background = 'rgba(22,163,74,.1)';
+  box.style.border = '1px solid rgba(22,163,74,.25)';
+  box.style.color = '#4ade80';
+  box.textContent = `🎉 Welcome to the KCL list, ${name}! Check your email for your 10% discount code.`;
+}
+
+/* ── FORM SUBMIT ── */
+function sendForm(e) {
+  e.preventDefault();
+  const name = document.getElementById('fn').value.trim();
+  const email= document.getElementById('fe').value.trim();
+  const phone= document.getElementById('fp').value.trim();
+  const svc  = document.getElementById('fs').value;
+  const msg  = document.getElementById('fm').value.trim();
+  const box  = document.getElementById('fmsg');
+
+  const sub = encodeURIComponent(`KCL Enquiry — ${svc||'General'} — ${name}`);
+  const bod = encodeURIComponent([
+    `Hi Kent Clothing Lab,`, ``,
+    `I'd like to get a quote.`, ``,
+    `Name:     ${name}`,
+    `Email:    ${email}`,
+    `Phone:    ${phone||'Not given'}`,
+    `Service:  ${svc||'Not specified'}`, ``,
+    `Project:`, msg||'No details yet.', ``,
+    `Thanks, ${name}`,
+  ].join('\n'));
+
+  window.location.href = `mailto:thekentclothinglab@gmail.com?subject=${sub}&body=${bod}`;
+
+  box.style.display = 'block';
+  box.style.background = 'rgba(25,97,255,0.1)';
+  box.style.border = '1px solid rgba(25,97,255,0.25)';
+  box.style.color = 'rgba(100,160,255,0.9)';
+  box.style.borderRadius = '3px';
+  box.textContent = '✓ Your email app should have opened. Hit send to complete your enquiry — we\'ll reply within 24 hours.';
+
+  const btn = e.target.querySelector('button');
+  btn.textContent = 'Email app opened ✓';
+  btn.disabled = true;
+  btn.style.opacity = '.5';
+}
+</script>
+<!-- NEWSLETTER POPUP -->
+<div class="nl-popup-overlay" id="nlPopup" onclick="popupBgClick(event)">
+  <div class="nl-popup">
+    <div class="nl-popup-bar"></div>
+    <button class="nl-popup-close" onclick="closePopup()">✕</button>
+    <div class="nl-popup-inner">
+      <div class="nl-popup-tag">
+        <span class="nl-popup-tag-dot"></span>
+        <span class="nl-popup-tag-txt">Limited time offer</span>
+      </div>
+      <h2 class="nl-popup-h">Get <span>10% off</span><br>your first order.</h2>
+      <p class="nl-popup-sub">Join the KCL list for exclusive deals, new drops and early access — straight to your inbox. No spam, ever.</p>
+      <div class="nl-popup-perks">
+        <div class="nl-popup-perk"><span class="nl-popup-perk-dot"></span>10% off first order</div>
+        <div class="nl-popup-perk"><span class="nl-popup-perk-dot"></span>Exclusive deals</div>
+        <div class="nl-popup-perk"><span class="nl-popup-perk-dot"></span>New drop alerts</div>
+      </div>
+      <form onsubmit="popupSubmit(event)">
+        <div class="nl-popup-row">
+          <input class="nl-popup-inp" id="pop-name" type="text" placeholder="Your name" required>
+          <input class="nl-popup-inp" id="pop-email" type="email" placeholder="Email address" required>
+          <button type="submit" class="nl-popup-btn">Get 10% Off →</button>
+        </div>
+        <div class="nl-popup-gdpr">
+          <input type="checkbox" id="pop-consent" required>
+          <span>I agree to receive marketing emails from Kent Clothing <span class="lab-glow" style="font-size:inherit;font-weight:inherit;font-family:inherit;letter-spacing:inherit">Lab</span>. Unsubscribe anytime.</span>
+        </div>
+        <div class="nl-popup-msg" id="pop-msg"></div>
+      </form>
+      <span class="nl-popup-skip" onclick="closePopup()">No thanks, I'll pay full price</span>
+    </div>
+  </div>
+</div>
+
+<!-- WHATSAPP FLOAT -->
+<a class="wa-btn" href="https://wa.me/447744053826?text=Hi%20Kent%20Clothing%20Lab%2C%20I%27d%20like%20a%20quote%20please!" target="_blank" rel="noopener" aria-label="Chat on WhatsApp">
+  <svg class="wa-icon" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
+  </svg>
+  <span class="wa-label">Chat with us</span>
+  <span class="wa-pulse"></span>
+</a>
+
+<!-- AI CHAT BOT -->
+<div class="chat-widget" id="chatWidget">
+
+  <!-- Toggle bubble -->
+  <button class="chat-bubble" id="chatBubble" onclick="toggleChat()" aria-label="Open chat">
+    <span class="chat-bubble-icon" id="bubbleIcon">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+      </svg>
+    </span>
+    <span class="chat-bubble-close" id="bubbleClose" style="display:none">✕</span>
+    <span class="chat-unread" id="chatUnread">1</span>
+  </button>
+
+  <!-- Chat window -->
+  <div class="chat-window" id="chatWindow">
+
+    <!-- Header -->
+    <div class="chat-header">
+      <div class="chat-header-left">
+        <div class="chat-avatar">
+          <span>KCL</span>
+          <span class="chat-online"></span>
+        </div>
+        <div>
+          <div class="chat-name">KCL <span class="lab-glow" style="font-size:inherit;font-family:inherit;font-weight:inherit;letter-spacing:normal;text-transform:none">Lab</span> Assistant</div>
+          <div class="chat-status">● Online — replies instantly</div>
+        </div>
+      </div>
+      <button class="chat-close-btn" onclick="toggleChat()">✕</button>
+    </div>
+
+    <!-- Messages -->
+    <div class="chat-messages" id="chatMessages">
+      <div class="chat-msg bot">
+        <div class="chat-bubble-msg">
+          👋 Hi! I'm the KCL Assistant. I can answer questions about our services, pricing, turnaround times and more.<br><br>What can I help you with today?
+        </div>
+      </div>
+      <div class="chat-suggestions" id="chatSuggestions">
+        <button onclick="quickAsk('What services do you offer?')">What services do you offer?</button>
+        <button onclick="quickAsk('How much does embroidery cost?')">How much does embroidery cost?</button>
+        <button onclick="quickAsk('How fast is your turnaround?')">How fast is your turnaround?</button>
+        <button onclick="quickAsk('Do you have a minimum order?')">Do you have a minimum order?</button>
+      </div>
+    </div>
+
+    <!-- Typing indicator -->
+    <div class="chat-typing" id="chatTyping" style="display:none">
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+      <div class="typing-dot"></div>
+    </div>
+
+    <!-- Input -->
+    <div class="chat-input-row">
+      <input class="chat-input" id="chatInput" type="text" placeholder="Ask me anything…" onkeydown="if(event.key==='Enter')sendMsg()">
+      <button class="chat-send" onclick="sendMsg()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="22" y1="2" x2="11" y2="13"></line>
+          <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
+        </svg>
+      </button>
+    </div>
+
+    <div class="chat-footer">Powered by AI · Kent Clothing Lab</div>
+  </div>
+
+</div>
+
+</body>
+</html>

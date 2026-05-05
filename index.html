@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231961FF'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' fill='white' font-size='16' font-weight='800' font-family='Arial,sans-serif'%3EK%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kent Clothing Lab</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+html, body { width:100%; height:100%; overflow:hidden; }
+
+body {
+  background: #000;
+  font-family: 'Share Tech Mono', monospace;
+  cursor: none;
+}
+
+/* ── CUSTOM CURSOR ── */
+.cursor {
+  position: fixed;
+  width: 12px; height: 12px;
+  background: #1961FF;
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9999;
+  transform: translate(-50%,-50%);
+  transition: transform .1s;
+  box-shadow: 0 0 12px rgba(25,97,255,.9), 0 0 24px rgba(25,97,255,.5);
+  mix-blend-mode: normal;
+}
+.cursor-ring {
+  position: fixed;
+  width: 36px; height: 36px;
+  border: 1px solid rgba(25,97,255,.5);
+  border-radius: 50%;
+  pointer-events: none;
+  z-index: 9998;
+  transform: translate(-50%,-50%);
+  transition: transform .12s, width .25s, height .25s, border-color .25s;
+}
+
+/* ── MATRIX CANVAS ── */
+#matrix {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+/* ── SCAN LINES ── */
+body::after {
+  content: '';
+  position: fixed; inset: 0;
+  background: repeating-linear-gradient(
+    0deg, transparent, transparent 2px,
+    rgba(0,0,0,0.08) 2px, rgba(0,0,0,0.08) 4px
+  );
+  pointer-events: none;
+  z-index: 1;
+}
+
+/* ── VIGNETTE ── */
+.vignette {
+  position: fixed; inset: 0;
+  background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.85) 100%);
+  pointer-events: none;
+  z-index: 2;
+}
+
+/* ── CONTENT ── */
+.content {
+  position: fixed; inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 10;
+  gap: 0;
+  padding: 20px;
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+/* LOGO */
+.logo-wrap {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-bottom: 12px;
+  opacity: 0;
+  animation: fadeUp .8s ease .3s forwards;
+}
+.logo-flag {
+  width: 44px; height: 28px;
+  border-radius: 4px;
+  overflow: hidden;
+  flex-shrink: 0;
+  box-shadow: 0 0 16px rgba(25,97,255,.5), 0 2px 12px rgba(0,0,0,.5);
+  border: 1px solid rgba(255,255,255,.1);
+}
+.logo-text {
+  font-family: 'Syne', sans-serif;
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.95);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  text-shadow: 0 0 20px rgba(255,255,255,.1);
+}
+.logo-text span { color: #1961FF; text-shadow: 0 0 12px rgba(25,97,255,.8); }
+.logo-divider { color: rgba(255,255,255,.2); font-weight: 300; }
+
+/* MAIN HEADING */
+.main-h {
+  font-family: 'Syne', sans-serif;
+  font-weight: 800;
+  font-size: clamp(32px, 5.5vw, 78px);
+  line-height: .92;
+  letter-spacing: -.025em;
+  text-transform: uppercase;
+  text-align: center;
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp .8s ease .5s forwards;
+  width: 100%;
+  overflow: hidden;
+}
+.main-h .w1 { display: block; color: #fff; }
+.main-h .w2 {
+  display: block;
+  color: #1961FF;
+  text-shadow:
+    0 0 30px rgba(25,97,255,.6),
+    0 0 60px rgba(25,97,255,.3);
+  animation: glitch 6s ease-in-out infinite;
+}
+.main-h .w3 {
+  display: block;
+  color: transparent;
+  -webkit-text-stroke: 1.5px rgba(25,97,255,.4);
+  animation: labFlash 2.5s ease-in-out infinite;
+}
+@keyframes labFlash {
+  0%,100% {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(25,97,255,.3);
+    text-shadow: none;
+  }
+  20% {
+    color: rgba(25,97,255,.05);
+    -webkit-text-stroke: 1.5px rgba(25,97,255,.9);
+    text-shadow: 0 0 10px rgba(25,97,255,1), 0 0 30px rgba(25,97,255,.8), 0 0 60px rgba(25,97,255,.5), 0 0 100px rgba(25,97,255,.3);
+    filter: brightness(1.3);
+  }
+  22% {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(25,97,255,.2);
+    text-shadow: none;
+  }
+  24% {
+    color: rgba(25,97,255,.08);
+    -webkit-text-stroke: 1.5px rgba(25,97,255,1);
+    text-shadow: 0 0 10px rgba(25,97,255,1), 0 0 40px rgba(25,97,255,.9), 0 0 80px rgba(25,97,255,.6);
+  }
+  40% {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(25,97,255,.3);
+    text-shadow: none;
+  }
+  60% {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(0,207,255,.5);
+    text-shadow: 0 0 8px rgba(0,207,255,.7), 0 0 20px rgba(0,207,255,.4);
+  }
+  62% {
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(25,97,255,.2);
+    text-shadow: none;
+  }
+}
+
+@keyframes glitch {
+  0%,88%,100% { transform:translate(0); filter:none; }
+  90% { transform:translate(-3px,1px); filter:hue-rotate(90deg); }
+  91% { transform:translate(3px,-1px); }
+  92% { transform:translate(0); filter:none; }
+  94% { transform:translate(2px,2px); filter:hue-rotate(-45deg); }
+  95% { transform:translate(-1px,0); filter:none; }
+}
+
+/* TAGLINE */
+.tagline {
+  font-size: clamp(13px, 1.8vw, 17px);
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.85);
+  margin-bottom: 20px;
+  opacity: 0;
+  animation: fadeUp .8s ease .7s forwards;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  font-family: 'Share Tech Mono', monospace;
+}
+.tagline-text { color: rgba(255,255,255,.9); }
+.tagline-sep {
+  display: inline-block;
+  width: 32px; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(25,97,255,.8), transparent);
+  flex-shrink: 0;
+}
+.tagline-loc {
+  color: rgba(25,97,255,.9);
+  text-shadow: 0 0 10px rgba(25,97,255,.5);
+}
+
+/* ENTER BUTTON */
+/* ── ENTER BUTTON ── */
+.enter-btn {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: min(240px, 40vw);
+  height: min(240px, 40vw);
+  border: none;
+  background: transparent;
+  cursor: none;
+  opacity: 0;
+  animation: fadeUp .8s ease .9s forwards;
+}
+
+/* Outer rings — stronger glow */
+.btn-ring {
+  position: absolute;
+  border-radius: 50%;
+  animation: ringPulse 2.5s ease-in-out infinite;
+  pointer-events: none;
+}
+.btn-ring-1 {
+  width: 280px; height: 280px;
+  border: 1px solid rgba(25,97,255,.2);
+  animation-delay: 0s;
+  box-shadow: 0 0 15px rgba(25,97,255,.08);
+}
+.btn-ring-2 {
+  width: 234px; height: 234px;
+  border: 1px solid rgba(25,97,255,.35);
+  animation-delay: .35s;
+  box-shadow: 0 0 20px rgba(25,97,255,.1);
+}
+.btn-ring-3 {
+  width: 188px; height: 188px;
+  border: 1.5px solid rgba(25,97,255,.55);
+  animation-delay: .7s;
+  box-shadow: 0 0 25px rgba(25,97,255,.15);
+}
+
+@keyframes ringPulse {
+  0%,100% { transform:scale(1); opacity:.55; }
+  50%      { transform:scale(1.05); opacity:1;
+             box-shadow: 0 0 35px rgba(25,97,255,.3); }
+}
+
+/* Inner circle — premium glass */
+.btn-inner {
+  position: relative;
+  width: 140px; height: 140px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(25,97,255,.18) 0%, rgba(25,97,255,.06) 100%);
+  border: 2px solid rgba(25,97,255,.7);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all .35s ease;
+  box-shadow:
+    0 0 40px rgba(25,97,255,.3),
+    0 0 80px rgba(25,97,255,.12),
+    inset 0 0 30px rgba(25,97,255,.08),
+    inset 0 1px 0 rgba(255,255,255,.1);
+  backdrop-filter: blur(4px);
+}
+/* Shine on inner circle */
+.btn-inner::before {
+  content: '';
+  position: absolute;
+  top: 12px; left: 18px;
+  width: 40px; height: 40px;
+  background: radial-gradient(circle, rgba(255,255,255,.12) 0%, transparent 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+.enter-btn:hover .btn-inner {
+  background: radial-gradient(circle, rgba(25,97,255,.3) 0%, rgba(25,97,255,.1) 100%);
+  border-color: rgba(25,97,255,1);
+  box-shadow:
+    0 0 60px rgba(25,97,255,.7),
+    0 0 120px rgba(25,97,255,.35),
+    0 0 200px rgba(25,97,255,.15),
+    inset 0 0 40px rgba(25,97,255,.15);
+  transform: scale(1.06);
+}
+.enter-btn:hover .btn-ring-1 { animation-duration: 1.2s; }
+.enter-btn:hover .btn-ring-2 { animation-duration: .9s; }
+.enter-btn:hover .btn-ring-3 { animation-duration: .7s; }
+
+.btn-label {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: .3em;
+  text-transform: uppercase;
+  color: #fff;
+  text-shadow: 0 0 12px rgba(255,255,255,.5);
+}
+.btn-sub {
+  font-size: 10px;
+  letter-spacing: .22em;
+  text-transform: uppercase;
+  color: rgba(25,97,255,.9);
+  text-shadow: 0 0 8px rgba(25,97,255,.6);
+}
+
+/* Orbiting text — brighter and bigger */
+.btn-orbit {
+  position: absolute;
+  width: 280px; height: 280px;
+  animation: orbit 10s linear infinite;
+  pointer-events: none;
+}
+@keyframes orbit { from{transform:rotate(0deg)} to{transform:rotate(360deg)} }
+
+/* BOTTOM BAR */
+.bottom-bar {
+  position: fixed;
+  bottom: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  gap: 0;
+  z-index: 10;
+  opacity: 0;
+  animation: fadeUp .8s ease 1.2s forwards;
+  padding: 10px 24px;
+  background: rgba(0,0,0,.5);
+  border: 1px solid rgba(25,97,255,.15);
+  border-radius: 100px;
+  backdrop-filter: blur(12px);
+  white-space: nowrap;
+}
+.bar-item {
+  font-size: 10px;
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.4);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 16px;
+  border-right: 1px solid rgba(25,97,255,.15);
+  transition: color .2s;
+}
+.bar-item:last-child { border-right: none; }
+.bar-item:hover { color: rgba(255,255,255,.8); }
+.bar-dot {
+  width: 5px; height: 5px;
+  border-radius: 50%;
+  background: #1961FF;
+  box-shadow: 0 0 8px rgba(25,97,255,1);
+  animation: dotBlink 2s ease-in-out infinite;
+  flex-shrink: 0;
+}
+.bar-dot:nth-child(1) { animation-delay: 0s; }
+.bar-dot:nth-child(2) { animation-delay: .4s; }
+@keyframes dotBlink { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+/* TRANSITION OVERLAY */
+.transition {
+  position: fixed; inset: 0;
+  z-index: 100;
+  pointer-events: none;
+  opacity: 0;
+}
+.transition.go {
+  pointer-events: all;
+  animation: transitionOut 1.4s ease forwards;
+}
+@keyframes transitionOut {
+  0%   { opacity: 0; background: transparent; }
+  30%  { opacity: 1; background: #000; }
+  70%  { opacity: 1; background: #000; }
+  100% { opacity: 1; background: #000; }
+}
+
+/* STATUS BAR */
+.status {
+  position: relative;
+  top: auto; left: auto; transform: none;
+  margin-bottom: 16px;
+  font-size: 11px;
+  letter-spacing: .2em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.45);
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  opacity: 0;
+  animation: fadeUp .6s ease .2s forwards;
+  padding: 8px 20px;
+  background: rgba(25,97,255,.06);
+  border: 1px solid rgba(25,97,255,.18);
+  border-radius: 100px;
+  backdrop-filter: blur(8px);
+}
+.status-blink {
+  width: 7px; height: 7px;
+  border-radius: 50%;
+  background: #1961FF;
+  box-shadow: 0 0 10px rgba(25,97,255,1), 0 0 20px rgba(25,97,255,.5);
+  animation: dotBlink 1.5s step-end infinite;
+  flex-shrink: 0;
+}
+
+@keyframes fadeUp {
+  from { opacity:0; transform:translateY(16px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* MOBILE */
+@media (max-width: 600px) {
+  .enter-btn { width: 210px; height: 210px; }
+  .btn-ring-1 { width: 210px; height: 210px; }
+  .btn-ring-2 { width: 174px; height: 174px; }
+  .btn-ring-3 { width: 138px; height: 138px; }
+  .btn-inner { width: 108px; height: 108px; }
+  .btn-orbit { width: 210px; height: 210px; }
+  .tagline { margin-bottom: 40px; }
+  .main-h { margin-bottom: 12px; }
+}
+
+@media (max-width: 480px) {
+  .main-h {
+    font-size: clamp(32px, 9vw, 56px) !important;
+  }
+}
+@media (max-width: 380px) {
+  .main-h {
+    font-size: clamp(28px, 8vw, 44px) !important;
+  }
+}
+
+
+
+/* ── CLEAN RESPONSIVE ── */
+@media (max-width: 1200px) { .main-h { font-size: clamp(32px, 5vw, 70px) !important; } }
+@media (max-width: 960px)  { .main-h { font-size: clamp(28px, 7vw, 56px) !important; } }
+@media (max-width: 600px)  { .main-h { font-size: clamp(24px, 8vw, 44px) !important; } .enter-btn { width: 180px !important; height: 180px !important; } .btn-ring-1 { width: 180px !important; height: 180px !important; } .btn-ring-2 { width: 148px !important; height: 148px !important; } .btn-ring-3 { width: 116px !important; height: 116px !important; } .btn-inner { width: 90px !important; height: 90px !important; } .btn-orbit { width: 180px !important; height: 180px !important; } }
+@media (max-width: 390px)  { .main-h { font-size: clamp(20px, 7.5vw, 36px) !important; } }
+html, body { overflow: hidden !important; }
+
+</style>
+</head>
+<body>
+
+<!-- Custom cursor -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
+
+<!-- Matrix canvas -->
+<canvas id="matrix"></canvas>
+
+<!-- Vignette -->
+<div class="vignette"></div>
+
+<!-- Transition overlay -->
+<div class="transition" id="transition"></div>
+
+<!-- Status bar -->
+<div class="status">
+  <span class="status-blink"></span>
+  System Online · Kent, UK
+</div>
+
+<!-- Main content -->
+<div class="content">
+
+  <!-- Logo -->
+  <div class="logo-wrap">
+    <div class="logo-flag">
+      <svg width="44" height="28" viewBox="0 0 60 38" xmlns="http://www.w3.org/2000/svg">
+        <rect width="60" height="38" fill="#012169"/>
+        <path d="M0,0 L60,38 M60,0 L0,38" stroke="white" stroke-width="10"/>
+        <path d="M0,0 L60,38" stroke="#C8102E" stroke-width="6"/>
+        <path d="M60,0 L0,38" stroke="#C8102E" stroke-width="6"/>
+        <rect x="0" y="14" width="60" height="10" fill="white"/>
+        <rect x="25" y="0" width="10" height="38" fill="white"/>
+        <rect x="0" y="15.5" width="60" height="7" fill="#C8102E"/>
+        <rect x="26.5" y="0" width="7" height="38" fill="#C8102E"/>
+      </svg>
+    </div>
+    <div class="logo-text">
+      Kent <span class="logo-divider">|</span> <span>Clothing</span> <span class="logo-divider">|</span> Lab
+    </div>
+  </div>
+
+  <!-- Divider line -->
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:20px;opacity:0;animation:fadeUp .8s ease .45s forwards;width:min(500px,85vw)">
+    <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(25,97,255,.6))"></div>
+    <div style="width:5px;height:5px;border-radius:50%;background:#1961FF;box-shadow:0 0 10px rgba(25,97,255,1)"></div>
+    <div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(25,97,255,.6))"></div>
+  </div>
+
+  <!-- Heading -->
+  <h1 class="main-h">
+    <span class="w1">The</span>
+    <span class="w2">Clothing</span>
+    <span class="w3">Lab.</span>
+  </h1>
+
+  <!-- Tagline -->
+  <div class="tagline">
+    <span class="tagline-text">Custom Garments</span>
+    <span class="tagline-sep"></span>
+    <span class="tagline-loc">Kent, UK</span>
+  </div>
+
+  <!-- Bottom divider -->
+  <div style="display:flex;align-items:center;gap:16px;margin-bottom:36px;opacity:0;animation:fadeUp .8s ease .75s forwards;width:min(400px,80vw)">
+    <div style="flex:1;height:1px;background:linear-gradient(90deg,transparent,rgba(25,97,255,.4))"></div>
+    <div style="font-size:9px;letter-spacing:.25em;color:rgba(25,97,255,.5);text-transform:uppercase;white-space:nowrap">KCL · 2024</div>
+    <div style="flex:1;height:1px;background:linear-gradient(270deg,transparent,rgba(25,97,255,.4))"></div>
+  </div>
+
+  <!-- Enter Button -->
+  <button class="enter-btn" id="enterBtn" onclick="enterSite()">
+    <div class="btn-ring btn-ring-1"></div>
+    <div class="btn-ring btn-ring-2"></div>
+    <div class="btn-ring btn-ring-3"></div>
+
+    <!-- Orbiting text -->
+    <svg class="btn-orbit" viewBox="0 0 280 280">
+      <defs>
+        <path id="op" d="M 140,140 m -108,0 a 108,108 0 1,1 216,0 a 108,108 0 1,1 -216,0"/>
+      </defs>
+      <text font-size="11.5" fill="rgba(25,97,255,0.9)" font-family="'Share Tech Mono',monospace" letter-spacing="5.5"
+        filter="url(#glow)">
+        <textPath href="#op">ENTER THE LAB · KENT CLOTHING · EST 2024 · </textPath>
+      </text>
+      <defs>
+        <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="2" result="blur"/>
+          <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+        </filter>
+      </defs>
+    </svg>
+
+    <div class="btn-inner">
+      <span class="btn-label">Enter</span>
+      <span class="btn-sub">The Lab</span>
+    </div>
+  </button>
+
+</div>
+
+<!-- Emergency tap target - invisible but covers button area on mobile -->
+<div style="position:fixed;bottom:0;left:0;right:0;top:0;z-index:5;display:flex;align-items:center;justify-content:center;pointer-events:none">
+  <div onclick="enterSite()" style="width:280px;height:280px;border-radius:50%;cursor:pointer;pointer-events:all;opacity:0"></div>
+</div>
+
+<!-- Bottom bar -->
+<div class="bottom-bar">
+  <div class="bar-item"><span class="bar-dot"></span> Embroidery</div>
+  <div class="bar-item"><span class="bar-dot"></span> Heat Press</div>
+  <div class="bar-item"><span class="bar-dot"></span> Sublimation</div>
+  <div class="bar-item"><span class="bar-dot"></span> DTF</div>
+</div>
+
+<script>
+/* ── CURSOR ── */
+const cursor = document.getElementById('cursor');
+const ring   = document.getElementById('cursorRing');
+let rx = 0, ry = 0, cx = 0, cy = 0;
+
+document.addEventListener('mousemove', e => {
+  cx = e.clientX; cy = e.clientY;
+  cursor.style.left = cx + 'px';
+  cursor.style.top  = cy + 'px';
+});
+
+// Smooth ring follow
+(function animRing() {
+  rx += (cx - rx) * 0.12;
+  ry += (cy - ry) * 0.12;
+  ring.style.left = rx + 'px';
+  ring.style.top  = ry + 'px';
+  requestAnimationFrame(animRing);
+})();
+
+// Hover effect on button
+const btn = document.getElementById('enterBtn');
+btn.addEventListener('mouseenter', () => {
+  cursor.style.transform = 'translate(-50%,-50%) scale(1.5)';
+  ring.style.width = '60px';
+  ring.style.height = '60px';
+  ring.style.borderColor = 'rgba(25,97,255,.8)';
+});
+btn.addEventListener('mouseleave', () => {
+  cursor.style.transform = 'translate(-50%,-50%) scale(1)';
+  ring.style.width = '36px';
+  ring.style.height = '36px';
+  ring.style.borderColor = 'rgba(25,97,255,.5)';
+});
+
+/* ── MATRIX RAIN ── */
+const canvas = document.getElementById('matrix');
+const ctx    = canvas.getContext('2d');
+
+let W, H, cols, drops;
+
+const CHARS = 'KENT CLOTHING LAB 0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&アイウエオカキクケコサシスセソタチツ';
+
+function initMatrix() {
+  W = canvas.width  = window.innerWidth;
+  H = canvas.height = window.innerHeight;
+  const fs  = 14;
+  cols = Math.floor(W / fs);
+  drops = new Array(cols).fill(1).map(() => Math.random() * -H / fs);
+}
+
+function drawMatrix(speed = 1) {
+  ctx.fillStyle = `rgba(0,0,0,${0.04 * speed})`;
+  ctx.fillRect(0, 0, W, H);
+
+  const fs = 14;
+  for (let i = 0; i < cols; i++) {
+    const ch = CHARS[Math.floor(Math.random() * CHARS.length)];
+    const y  = drops[i] * fs;
+
+    // Leading char — bright white/cyan
+    ctx.fillStyle = '#fff';
+    ctx.shadowColor = '#1961FF';
+    ctx.shadowBlur  = 8;
+    ctx.font = `bold ${fs}px 'Share Tech Mono', monospace`;
+    ctx.fillText(ch, i * fs, y);
+
+    // Trail chars — blue
+    ctx.fillStyle = `rgba(25,97,255,${0.5 + Math.random() * 0.4})`;
+    ctx.shadowColor = '#1961FF';
+    ctx.shadowBlur  = 4;
+    ctx.font = `${fs}px 'Share Tech Mono', monospace`;
+    const tc = CHARS[Math.floor(Math.random() * CHARS.length)];
+    ctx.fillText(tc, i * fs, y - fs);
+
+    ctx.shadowBlur = 0;
+
+    if (y > H && Math.random() > 0.975) drops[i] = 0;
+    drops[i] += 0.35;
+  }
+}
+
+initMatrix();
+window.addEventListener('resize', initMatrix);
+
+// PHASE 1 — slow ambient rain on load
+let phase = 'ambient';
+let rafId;
+
+let lastFrame = 0;
+function ambientRain(ts) {
+  if (phase !== 'ambient') return;
+  if (!ts || ts - lastFrame > 28) {
+    drawMatrix(0.7);
+    lastFrame = ts || 0;
+  }
+  rafId = requestAnimationFrame(ambientRain);
+}
+ambientRain(0);
+
+/* ── ENTER SITE ── */
+function enterSite() {
+  if (phase === 'navigate') return;
+  if (phase === 'accelerate') { resolveToLab(); return; }
+  phase = 'accelerate';
+  cancelAnimationFrame(rafId);
+
+  // Phase 2 — matrix accelerates on click
+  let speed = 1;
+  let frame = 0;
+  const totalFrames = 90;
+
+  function accelerate() {
+    frame++;
+    const t = frame / totalFrames;
+    speed = 1 + t * 12;
+
+    // Multiple passes per frame to show speed
+    for (let i = 0; i < Math.floor(speed * 0.4); i++) {
+      drawMatrix(speed * 0.15);
+    }
+
+    // At peak — flash white then resolve to "THE CLOTHING LAB"
+    if (frame === 60) {
+      ctx.fillStyle = 'rgba(25,97,255,0.15)';
+      ctx.fillRect(0, 0, W, H);
+    }
+
+    if (frame < totalFrames) {
+      requestAnimationFrame(accelerate);
+    } else {
+      // Flash and navigate
+      resolveToLab();
+    }
+  }
+  requestAnimationFrame(accelerate);
+}
+
+function resolveToLab() {
+  if (phase === 'navigate') return;
+  phase = 'navigate';
+  const overlay = document.getElementById('transition');
+  overlay.classList.add('go');
+
+  try { ctx.fillStyle = 'rgba(0,0,0,0.9)'; ctx.fillRect(0, 0, W, H); } catch(e){}
+
+  // Short delay then navigate - multiple fallbacks
+  const dest = 'https://kcl-upload-this20-production.up.railway.app/kent-clothing-lab.html';
+  setTimeout(() => {
+    window.location.href = dest;
+  }, 600);
+  // Backup in case first one fails
+  setTimeout(() => {
+    if (document.title === 'Kent Clothing Lab') return; // already navigated
+    window.location.replace(dest);
+  }, 1200);
+}
+
+/* ── TOUCH SUPPORT ── */
+document.getElementById('enterBtn').addEventListener('touchend', function(e) {
+  e.preventDefault();
+  enterSite();
+});
+
+/* ── SKIP on space/enter key ── */
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' || e.key === ' ') enterSite();
+});
+</script>
+</body>
+</html>

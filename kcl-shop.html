@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'%3E%3Crect width='32' height='32' rx='6' fill='%231961FF'/%3E%3Ctext x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' fill='white' font-size='16' font-weight='800' font-family='Arial,sans-serif'%3EK%3C/text%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Shop — Kent Clothing <span class="lab-glow" style="font-size:inherit;font-weight:inherit;font-family:inherit;letter-spacing:inherit">Lab</span></title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap" rel="stylesheet">
+<script src="https://js.stripe.com/v3/"></script>
+<style>
+:root {
+  --bg:      #080807;
+  --surface: #141412;
+  --raised:  #1C1C1A;
+  --raised2: #232320;
+  --border:  rgba(240,237,232,0.07);
+  --border2: rgba(240,237,232,0.14);
+  --fg:      #F0EDE8;
+  --muted:   #9B9894;
+  --accent:  #1961FF;
+  --accent2: #0040CC;
+  --green:   #16a34a;
+  --red:     #dc2626;
+  --amber:   #d97706;
+  --fd: 'Syne', sans-serif;
+  --fb: 'DM Sans', sans-serif;
+  --ease: cubic-bezier(.16,1,.3,1);
+  --nav-bg: rgba(8,8,7,.85);
+}
+html.light {
+  --bg:      #F0EDF8;
+  --surface: #FFFFFF;
+  --raised:  #F4F2FC;
+  --raised2: #EAE7F7;
+  --border:  rgba(20,20,18,0.1);
+  --border2: rgba(20,20,18,0.2);
+  --fg:      #0A0A10;
+  --muted:   #4A4845;
+  --nav-bg:  rgba(240,237,248,.92);
+}
+*,*::before,*::after { margin:0; padding:0; box-sizing:border-box; }
+html { scroll-behavior: smooth; overflow-x: hidden; }
+body {
+  background: var(--bg); color: var(--fg);
+  font-family: var(--fb); font-weight: 300;
+  -webkit-font-smoothing: antialiased; overflow-x: hidden;
+}
+a { color: inherit; text-decoration: none; }
+::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar-thumb { background: var(--raised2); border-radius: 4px; }
+
+/* ── ORBS ── */
+.orb-field { position:fixed; inset:0; pointer-events:none; z-index:0; overflow:hidden; }
+.orb { position:absolute; border-radius:50%; animation:orbFloat linear infinite; }
+.orb-1 { width:500px;height:500px;background:radial-gradient(circle,rgba(25,97,255,.18) 0%,transparent 70%);top:-100px;left:-100px;animation-duration:16s;filter:blur(70px);-webkit-filter:blur(70px); }
+.orb-2 { width:400px;height:400px;background:radial-gradient(circle,rgba(25,97,255,.14) 0%,transparent 70%);bottom:0;right:-100px;animation-duration:20s;animation-delay:-8s;filter:blur(70px);-webkit-filter:blur(70px); }
+@keyframes orbFloat { 0%{transform:translate(0,0) scale(1)} 33%{transform:translate(20px,-30px) scale(1.04)} 66%{transform:translate(-15px,20px) scale(.97)} 100%{transform:translate(0,0) scale(1)} }
+.grain { position:fixed;inset:0;z-index:1;pointer-events:none;opacity:.022;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+.glow-line { position:fixed;top:0;left:0;right:0;height:1px;z-index:200;background:linear-gradient(90deg,transparent,rgba(25,97,255,.7),rgba(25,97,255,.7),transparent);animation:glowPulse 4s ease-in-out infinite; }
+@keyframes glowPulse { 0%,100%{opacity:.4} 50%{opacity:1} }
+
+/* ── NAV ── */
+nav {
+  position:fixed;top:0;left:0;right:0;z-index:100;height:64px;
+  border-bottom:1px solid var(--border);background:var(--nav-bg);
+  backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  display:flex;align-items:center;
+}
+.nav-inner {
+  max-width:1200px;margin:0 auto;padding:0 32px;height:100%;
+  display:flex;align-items:center;justify-content:space-between;
+  gap:16px;width:100%;box-sizing:border-box;
+}
+.nav-logo {
+  font-family:var(--fd);font-weight:800;font-size:14px;
+  letter-spacing:.1em;text-transform:uppercase;
+  display:flex;align-items:center;gap:10px;flex-shrink:0;
+}
+.nav-flag { width:30px;height:19px;border-radius:2px;overflow:hidden;box-shadow:0 1px 6px rgba(0,0,0,.3);flex-shrink:0; }
+.nav-logo-text { display:flex;align-items:center;gap:5px; }
+.nav-logo-kent { color:var(--fg); }
+.nav-logo-div { color:var(--accent);opacity:.4;font-weight:300;font-size:16px; }
+.nav-logo-clothing { color:var(--accent); }
+.nav-logo-lab {
+  color:transparent;-webkit-text-stroke:1px rgba(25,97,255,.6);font-weight:800;
+  animation:navLabFlicker 3.5s ease-in-out infinite;
+}
+@keyframes navLabFlicker {
+  0%,100%{color:transparent;-webkit-text-stroke:1px rgba(25,97,255,.5);text-shadow:none}
+  20%{color:rgba(25,97,255,.15);-webkit-text-stroke:1px rgba(25,97,255,1);text-shadow:0 0 8px rgba(25,97,255,1),0 0 20px rgba(25,97,255,.7)}
+  22%{color:transparent;-webkit-text-stroke:1px rgba(25,97,255,.2);text-shadow:none}
+  24%{color:rgba(25,97,255,.1);-webkit-text-stroke:1px rgba(25,97,255,1);text-shadow:0 0 8px rgba(25,97,255,1),0 0 24px rgba(25,97,255,.8)}
+  50%{color:transparent;-webkit-text-stroke:1px rgba(0,207,255,.5);text-shadow:0 0 6px rgba(0,207,255,.6)}
+  52%{color:transparent;-webkit-text-stroke:1px rgba(25,97,255,.4);text-shadow:none}
+}
+.nav-links { display:flex;gap:28px;list-style:none; }
+.nav-links a { font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s; }
+.nav-links a:hover { color:var(--fg); }
+.nav-links a.active { color:var(--accent); }
+.nav-right { display:flex;align-items:center;gap:10px;flex-shrink:0; }
+.nav-cart {
+  position:relative;padding:9px 18px;background:var(--accent);color:#fff;
+  border-radius:2px;font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;border:none;font-family:var(--fb);
+  transition:all .25s;display:flex;align-items:center;gap:8px;
+}
+.nav-cart:hover { background:var(--accent2);transform:translateY(-1px); }
+.cart-count {
+  position:absolute;top:-6px;right:-6px;width:18px;height:18px;
+  background:#ef4444;border-radius:50%;font-size:10px;font-weight:700;
+  display:flex;align-items:center;justify-content:center;border:2px solid var(--bg);
+  animation:waPulse 2s ease-in-out infinite;
+}
+@keyframes waPulse { 0%,100%{box-shadow:0 0 0 0 rgba(239,68,68,.4)} 50%{box-shadow:0 0 0 6px rgba(239,68,68,0)} }
+.mode-btn {
+  width:34px;height:34px;background:var(--surface);border:1px solid var(--border2);
+  border-radius:50%;font-size:14px;cursor:pointer;display:flex;align-items:center;
+  justify-content:center;transition:all .25s;
+}
+.mode-btn:hover { background:var(--raised);transform:scale(1.08); }
+.nav-back { font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);transition:color .2s;display:flex;align-items:center;gap:6px; }
+.nav-back:hover { color:var(--fg); }
+@media(max-width:960px){ .nav-links{display:none;} }
+
+/* ── WRAP ── */
+.wrap { max-width:1200px;margin:0 auto;padding:0 32px;position:relative;z-index:2;box-sizing:border-box; }
+@media(max-width:600px){ .wrap{padding:0 16px;} }
+
+/* ── PAGE ── */
+.page { padding:96px 0 120px;position:relative;z-index:2; }
+
+/* ── SHOP HEADER ── */
+.shop-header { padding:48px 0 56px; }
+.shop-eyebrow { display:flex;align-items:center;gap:8px;margin-bottom:16px; }
+.shop-dot { width:6px;height:6px;border-radius:50%;background:var(--accent);box-shadow:0 0 8px rgba(25,97,255,.9);animation:dotPulse 2s ease-in-out infinite; }
+@keyframes dotPulse { 0%,100%{box-shadow:0 0 8px rgba(25,97,255,.8)} 50%{box-shadow:0 0 18px rgba(25,97,255,1)} }
+.shop-eyetxt { font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:rgba(25,97,255,.85);font-weight:500; }
+.shop-h {
+  font-family:var(--fd);font-weight:800;font-size:clamp(40px,6vw,80px);
+  line-height:.92;letter-spacing:-.025em;text-transform:uppercase;margin-bottom:16px;
+}
+.shop-h span { color:var(--accent);text-shadow:0 0 30px rgba(25,97,255,.4); }
+.shop-sub { font-size:16px;color:var(--muted);line-height:1.7;max-width:500px; }
+
+/* ── FILTER TABS ── */
+.shop-filters {
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:48px;
+  padding-bottom:24px;border-bottom:1px solid var(--border);
+  align-items:center;justify-content:space-between;
+}
+.filter-tabs { display:flex;gap:6px;flex-wrap:wrap; }
+.filter-btn {
+  padding:8px 18px;background:transparent;border:1px solid var(--border);
+  border-radius:100px;font-size:12px;letter-spacing:.1em;text-transform:uppercase;
+  color:var(--muted);cursor:pointer;font-family:var(--fb);transition:all .25s;
+}
+.filter-btn:hover { color:var(--fg);border-color:var(--border2); }
+.filter-btn.on { background:var(--fg);color:var(--bg);border-color:var(--fg); }
+.shop-count { font-size:13px;color:var(--muted); }
+.shop-count span { color:var(--fg);font-weight:500; }
+
+/* ── PRODUCT GRID ── */
+.product-grid {
+  display:grid;grid-template-columns:repeat(3,1fr);gap:20px;
+}
+@media(max-width:960px){ .product-grid{grid-template-columns:repeat(2,1fr);gap:14px;} }
+@media(max-width:480px){ .product-grid{grid-template-columns:1fr;} }
+
+/* ── PRODUCT CARD ── */
+.prod-card {
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:6px;overflow:hidden;cursor:pointer;
+  transition:all .3s var(--ease);position:relative;
+  display:flex;flex-direction:column;
+}
+.prod-card:hover {
+  border-color:rgba(25,97,255,.35);
+  transform:translateY(-4px);
+  box-shadow:0 12px 40px rgba(0,0,0,.3),0 0 0 1px rgba(25,97,255,.1);
+}
+.prod-card.hide { display:none; }
+
+/* Image area */
+.prod-img {
+  width:100%;aspect-ratio:1;background:var(--raised);
+  display:flex;align-items:center;justify-content:center;
+  position:relative;overflow:hidden;
+}
+.prod-img-ph {
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;
+}
+.prod-img-icon { font-size:48px;opacity:.3; }
+.prod-img-txt { font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);opacity:.5; }
+
+/* Real image when added */
+.prod-img img { width:100%;height:100%;object-fit:cover;transition:transform .5s var(--ease); }
+.prod-card:hover .prod-img img { transform:scale(1.05); }
+
+/* Badges */
+.prod-badge {
+  position:absolute;top:12px;left:12px;
+  padding:4px 10px;border-radius:100px;
+  font-size:10px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;
+}
+.badge-new { background:rgba(25,97,255,.15);border:1px solid rgba(25,97,255,.4);color:var(--accent); }
+.badge-sale { background:rgba(220,38,38,.15);border:1px solid rgba(220,38,38,.4);color:#f87171; }
+.badge-sold { background:rgba(100,100,100,.15);border:1px solid rgba(100,100,100,.3);color:var(--muted); }
+.badge-custom { background:rgba(22,163,74,.12);border:1px solid rgba(22,163,74,.35);color:#4ade80; }
+.badge-refurb { background:rgba(217,119,6,.12);border:1px solid rgba(217,119,6,.35);color:#fbbf24; }
+
+/* Wishlist */
+.prod-wish {
+  position:absolute;top:10px;right:10px;
+  width:32px;height:32px;border-radius:50%;
+  background:rgba(8,8,7,.6);backdrop-filter:blur(8px);
+  border:1px solid var(--border);display:flex;align-items:center;justify-content:center;
+  font-size:14px;cursor:pointer;transition:all .2s;opacity:0;
+}
+.prod-card:hover .prod-wish { opacity:1; }
+.prod-wish:hover { background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.4); }
+.prod-wish.active { opacity:1;background:rgba(239,68,68,.2);border-color:rgba(239,68,68,.5); }
+
+/* Info */
+.prod-info { padding:18px 18px 20px;display:flex;flex-direction:column;gap:10px;flex:1; }
+.prod-cat { font-size:10px;letter-spacing:.18em;text-transform:uppercase;color:var(--accent); }
+.prod-name { font-family:var(--fd);font-size:15px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;line-height:1.2; }
+.prod-desc { font-size:13px;color:var(--muted);line-height:1.65; }
+.prod-tags { display:flex;flex-wrap:wrap;gap:5px;margin-top:2px; }
+.prod-tag {
+  font-size:10px;letter-spacing:.1em;text-transform:uppercase;
+  padding:3px 9px;border:1px solid var(--border);border-radius:100px;color:var(--muted);
+}
+.prod-footer { display:flex;align-items:center;justify-content:space-between;margin-top:auto;padding-top:14px;border-top:1px solid var(--border); }
+.prod-price { font-family:var(--fd);font-size:20px;font-weight:800;letter-spacing:-.01em; }
+.prod-price .was { font-size:13px;color:var(--muted);text-decoration:line-through;font-weight:300;margin-right:6px; }
+.prod-price .save { font-size:11px;color:#f87171;font-weight:500; }
+.prod-btn {
+  padding:10px 20px;background:var(--accent);color:#fff;border:none;
+  border-radius:3px;font-size:12px;font-weight:500;letter-spacing:.08em;
+  text-transform:uppercase;cursor:pointer;font-family:var(--fb);
+  transition:all .25s;white-space:nowrap;
+}
+.prod-btn:hover { background:var(--accent2);transform:translateY(-1px); }
+.prod-btn:disabled { background:var(--raised);color:var(--muted);cursor:not-allowed;transform:none; }
+
+/* ── CART DRAWER ── */
+.cart-overlay {
+  position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:300;
+  opacity:0;pointer-events:none;transition:opacity .3s;
+  backdrop-filter:blur(4px);
+}
+.cart-overlay.open { opacity:1;pointer-events:all; }
+.cart-drawer {
+  position:fixed;top:0;right:0;bottom:0;width:420px;max-width:100vw;
+  background:var(--surface);border-left:1px solid var(--border2);
+  z-index:301;display:flex;flex-direction:column;
+  transform:translateX(100%);transition:transform .4s var(--ease);
+}
+.cart-overlay.open .cart-drawer { transform:translateX(0); }
+.cart-head {
+  padding:24px;border-bottom:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-shrink:0;
+}
+.cart-title { font-family:var(--fd);font-size:16px;font-weight:800;text-transform:uppercase;letter-spacing:.08em; }
+.cart-x { width:32px;height:32px;background:var(--raised);border:1px solid var(--border);border-radius:50%;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .2s; }
+.cart-x:hover { background:var(--raised2); }
+.cart-items { flex:1;overflow-y:auto;padding:16px; }
+.cart-empty { display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;color:var(--muted); }
+.cart-empty-icon { font-size:48px;opacity:.3; }
+.cart-empty-txt { font-size:14px;letter-spacing:.06em; }
+.cart-item { display:flex;gap:14px;padding:14px 0;border-bottom:1px solid var(--border); }
+.cart-item-img { width:64px;height:64px;background:var(--raised);border-radius:4px;display:flex;align-items:center;justify-content:center;font-size:24px;flex-shrink:0;border:1px solid var(--border); }
+.cart-item-info { flex:1;min-width:0; }
+.cart-item-name { font-family:var(--fd);font-size:13px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-bottom:4px; }
+.cart-item-cat { font-size:11px;color:var(--accent);letter-spacing:.1em;text-transform:uppercase;margin-bottom:6px; }
+.cart-item-row { display:flex;align-items:center;justify-content:space-between; }
+.cart-item-price { font-family:var(--fd);font-size:15px;font-weight:700; }
+.cart-item-qty { display:flex;align-items:center;gap:10px; }
+.qty-btn { width:26px;height:26px;background:var(--raised);border:1px solid var(--border);border-radius:4px;display:flex;align-items:center;justify-content:center;cursor:pointer;font-size:14px;transition:all .2s; }
+.qty-btn:hover { border-color:var(--accent);color:var(--accent); }
+.qty-num { font-size:13px;font-weight:500;min-width:16px;text-align:center; }
+.cart-item-remove { color:var(--muted);cursor:pointer;font-size:12px;transition:color .2s; }
+.cart-item-remove:hover { color:#f87171; }
+.cart-foot {
+  padding:20px 24px;border-top:1px solid var(--border);flex-shrink:0;
+  background:var(--raised);
+}
+.cart-subtotal { display:flex;justify-content:space-between;align-items:center;margin-bottom:16px; }
+.cart-subtotal-l { font-size:13px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase; }
+.cart-subtotal-v { font-family:var(--fd);font-size:20px;font-weight:800; }
+.cart-checkout {
+  width:100%;padding:16px;background:var(--accent);color:#fff;border:none;
+  border-radius:3px;font-family:var(--fb);font-size:14px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;
+  transition:all .25s;box-shadow:0 4px 20px rgba(25,97,255,.3);
+}
+.cart-checkout:hover { background:var(--accent2);box-shadow:0 8px 28px rgba(25,97,255,.45);transform:translateY(-1px); }
+.cart-checkout:disabled { background:var(--raised);color:var(--muted);cursor:not-allowed;transform:none;box-shadow:none; }
+.cart-note { font-size:11px;color:var(--muted);text-align:center;margin-top:10px;letter-spacing:.04em; }
+
+/* ── CUSTOM ORDER BANNER ── */
+.custom-banner {
+  margin-top:64px;padding:48px;
+  background:var(--surface);border:1px solid var(--border2);border-radius:6px;
+  display:flex;align-items:center;justify-content:space-between;gap:32px;
+  position:relative;overflow:hidden;
+}
+.custom-banner::before {
+  content:'';position:absolute;top:0;left:0;right:0;height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),#00cfff,var(--accent),transparent);
+}
+.custom-banner-left h2 {
+  font-family:var(--fd);font-size:clamp(24px,3vw,36px);font-weight:800;
+  text-transform:uppercase;letter-spacing:-.02em;margin-bottom:8px;line-height:1;
+}
+.custom-banner-left h2 span { color:var(--accent); }
+.custom-banner-left p { font-size:15px;color:var(--muted);line-height:1.7;max-width:420px; }
+.custom-banner-btn {
+  padding:16px 32px;background:var(--accent);color:#fff;border:none;
+  border-radius:3px;font-family:var(--fb);font-size:13px;font-weight:500;
+  letter-spacing:.1em;text-transform:uppercase;cursor:pointer;white-space:nowrap;
+  transition:all .25s;box-shadow:0 4px 20px rgba(25,97,255,.3);
+  flex-shrink:0;
+}
+.custom-banner-btn:hover { background:var(--accent2);transform:translateY(-2px);box-shadow:0 8px 28px rgba(25,97,255,.45); }
+
+@media(max-width:768px){
+  .custom-banner { flex-direction:column;padding:28px; }
+  .custom-banner-btn { width:100%;text-align:center; }
+}
+
+/* ── TOAST NOTIFICATION ── */
+.toast {
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--surface);border:1px solid rgba(25,97,255,.3);border-radius:6px;
+  padding:14px 22px;display:flex;align-items:center;gap:12px;
+  font-size:13px;letter-spacing:.04em;z-index:500;
+  transition:transform .4s var(--ease);box-shadow:0 8px 32px rgba(0,0,0,.4);
+  white-space:nowrap;
+}
+.toast.show { transform:translateX(-50%) translateY(0); }
+.toast-icon { font-size:18px; }
+
+/* Light mode */
+html.light .prod-card { box-shadow:0 2px 12px rgba(20,20,18,.06); }
+html.light .cart-drawer { background:#fff; }
+html.light .cart-foot { background:#f8f7fc; }
+html.light .custom-banner { background:#fff;border-color:rgba(20,20,18,.12); }
+html.light .toast { background:#fff; }
+
+/* ════════════════════════════════
+   NEON SHOP BACKGROUND
+════════════════════════════════ */
+.shop-bg {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+/* Crazy repeating neon grid pattern */
+.shop-bg::before {
+  content: '';
+  position: absolute;
+  inset: -20%;
+  background-image:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'%3E%3Cg fill='none'%3E%3C!-- Outer diamond --%3E%3Cpolygon points='50,5 95,50 50,95 5,50' stroke='rgba(25%2C97%2C255%2C0.25)' stroke-width='1'/%3E%3C!-- Inner diamond --%3E%3Cpolygon points='50,20 80,50 50,80 20,50' stroke='rgba(25%2C97%2C255%2C0.18)' stroke-width='0.8'/%3E%3C!-- Cross stitches --%3E%3Cline x1='5' y1='5' x2='20' y2='20' stroke='rgba(0%2C207%2C255%2C0.3)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='20' y1='5' x2='5' y2='20' stroke='rgba(0%2C207%2C255%2C0.3)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='80' y1='5' x2='95' y2='20' stroke='rgba(0%2C207%2C255%2C0.3)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='95' y1='5' x2='80' y2='20' stroke='rgba(0%2C207%2C255%2C0.3)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='5' y1='80' x2='20' y2='95' stroke='rgba(0%2C207%2C255%2C0.3)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='20' y1='80' x2='5' y2='95' stroke='rgba(0%2C207%2C255%2C0.3)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='80' y1='80' x2='95' y2='95' stroke='rgba(0%2C207%2C255%2C0.3)' stroke-width='1.2' stroke-linecap='round'/%3E%3Cline x1='95' y1='80' x2='80' y2='95' stroke='rgba(0%2C207%2C255%2C0.3)' stroke-width='1.2' stroke-linecap='round'/%3E%3C!-- Centre dot --%3E%3Ccircle cx='50' cy='50' r='2.5' fill='rgba(25%2C97%2C255%2C0.4)'/%3E%3C!-- Corner dots --%3E%3Ccircle cx='5' cy='50' r='1.5' fill='rgba(0%2C207%2C255%2C0.35)'/%3E%3Ccircle cx='95' cy='50' r='1.5' fill='rgba(0%2C207%2C255%2C0.35)'/%3E%3Ccircle cx='50' cy='5' r='1.5' fill='rgba(0%2C207%2C255%2C0.35)'/%3E%3Ccircle cx='50' cy='95' r='1.5' fill='rgba(0%2C207%2C255%2C0.35)'/%3E%3C!-- Grid dots --%3E%3Ccircle cx='0' cy='0' r='1.2' fill='rgba(25%2C97%2C255%2C0.4)'/%3E%3Ccircle cx='100' cy='0' r='1.2' fill='rgba(25%2C97%2C255%2C0.4)'/%3E%3Ccircle cx='0' cy='100' r='1.2' fill='rgba(25%2C97%2C255%2C0.4)'/%3E%3Ccircle cx='100' cy='100' r='1.2' fill='rgba(25%2C97%2C255%2C0.4)'/%3E%3C/g%3E%3C/svg%3E");
+  background-size: 100px 100px;
+  animation: patternDrift 30s linear infinite;
+}
+
+@keyframes patternDrift {
+  from { transform: translate(0,0) rotate(0deg); }
+  to   { transform: translate(50px,50px) rotate(2deg); }
+}
+
+/* Colour gradient overlay */
+.shop-bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(25,97,255,0.12) 0%, transparent 50%),
+    radial-gradient(ellipse at 80% 30%, rgba(0,207,255,0.08) 0%, transparent 45%),
+    radial-gradient(ellipse at 60% 80%, rgba(100,60,255,0.1) 0%, transparent 40%),
+    linear-gradient(to bottom, rgba(8,8,7,0.7) 0%, rgba(8,8,7,0.3) 40%, rgba(8,8,7,0.5) 100%);
+}
+
+/* ════════════════════════════════
+   LASER SCANNER
+════════════════════════════════ */
+.laser-wrap {
+  position: fixed;
+  left: 0; right: 0;
+  pointer-events: none;
+  z-index: 3;
+  height: 0;
+}
+
+/* Emitter housing */
+.laser-emitter {
+  position: absolute;
+  top: -20px;
+  display: flex;
+  align-items: center;
+}
+.laser-left  { left: -8px; flex-direction: row; }
+.laser-right { right: -8px; flex-direction: row-reverse; }
+
+.emitter-body {
+  width: 22px; height: 22px;
+  background: linear-gradient(135deg, #0a0a0e, #1a1a2e);
+  border: 1.5px solid rgba(25,97,255,0.8);
+  border-radius: 4px;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  box-shadow:
+    0 0 12px rgba(25,97,255,0.6),
+    0 0 30px rgba(25,97,255,0.3),
+    inset 0 0 8px rgba(25,97,255,0.2);
+  z-index: 2;
+  flex-shrink: 0;
+}
+
+/* Glowing core dot */
+.emitter-dot {
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: #00cfff;
+  box-shadow:
+    0 0 4px rgba(0,207,255,1),
+    0 0 10px rgba(0,207,255,0.9),
+    0 0 20px rgba(25,97,255,0.8);
+  animation: corePulse 1.2s ease-in-out infinite;
+}
+@keyframes corePulse {
+  0%,100% { transform: scale(1); box-shadow: 0 0 4px rgba(0,207,255,1), 0 0 10px rgba(0,207,255,.9), 0 0 20px rgba(25,97,255,.8); }
+  50%      { transform: scale(1.3); box-shadow: 0 0 6px rgba(0,207,255,1), 0 0 18px rgba(0,207,255,1), 0 0 35px rgba(25,97,255,1); }
+}
+
+/* Pulsing rings around emitter */
+.emitter-rings {
+  position: absolute;
+  inset: -12px;
+  pointer-events: none;
+}
+.emitter-rings span {
+  position: absolute;
+  inset: 0;
+  border-radius: 50%;
+  border: 1px solid rgba(25,97,255,0.4);
+  animation: ringExpand 2s ease-out infinite;
+}
+.emitter-rings span:nth-child(2) { animation-delay: .66s; }
+.emitter-rings span:nth-child(3) { animation-delay: 1.33s; }
+@keyframes ringExpand {
+  from { transform: scale(.5); opacity:.8; }
+  to   { transform: scale(2); opacity:0; }
+}
+
+/* THE LASER BEAM */
+.laser-beam {
+  height: 2px;
+  flex: 1;
+  position: relative;
+  overflow: visible;
+}
+.laser-beam-l {
+  background: linear-gradient(to right,
+    rgba(0,207,255,1) 0%,
+    rgba(25,97,255,0.9) 20%,
+    rgba(25,97,255,0.5) 60%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 4px rgba(0,207,255,1),
+    0 0 12px rgba(0,207,255,0.8),
+    0 0 30px rgba(25,97,255,0.6),
+    0 0 60px rgba(25,97,255,0.3);
+}
+.laser-beam-r {
+  background: linear-gradient(to left,
+    rgba(0,207,255,1) 0%,
+    rgba(25,97,255,0.9) 20%,
+    rgba(25,97,255,0.5) 60%,
+    transparent 100%
+  );
+  box-shadow:
+    0 0 4px rgba(0,207,255,1),
+    0 0 12px rgba(0,207,255,0.8),
+    0 0 30px rgba(25,97,255,0.6),
+    0 0 60px rgba(25,97,255,0.3);
+}
+
+/* Particle sparkles along beam */
+.laser-beam::before, .laser-beam::after {
+  content: '';
+  position: absolute;
+  top: -3px;
+  width: 6px; height: 6px;
+  border-radius: 50%;
+  background: rgba(0,207,255,0.9);
+  box-shadow: 0 0 6px rgba(0,207,255,1), 0 0 12px rgba(25,97,255,0.8);
+  animation: particleDrift 2s ease-in-out infinite;
+}
+.laser-beam-l::before { left: 20%; animation-delay: 0s; }
+.laser-beam-l::after  { left: 55%; animation-delay: 1s; }
+.laser-beam-r::before { right: 20%; animation-delay: .5s; }
+.laser-beam-r::after  { right: 55%; animation-delay: 1.5s; }
+@keyframes particleDrift {
+  0%,100% { transform: translateY(0) scale(1); opacity:.8; }
+  50%      { transform: translateY(-4px) scale(1.4); opacity:1; }
+}
+
+/* Impact where beams meet in centre */
+.laser-impact {
+  position: absolute;
+  left: 50%;
+  top: -12px;
+  transform: translateX(-50%);
+  width: 24px; height: 24px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(0,207,255,0.9) 0%, rgba(25,97,255,0.5) 40%, transparent 70%);
+  box-shadow:
+    0 0 10px rgba(0,207,255,1),
+    0 0 24px rgba(25,97,255,0.9),
+    0 0 50px rgba(25,97,255,0.6),
+    0 0 90px rgba(25,97,255,0.3);
+  animation: impactPulse 1.2s ease-in-out infinite;
+}
+@keyframes impactPulse {
+  0%,100% { transform: translateX(-50%) scale(1); }
+  50%      { transform: translateX(-50%) scale(1.5); box-shadow: 0 0 16px rgba(0,207,255,1), 0 0 40px rgba(25,97,255,1), 0 0 80px rgba(25,97,255,0.7); }
+}
+
+/* Cards light up when laser passes */
+.prod-card.neon-lit {
+  border-color: rgba(25,97,255,0.6) !important;
+  box-shadow:
+    0 0 20px rgba(25,97,255,0.3),
+    0 0 60px rgba(25,97,255,0.12),
+    0 0 0 1px rgba(0,207,255,0.15),
+    inset 0 0 24px rgba(25,97,255,0.05) !important;
+  transition: all .2s !important;
+}
+.prod-card.neon-lit .prod-img {
+  background: rgba(25,97,255,0.1) !important;
+}
+.prod-card.neon-lit .prod-img-icon {
+  filter: drop-shadow(0 0 12px rgba(0,207,255,0.9)) drop-shadow(0 0 24px rgba(25,97,255,0.7)) !important;
+  opacity: 0.75 !important;
+}
+.prod-card.neon-lit .prod-name {
+  text-shadow: 0 0 14px rgba(25,97,255,0.5), 0 0 28px rgba(0,207,255,0.3) !important;
+}
+.prod-card.neon-lit .prod-price {
+  text-shadow: 0 0 10px rgba(25,97,255,0.4) !important;
+}
+.prod-card.neon-lit .prod-badge {
+  box-shadow: 0 0 14px rgba(25,97,255,0.6) !important;
+}
+
+/* ── NEON OPEN SIGN ── */
+.neon-open {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  justify-content: flex-end;
+  padding: 20px 0 8px;
+}
+.neon-sign {
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 20px 36px;
+  border: 2px solid rgba(25,97,255,0.4);
+  border-radius: 8px;
+  position: relative;
+  background: rgba(8,8,7,0.6);
+  backdrop-filter: blur(8px);
+  box-shadow:
+    0 0 20px rgba(25,97,255,0.2),
+    0 0 60px rgba(25,97,255,0.08),
+    inset 0 0 30px rgba(25,97,255,0.04);
+}
+/* Corner screws */
+.neon-sign::before, .neon-sign::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(25,97,255,0.3);
+  border: 1px solid rgba(25,97,255,0.5);
+}
+.neon-sign::before { top: 8px; left: 8px; }
+.neon-sign::after  { top: 8px; right: 8px; }
+.neon-sign-screws::before, .neon-sign-screws::after {
+  content: '';
+  position: absolute;
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: rgba(25,97,255,0.3);
+  border: 1px solid rgba(25,97,255,0.5);
+}
+.neon-sign-screws::before { bottom: 8px; left: 8px; }
+.neon-sign-screws::after  { bottom: 8px; right: 8px; }
+
+.neon-open-txt {
+  font-family: var(--fd);
+  font-size: clamp(48px, 8vw, 96px);
+  font-weight: 800;
+  letter-spacing: .15em;
+  text-transform: uppercase;
+  color: transparent;
+  -webkit-text-stroke: 2px rgba(25,97,255,0.8);
+  animation: neonOpenFlicker 3s ease-in-out infinite;
+  text-shadow:
+    0 0 10px rgba(25,97,255,0.9),
+    0 0 30px rgba(25,97,255,0.7),
+    0 0 60px rgba(25,97,255,0.5),
+    0 0 100px rgba(25,97,255,0.3),
+    0 0 160px rgba(25,97,255,0.15);
+  line-height: 1;
+}
+@keyframes neonOpenFlicker {
+  0%,100% {
+    -webkit-text-stroke: 2px rgba(25,97,255,1);
+    text-shadow:
+      0 0 10px rgba(25,97,255,1),
+      0 0 30px rgba(25,97,255,0.8),
+      0 0 60px rgba(25,97,255,0.6),
+      0 0 120px rgba(25,97,255,0.4),
+      0 0 200px rgba(25,97,255,0.2);
+    color: rgba(25,97,255,0.1);
+    filter: brightness(1);
+  }
+  92% {
+    -webkit-text-stroke: 2px rgba(25,97,255,1);
+    text-shadow:
+      0 0 10px rgba(25,97,255,1),
+      0 0 30px rgba(25,97,255,0.8),
+      0 0 60px rgba(25,97,255,0.6),
+      0 0 120px rgba(25,97,255,0.4);
+    color: rgba(25,97,255,0.1);
+  }
+  93% {
+    -webkit-text-stroke: 2px rgba(25,97,255,0.1);
+    text-shadow: none;
+    color: transparent;
+    filter: brightness(0.3);
+  }
+  94% {
+    -webkit-text-stroke: 2px rgba(25,97,255,1);
+    text-shadow:
+      0 0 10px rgba(25,97,255,1),
+      0 0 30px rgba(25,97,255,0.8);
+    color: rgba(25,97,255,0.15);
+    filter: brightness(1.2);
+  }
+  95% {
+    -webkit-text-stroke: 2px rgba(25,97,255,0.2);
+    text-shadow: none;
+    color: transparent;
+  }
+  96%,99% {
+    -webkit-text-stroke: 2px rgba(25,97,255,1);
+    text-shadow:
+      0 0 10px rgba(25,97,255,1),
+      0 0 40px rgba(0,207,255,0.9),
+      0 0 80px rgba(0,207,255,0.6),
+      0 0 140px rgba(25,97,255,0.4);
+    color: rgba(0,207,255,0.15);
+    filter: brightness(1.3);
+  }
+}
+
+.neon-sub {
+  font-size: 12px;
+  letter-spacing: .35em;
+  text-transform: uppercase;
+  color: rgba(25,97,255,0.6);
+  font-family: var(--fb);
+  text-shadow: 0 0 8px rgba(25,97,255,0.4);
+  animation: neonSubPulse 2s ease-in-out infinite;
+}
+@keyframes neonSubPulse {
+  0%,100% { opacity: .6; }
+  50%      { opacity: 1; text-shadow: 0 0 12px rgba(25,97,255,0.7); }
+}
+
+.neon-dots {
+  display: flex; gap: 8px; margin-top: 4px;
+}
+.neon-dot-sm {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: rgba(25,97,255,0.8);
+  box-shadow: 0 0 8px rgba(25,97,255,1);
+  animation: dotBlink 1.5s step-end infinite;
+}
+.neon-dot-sm:nth-child(2) { animation-delay: .5s; }
+.neon-dot-sm:nth-child(3) { animation-delay: 1s; }
+@keyframes dotBlink { 0%,100%{opacity:1} 50%{opacity:.2} }
+
+
+/* ── LAB NEON GLOW ── */
+.lab-glow {
+  color: transparent !important;
+  -webkit-text-stroke: 1px rgba(25,97,255,0.6) !important;
+  animation: globalLabFlicker 3s ease-in-out infinite !important;
+  display: inline !important;
+}
+@keyframes globalLabFlicker {
+  0%,100%{color:transparent;-webkit-text-stroke:1px rgba(25,97,255,.5);text-shadow:none}
+  18%{color:rgba(25,97,255,.1);-webkit-text-stroke:1px rgba(25,97,255,1);text-shadow:0 0 8px rgba(25,97,255,1),0 0 20px rgba(25,97,255,.8),0 0 40px rgba(25,97,255,.5)}
+  20%{color:transparent;-webkit-text-stroke:1px rgba(25,97,255,.15);text-shadow:none}
+  22%{color:rgba(25,97,255,.08);-webkit-text-stroke:1px rgba(25,97,255,1);text-shadow:0 0 8px rgba(25,97,255,1),0 0 24px rgba(25,97,255,.9)}
+  45%{color:transparent;-webkit-text-stroke:1px rgba(0,207,255,.45);text-shadow:0 0 6px rgba(0,207,255,.6)}
+  47%{color:transparent;-webkit-text-stroke:1px rgba(25,97,255,.35);text-shadow:none}
+}
+
+</style>
+</head>
+<body>
+
+<!-- SHOP NEON BACKGROUND -->
+<div class="shop-bg">
+  <!-- LASER EMITTERS -->
+<div class="laser-wrap" id="laserWrap">
+  <!-- Left emitter -->
+  <div class="laser-emitter laser-left" id="laserLeft">
+    <div class="emitter-body">
+      <div class="emitter-dot"></div>
+      <div class="emitter-rings">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="laser-beam laser-beam-l" id="laserBeamL"></div>
+  </div>
+  <!-- Right emitter -->
+  <div class="laser-emitter laser-right" id="laserRight">
+    <div class="emitter-body">
+      <div class="emitter-dot"></div>
+      <div class="emitter-rings">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+    <div class="laser-beam laser-beam-r" id="laserBeamR"></div>
+  </div>
+  <!-- Impact glow where beams meet -->
+  <div class="laser-impact" id="laserImpact"></div>
+</div>
+</div>
+
+<div class="orb-field">
+  <div class="orb orb-1"></div>
+  <div class="orb orb-2"></div>
+</div>
+<div class="grain"></div>
+<div class="glow-line"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-inner">
+    <a href="kent-clothing-lab.html" class="nav-logo">
+      <div class="nav-flag">
+        <svg width="30" height="19" viewBox="0 0 60 38" xmlns="http://www.w3.org/2000/svg">
+          <rect width="60" height="38" fill="#012169"/>
+          <path d="M0,0 L60,38 M60,0 L0,38" stroke="white" stroke-width="10"/>
+          <path d="M0,0 L60,38" stroke="#C8102E" stroke-width="6"/>
+          <path d="M60,0 L0,38" stroke="#C8102E" stroke-width="6"/>
+          <rect x="0" y="14" width="60" height="10" fill="white"/>
+          <rect x="25" y="0" width="10" height="38" fill="white"/>
+          <rect x="0" y="15.5" width="60" height="7" fill="#C8102E"/>
+          <rect x="26.5" y="0" width="7" height="38" fill="#C8102E"/>
+        </svg>
+      </div>
+      <div class="nav-logo-text">
+        <span class="nav-logo-kent">Kent</span>
+        <span class="nav-logo-div">|</span>
+        <span class="nav-logo-clothing">Clothing</span>
+        <span class="nav-logo-div">|</span>
+        <span class="nav-logo-lab">Lab</span>
+      </div>
+    </a>
+
+    <ul class="nav-links">
+      <li><a href="kent-clothing-lab.html#services">Services</a></li>
+      <li><a href="kent-clothing-lab.html#gallery">Gallery</a></li>
+      <li><a href="kcl-shop.html" class="active">Shop</a></li>
+      <li><a href="kent-clothing-lab.html#contact">Contact</a></li>
+      <li><a href="kcl-tracker.html">📦 Track</a></li>
+    </ul>
+
+    <div class="nav-right">
+      <button class="nav-cart" onclick="openCart()">
+        🛒 Cart
+        <span class="cart-count" id="cartCount" style="display:none">0</span>
+      </button>
+      <button class="mode-btn" id="modeBtn" onclick="toggleMode()">🌙</button>
+    </div>
+  </div>
+</nav>
+
+<!-- CART DRAWER -->
+<div class="cart-overlay" id="cartOverlay" onclick="closeCart()">
+  <div class="cart-drawer" onclick="event.stopPropagation()">
+    <div class="cart-head">
+      <span class="cart-title">Your Cart</span>
+      <div class="cart-x" onclick="closeCart()">✕</div>
+    </div>
+    <div class="cart-items" id="cartItems">
+      <div class="cart-empty">
+        <span class="cart-empty-icon">🛒</span>
+        <span class="cart-empty-txt">Your cart is empty</span>
+      </div>
+    </div>
+    <div class="cart-foot">
+      <div class="cart-subtotal">
+        <span class="cart-subtotal-l">Subtotal</span>
+        <span class="cart-subtotal-v" id="cartTotal">£0.00</span>
+      </div>
+      <button class="cart-checkout" id="checkoutBtn" onclick="checkout()" disabled>
+        Checkout with Stripe →
+      </button>
+      <p class="cart-note">🔒 Secure checkout · Free UK delivery over £50</p>
+    </div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast">
+  <span class="toast-icon">✅</span>
+  <span id="toastMsg">Added to cart</span>
+</div>
+
+<!-- MAIN -->
+<div class="page">
+  <div class="wrap">
+
+    <!-- NEON OPEN SIGN -->
+    <div class="neon-open">
+      <div class="neon-sign">
+        <div class="neon-sign-screws">
+          <div class="neon-open-txt">COMING<br>SOON</div>
+          <div class="neon-sub">Kent Clothing <span class="lab-glow" style="font-size:inherit;font-weight:inherit;font-family:inherit;letter-spacing:inherit">Lab</span></div>
+          <div class="neon-dots">
+            <span class="neon-dot-sm"></span>
+            <span class="neon-dot-sm"></span>
+            <span class="neon-dot-sm"></span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Header -->
+    <div class="shop-header">
+      <div class="shop-eyebrow">
+        <span class="shop-dot"></span>
+        <span class="shop-eyetxt">Kent Clothing <span class="lab-glow" style="font-size:inherit;font-weight:inherit;font-family:inherit;letter-spacing:inherit">Lab</span> Store</span>
+      </div>
+      <h1 class="shop-h">The <span>KCL</span><br>Shop.</h1>
+      <p class="shop-sub">Custom garments, fresh drops and refurbished gems — all made or curated in Kent.</p>
+    </div>
+
+    <!-- Filters -->
+    <div class="shop-filters">
+      <div class="filter-tabs">
+        <button class="filter-btn on" onclick="filterShop('all',this)">All</button>
+        <button class="filter-btn" onclick="filterShop('custom',this)">Custom Orders</button>
+        <button class="filter-btn" onclick="filterShop('new',this)">New Stock</button>
+        <button class="filter-btn" onclick="filterShop('refurb',this)">Refurbished</button>
+        <button class="filter-btn" onclick="filterShop('sale',this)">🔥 Sale</button>
+      </div>
+      <div class="shop-count">Showing <span id="prodCount">12</span> items</div>
+    </div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="productGrid">
+
+      <!-- PRODUCT 1 — Custom Embroidered Hoodie -->
+      <div class="prod-card" data-cat="custom">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🧵</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-custom">Custom</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Custom Orders</span>
+          <div class="prod-name">Embroidered Hoodie</div>
+          <div class="prod-desc">Premium heavyweight hoodie with custom embroidered logo. Your design, your colours.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">Unisex</span>
+            <span class="prod-tag">S–3XL</span>
+            <span class="prod-tag">Custom</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£38<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('Embroidered Hoodie',38,'🧵','custom')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 2 — DTF Print Tee -->
+      <div class="prod-card" data-cat="custom">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🖨️</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-new">New</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Custom Orders</span>
+          <div class="prod-name">DTF Print T-Shirt</div>
+          <div class="prod-desc">Full colour DTF print on premium cotton tee. Works on dark and light fabrics.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">All Colours</span>
+            <span class="prod-tag">XS–2XL</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£22<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('DTF Print T-Shirt',22,'🖨️','custom')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 3 — Sublimation Jersey -->
+      <div class="prod-card" data-cat="custom">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🎨</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-custom">Custom</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Custom Orders</span>
+          <div class="prod-name">Sublimation Sports Jersey</div>
+          <div class="prod-desc">All-over sublimation printed jersey. Photographic quality, never fades or cracks.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">Full Colour</span>
+            <span class="prod-tag">Sportswear</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£45<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('Sublimation Jersey',45,'🎨','custom')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 4 — Heat Press Cap -->
+      <div class="prod-card" data-cat="custom">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🧢</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-custom">Custom</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Custom Orders</span>
+          <div class="prod-name">Custom Printed Cap</div>
+          <div class="prod-desc">6-panel cap with heat pressed or embroidered design. Adjustable fit, multiple colours.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">One Size</span>
+            <span class="prod-tag">Heat Press</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£18<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('Custom Printed Cap',18,'🧢','custom')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 5 — NEW STOCK: KCL Branded Hoodie -->
+      <div class="prod-card" data-cat="new">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🏷️</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-new">New</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">New Stock</span>
+          <div class="prod-name">KCL Signature Hoodie</div>
+          <div class="prod-desc">The KCL house hoodie. Embroidered logo, heavyweight fleece, oversized fit.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">Black</span>
+            <span class="prod-tag">Navy</span>
+            <span class="prod-tag">S–XXL</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£52<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('KCL Signature Hoodie',52,'🏷️','new')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 6 — NEW: KCL Tee -->
+      <div class="prod-card" data-cat="new">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">👕</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-new">New</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">New Stock</span>
+          <div class="prod-name">KCL Logo T-Shirt</div>
+          <div class="prod-desc">Clean chest logo tee. 100% combed cotton, relaxed cut. Core colourways.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">White</span>
+            <span class="prod-tag">Black</span>
+            <span class="prod-tag">XS–XL</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£28<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('KCL Logo T-Shirt',28,'👕','new')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 7 — REFURB: Vintage Reworked Jacket -->
+      <div class="prod-card" data-cat="refurb">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🧥</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-refurb">Refurbished</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Refurbished</span>
+          <div class="prod-name">Reworked Vintage Jacket</div>
+          <div class="prod-desc">Sourced vintage jacket reworked with KCL embroidery. One of a kind — once it's gone it's gone.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">1 of 1</span>
+            <span class="prod-tag">Large</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£65<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('Reworked Vintage Jacket',65,'🧥','refurb')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 8 — REFURB: Reworked Varsity -->
+      <div class="prod-card" data-cat="refurb">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🏫</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-refurb">Refurbished</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Refurbished</span>
+          <div class="prod-name">Custom Varsity Jacket</div>
+          <div class="prod-desc">Vintage varsity jacket with custom heat pressed panels and KCL chest embroidery.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">1 of 1</span>
+            <span class="prod-tag">Medium</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£80<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('Custom Varsity Jacket',80,'🏫','refurb')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 9 — SALE: Sublimation Tee -->
+      <div class="prod-card" data-cat="sale">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🎨</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-sale">Sale</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Sale</span>
+          <div class="prod-name">Sublimation All-Over Tee</div>
+          <div class="prod-desc">End of season all-over sublimation tee. Vivid colours, lightweight fabric.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">Limited</span>
+            <span class="prod-tag">M & L</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="was">£35</span>£20<span style="font-size:14px;font-weight:300">.00</span>
+              <span class="save"> −43%</span>
+            </div>
+            <button class="prod-btn" onclick="addToCart('Sublimation All-Over Tee',20,'🎨','sale')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 10 — SALE: Heat Press Hoodie -->
+      <div class="prod-card" data-cat="sale">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">🔥</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-sale">Sale</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Sale</span>
+          <div class="prod-name">Heat Press Sample Hoodie</div>
+          <div class="prod-desc">Our sample run hoodie at a discounted price. Full colour heat press design, perfect condition.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">Small</span>
+            <span class="prod-tag">Sample</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">
+              <span class="was">£42</span>£26<span style="font-size:14px;font-weight:300">.00</span>
+              <span class="save"> −38%</span>
+            </div>
+            <button class="prod-btn" onclick="addToCart('Heat Press Sample Hoodie',26,'🔥','sale')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 11 — NEW STOCK: KCL Joggers -->
+      <div class="prod-card" data-cat="new">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">👖</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-new">New</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">New Stock</span>
+          <div class="prod-name">KCL Embroidered Joggers</div>
+          <div class="prod-desc">Heavyweight joggers with tonal KCL embroidery on the leg. Matching set available.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">Black</span>
+            <span class="prod-tag">S–XL</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£44<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('KCL Embroidered Joggers',44,'👖','new')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+      <!-- PRODUCT 12 — REFURB: Reworked Denim -->
+      <div class="prod-card" data-cat="refurb">
+        <div class="prod-img">
+          <div class="prod-img-ph">
+            <span class="prod-img-icon">👗</span>
+            <span class="prod-img-txt">Add your photo</span>
+          </div>
+          <span class="prod-badge badge-refurb">Refurbished</span>
+          <div class="prod-wish" onclick="toggleWish(this)">♡</div>
+        </div>
+        <div class="prod-info">
+          <span class="prod-cat">Refurbished</span>
+          <div class="prod-name">Reworked Denim Jacket</div>
+          <div class="prod-desc">Vintage denim reworked with custom KCL back patch embroidery. Kent made, one of one.</div>
+          <div class="prod-tags">
+            <span class="prod-tag">1 of 1</span>
+            <span class="prod-tag">Medium</span>
+          </div>
+          <div class="prod-footer">
+            <div class="prod-price">£75<span style="font-size:14px;font-weight:300">.00</span></div>
+            <button class="prod-btn" onclick="addToCart('Reworked Denim Jacket',75,'👗','refurb')">Add to Cart</button>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- end product grid -->
+
+    <!-- Custom Order Banner -->
+    <div class="custom-banner">
+      <div class="custom-banner-left">
+        <h2>Want something <span>fully custom?</span></h2>
+        <p>Every service we offer is available as a bespoke order. Your logo, your colours, your garment. Get a free quote within 24 hours.</p>
+      </div>
+      <button class="custom-banner-btn" onclick="window.location.href='kent-clothing-lab.html#contact'">Get a Free Quote →</button>
+    </div>
+
+  </div>
+</div>
+
+<script>
+/* ══════════════════════════════════
+   STRIPE CONFIG
+   Replace with your real Stripe keys
+   Get them at: dashboard.stripe.com
+══════════════════════════════════ */
+const STRIPE_PUBLIC_KEY = 'pk_test_YOUR_STRIPE_PUBLIC_KEY_HERE';
+// When you're ready to go live, swap to your pk_live_ key
+
+/* ══════════════════════════════════
+   CART LOGIC
+══════════════════════════════════ */
+let cart = JSON.parse(localStorage.getItem('kcl-cart') || '[]');
+
+function saveCart() {
+  localStorage.setItem('kcl-cart', JSON.stringify(cart));
+}
+
+function addToCart(name, price, icon, cat) {
+  const existing = cart.find(i => i.name === name);
+  if (existing) {
+    existing.qty++;
+  } else {
+    cart.push({ name, price, icon, cat, qty: 1 });
+  }
+  saveCart();
+  renderCart();
+  showToast(`${icon} ${name} added to cart`);
+}
+
+function removeFromCart(name) {
+  cart = cart.filter(i => i.name !== name);
+  saveCart();
+  renderCart();
+}
+
+function updateQty(name, delta) {
+  const item = cart.find(i => i.name === name);
+  if (!item) return;
+  item.qty += delta;
+  if (item.qty <= 0) removeFromCart(name);
+  else { saveCart(); renderCart(); }
+}
+
+function renderCart() {
+  const container = document.getElementById('cartItems');
+  const totalEl   = document.getElementById('cartTotal');
+  const countEl   = document.getElementById('cartCount');
+  const checkBtn  = document.getElementById('checkoutBtn');
+
+  const totalQty = cart.reduce((s, i) => s + i.qty, 0);
+  const totalAmt = cart.reduce((s, i) => s + i.price * i.qty, 0);
+
+  // Update badge
+  if (totalQty > 0) {
+    countEl.textContent = totalQty;
+    countEl.style.display = 'flex';
+  } else {
+    countEl.style.display = 'none';
+  }
+
+  totalEl.textContent = `£${totalAmt.toFixed(2)}`;
+  checkBtn.disabled = cart.length === 0;
+
+  if (cart.length === 0) {
+    container.innerHTML = `
+      <div class="cart-empty">
+        <span class="cart-empty-icon">🛒</span>
+        <span class="cart-empty-txt">Your cart is empty</span>
+      </div>`;
+    return;
+  }
+
+  container.innerHTML = cart.map(item => `
+    <div class="cart-item">
+      <div class="cart-item-img">${item.icon}</div>
+      <div class="cart-item-info">
+        <div class="cart-item-name">${item.name}</div>
+        <div class="cart-item-cat">${item.cat}</div>
+        <div class="cart-item-row">
+          <div class="cart-item-price">£${(item.price * item.qty).toFixed(2)}</div>
+          <div class="cart-item-qty">
+            <div class="qty-btn" onclick="updateQty('${item.name}',-1)">−</div>
+            <span class="qty-num">${item.qty}</span>
+            <div class="qty-btn" onclick="updateQty('${item.name}',1)">+</div>
+            <span class="cart-item-remove" onclick="removeFromCart('${item.name}')">✕</span>
+          </div>
+        </div>
+      </div>
+    </div>`).join('');
+}
+
+function openCart()  { document.getElementById('cartOverlay').classList.add('open'); }
+function closeCart() { document.getElementById('cartOverlay').classList.remove('open'); }
+
+/* ── STRIPE CHECKOUT ── */
+async function checkout() {
+  const btn = document.getElementById('checkoutBtn');
+  btn.textContent = 'Redirecting to Stripe...';
+  btn.disabled = true;
+
+  // ══════════════════════════════════════════════════════════════
+  // TO MAKE STRIPE WORK:
+  // 1. Sign up at stripe.com (free)
+  // 2. Get your publishable key from the Dashboard
+  // 3. Replace STRIPE_PUBLIC_KEY above with your pk_test_ key
+  // 4. Create a Payment Link in Stripe Dashboard for each product
+  // 5. Or set up a backend endpoint for full cart checkout
+  //
+  // QUICKEST WAY — use Stripe Payment Links:
+  // Dashboard → Payment Links → Create → Copy the URL
+  // Then update the line below with your Payment Link URL
+  // ══════════════════════════════════════════════════════════════
+
+  const total = cart.reduce((s, i) => s + i.price * i.qty, 0);
+  const items = cart.map(i => `${i.qty}x ${i.name}`).join(', ');
+
+  // For now — redirect to WhatsApp with order details
+  // Replace this with your Stripe Payment Link when ready
+  const msg = encodeURIComponent(
+    `Hi KCL! I'd like to order:\n${items}\nTotal: £${total.toFixed(2)}\n\nCan you send me a payment link?`
+  );
+  window.open(`https://wa.me/447744053826?text=${msg}`, '_blank');
+
+  btn.textContent = 'Checkout with Stripe →';
+  btn.disabled = false;
+}
+
+/* ── FILTER ── */
+function filterShop(cat, btn) {
+  document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('on'));
+  btn.classList.add('on');
+  const cards = document.querySelectorAll('.prod-card');
+  let count = 0;
+  cards.forEach(c => {
+    const match = cat === 'all' || c.dataset.cat === cat;
+    c.classList.toggle('hide', !match);
+    if (match) count++;
+  });
+  document.getElementById('prodCount').textContent = count;
+}
+
+/* ── WISHLIST ── */
+function toggleWish(el) {
+  el.classList.toggle('active');
+  el.textContent = el.classList.contains('active') ? '♥' : '♡';
+}
+
+/* ── TOAST ── */
+let toastTimer;
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  document.getElementById('toastMsg').textContent = msg;
+  t.classList.add('show');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+
+/* ── LASER SCANNER ── */
+(function() {
+  const wrap   = document.getElementById('laserWrap');
+  const cards  = document.querySelectorAll('.prod-card');
+  let laserY   = window.innerHeight * 0.3;
+  let targetY  = laserY;
+  let autoY    = 0;
+  let autoDir  = 1;
+  let isScrolling = false;
+  let scrollTimer;
+
+  function lerp(a, b, t) { return a + (b - a) * t; }
+
+  function update() {
+    laserY = lerp(laserY, targetY, 0.07);
+    wrap.style.top = laserY + 'px';
+
+    // Light up cards the laser is passing through
+    const beamTop    = laserY - 30;
+    const beamBottom = laserY + 30;
+
+    cards.forEach(card => {
+      const rect   = card.getBoundingClientRect();
+      const cardMid = (rect.top + rect.bottom) / 2;
+      const overlap = beamBottom > rect.top && beamTop < rect.bottom;
+      const dist    = Math.abs(cardMid - laserY);
+      const lit     = overlap && dist < 200;
+
+      if (lit) {
+        card.classList.add('neon-lit');
+      } else {
+        card.classList.remove('neon-lit');
+      }
+    });
+
+    requestAnimationFrame(update);
+  }
+
+  // Follow scroll
+  window.addEventListener('scroll', () => {
+    isScrolling = true;
+    clearTimeout(scrollTimer);
+    // Laser tracks at 40% scroll speed — stays roughly in viewport
+    targetY = window.innerHeight * 0.3 + window.scrollY * 0.4;
+    scrollTimer = setTimeout(() => { isScrolling = false; }, 800);
+  }, { passive: true });
+
+  // Auto drift when idle
+  setInterval(() => {
+    if (!isScrolling) {
+      autoY += autoDir * 0.5;
+      if (autoY > 60 || autoY < -60) autoDir *= -1;
+      targetY = window.innerHeight * 0.3 + window.scrollY * 0.4 + autoY;
+    }
+  }, 16);
+
+  update();
+})();
+
+
+/* ── DARK / LIGHT MODE ── */
+const mBtn = document.getElementById('modeBtn');
+function applyMode(m) {
+  document.documentElement.classList.toggle('light', m === 'light');
+  mBtn.textContent = m === 'light' ? '🌙' : '☀️';
+}
+function toggleMode() {
+  const next = document.documentElement.classList.contains('light') ? 'dark' : 'light';
+  localStorage.setItem('kcl-mode', next); applyMode(next);
+}
+const saved = localStorage.getItem('kcl-mode');
+if (saved) applyMode(saved);
+else if (window.matchMedia('(prefers-color-scheme:light)').matches) applyMode('light');
+
+// Init cart
+renderCart();
+</script>
+</body>
+</html>
