@@ -352,8 +352,7 @@ body::after {
   border: 1px solid rgba(25,97,255,.15);
   border-radius: 100px;
   backdrop-filter: blur(12px);
-  white-space: nowrap;
-}
+  white-space: nowrap;  overflow: hidden;}
 .bar-item {
   font-size: 10px;
   letter-spacing: .18em;
@@ -464,6 +463,22 @@ body::after {
 @media (max-width: 600px)  { .main-h { font-size: clamp(24px, 8vw, 44px) !important; } .enter-btn { width: 180px !important; height: 180px !important; } .btn-ring-1 { width: 180px !important; height: 180px !important; } .btn-ring-2 { width: 148px !important; height: 148px !important; } .btn-ring-3 { width: 116px !important; height: 116px !important; } .btn-inner { width: 90px !important; height: 90px !important; } .btn-orbit { width: 180px !important; height: 180px !important; } }
 @media (max-width: 390px)  { .main-h { font-size: clamp(20px, 7.5vw, 36px) !important; } }
 html, body { overflow: hidden !important; }
+
+/* Mobile bottom bar */
+@media (max-width: 480px) {
+  .bottom-bar {
+    padding: 8px 16px;
+    font-size: 9px;
+  }
+  .bar-item {
+    padding: 0 10px;
+    font-size: 9px;
+  }
+  .bar-dot {
+    width: 4px;
+    height: 4px;
+  }
+}
 
 </style>
 </head>
