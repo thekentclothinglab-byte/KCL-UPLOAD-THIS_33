@@ -81,7 +81,7 @@ nav {
 }
 .nav-logo { font-family:var(--fd);font-weight:800;font-size:15px;letter-spacing:.14em;text-transform:uppercase; }
 .nav-logo span { color:var(--accent); }
-.nav-right { display:flex;align-items:center;gap:12px; }
+.nav-right { display:flex;align-items:center;gap:12px; flex-wrap: wrap; }
 .nav-back {
   font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);
   display:flex;align-items:center;gap:6px;transition:color .2s;
@@ -95,7 +95,7 @@ nav {
 .mode-btn:hover { background:var(--raised);transform:scale(1.08); }
 
 /* Mobile Menu */
-@media(max-width:960px){
+@media(max-width:768px){
   nav { padding:0 20px; }
   .page { padding:90px 16px 60px; }
   .mob-toggle { display: flex !important; }
