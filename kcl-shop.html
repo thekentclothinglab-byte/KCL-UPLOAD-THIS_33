@@ -69,7 +69,7 @@ nav {
 .nav-inner {
   max-width:1200px;margin:0 auto;padding:0 32px;height:100%;
   display:flex;align-items:center;justify-content:space-between;
-  gap:16px;width:100%;box-sizing:border-box;
+  gap:16px;width:100%;box-sizing:border-box; overflow: hidden;
 }
 .nav-logo {
   font-family:var(--fd);font-weight:800;font-size:14px;
@@ -124,10 +124,12 @@ nav {
 
 /* Mobile Menu */
 .mob-toggle {
-  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px;
+  border-radius: 4px; transition: background .2s;
 }
 @media(max-width:768px){ .mob-toggle { display: flex !important; } }
-.mob-toggle span { display:block; width:22px; height:1.5px; background:var(--fg); transition:all .3s; }
+.mob-toggle:hover { background: rgba(255,255,255,.1); }
+.mob-toggle span { display:block; width:24px; height:2px; background:var(--fg); transition:all .3s; }
 
 .mob-menu {
   display: none; position: fixed; inset: 0;

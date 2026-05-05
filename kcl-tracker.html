@@ -101,9 +101,12 @@ nav {
   .mob-toggle { display: flex !important; }
 }
 .mob-toggle {
-  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 8px;
+  border-radius: 4px; transition: background .2s;
 }
-.mob-toggle span { display:block; width:22px; height:1.5px; background:var(--fg); transition:all .3s; }
+@media(max-width:768px){ .mob-toggle { display: flex !important; } }
+.mob-toggle:hover { background: rgba(255,255,255,.1); }
+.mob-toggle span { display:block; width:24px; height:2px; background:var(--fg); transition:all .3s; }
 
 .mob-menu {
   display: none; position: fixed; inset: 0;
