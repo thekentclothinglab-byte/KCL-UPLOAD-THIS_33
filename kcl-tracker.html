@@ -94,6 +94,33 @@ nav {
 }
 .mode-btn:hover { background:var(--raised);transform:scale(1.08); }
 
+/* Mobile Menu */
+@media(max-width:960px){
+  nav { padding:0 20px; }
+  .page { padding:90px 16px 60px; }
+  .mob-toggle { display: flex !important; }
+}
+.mob-toggle {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+}
+.mob-toggle span { display:block; width:22px; height:1.5px; background:var(--fg); transition:all .3s; }
+
+.mob-menu {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,8,7,.97); z-index: 90;
+  flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+}
+.mob-menu.open { display: flex; }
+.mob-menu a {
+  font-family: var(--fd); font-size: 28px; font-weight: 800;
+  text-transform: uppercase; color: var(--muted); transition: color .2s;
+}
+.mob-menu a:hover, .mob-menu a.active { color: var(--fg); }
+.mob-close {
+  position: absolute; top: 20px; right: 24px; font-size: 22px;
+  color: var(--muted); background: none; border: none; cursor: pointer;
+}
+
 /* ── PAGE ── */
 .page {
   position:relative;z-index:2;
@@ -542,8 +569,21 @@ html.light .page-footer a { color: var(--accent) !important; }
   <div class="nav-right">
     <a href="https://kcl-upload-this20-production.up.railway.app/kent-clothing-lab.html" class="nav-back">← Back to site</a>
     <button class="mode-btn" id="modeBtn" onclick="toggleMode()">🌙</button>
+    <div class="mob-toggle" onclick="toggleMob()">
+      <span></span><span></span><span></span>
+    </div>
   </div>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="toggleMob()">✕</button>
+  <a href="kent-clothing-lab.html#services" onclick="toggleMob()">Services</a>
+  <a href="kent-clothing-lab.html#gallery" onclick="toggleMob()">Gallery</a>
+  <a href="kcl-shop.html" onclick="toggleMob()">🛒 Shop</a>
+  <a href="kent-clothing-lab.html#contact" onclick="toggleMob()">Contact</a>
+  <a href="kcl-tracker.html" onclick="toggleMob()" class="active">📦 Track Order</a>
+</div>
 
 <!-- MAIN PAGE -->
 <div class="page">
@@ -852,6 +892,9 @@ window.addEventListener('mousemove', e => {
   document.querySelector('.orb-1').style.transform = `translate(${x}px,${y}px)`;
   document.querySelector('.orb-2').style.transform = `translate(${-x*.7}px,${-y*.7}px)`;
 }, { passive: true });
+
+/* ── MOBILE MENU ── */
+function toggleMob() { document.getElementById('mobMenu').classList.toggle('open'); }
 </script>
 </body>
 </html>

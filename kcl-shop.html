@@ -122,6 +122,29 @@ nav {
 .nav-back:hover { color:var(--fg); }
 @media(max-width:960px){ .nav-links{display:none;} }
 
+/* Mobile Menu */
+.mob-toggle {
+  display: none; flex-direction: column; gap: 5px; cursor: pointer; padding: 4px;
+}
+@media(max-width:960px){ .mob-toggle { display: flex !important; } }
+.mob-toggle span { display:block; width:22px; height:1.5px; background:var(--fg); transition:all .3s; }
+
+.mob-menu {
+  display: none; position: fixed; inset: 0;
+  background: rgba(8,8,7,.97); z-index: 90;
+  flex-direction: column; align-items: center; justify-content: center; gap: 28px;
+}
+.mob-menu.open { display: flex; }
+.mob-menu a {
+  font-family: var(--fd); font-size: 28px; font-weight: 800;
+  text-transform: uppercase; color: var(--muted); transition: color .2s;
+}
+.mob-menu a:hover, .mob-menu a.active { color: var(--fg); }
+.mob-close {
+  position: absolute; top: 20px; right: 24px; font-size: 22px;
+  color: var(--muted); background: none; border: none; cursor: pointer;
+}
+
 /* ── WRAP ── */
 .wrap { max-width:1200px;margin:0 auto;padding:0 32px;position:relative;z-index:2;box-sizing:border-box; }
 @media(max-width:600px){ .wrap{padding:0 16px;} }
@@ -799,9 +822,22 @@ html.light .toast { background:#fff; }
         <span class="cart-count" id="cartCount" style="display:none">0</span>
       </button>
       <button class="mode-btn" id="modeBtn" onclick="toggleMode()">🌙</button>
+      <div class="mob-toggle" onclick="toggleMob()">
+        <span></span><span></span><span></span>
+      </div>
     </div>
   </div>
 </nav>
+
+<!-- Mobile Menu -->
+<div class="mob-menu" id="mobMenu">
+  <button class="mob-close" onclick="toggleMob()">✕</button>
+  <a href="kent-clothing-lab.html#services" onclick="toggleMob()">Services</a>
+  <a href="kent-clothing-lab.html#gallery" onclick="toggleMob()">Gallery</a>
+  <a href="kcl-shop.html" onclick="toggleMob()" class="active">🛒 Shop</a>
+  <a href="kent-clothing-lab.html#contact" onclick="toggleMob()">Contact</a>
+  <a href="kcl-tracker.html" onclick="toggleMob()">📦 Track Order</a>
+</div>
 
 <!-- CART DRAWER -->
 <div class="cart-overlay" id="cartOverlay" onclick="closeCart()">
@@ -1437,6 +1473,9 @@ else if (window.matchMedia('(prefers-color-scheme:light)').matches) applyMode('l
 
 // Init cart
 renderCart();
+
+/* ── MOBILE MENU ── */
+function toggleMob() { document.getElementById('mobMenu').classList.toggle('open'); }
 </script>
 </body>
 </html>
