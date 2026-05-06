@@ -2,9 +2,11 @@
   "name": "kent-clothing-lab",
   "version": "1.0.0",
   "scripts": {
-    "start": "npx serve . -p $PORT"
+    "start": "node server.js"
   },
   "dependencies": {
+    "express": "^4.18.2",
+    "nodemailer": "^6.9.9",
     "serve": "^14.0.0"
   }
 }
