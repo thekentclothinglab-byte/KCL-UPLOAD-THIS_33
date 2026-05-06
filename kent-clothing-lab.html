@@ -4610,25 +4610,25 @@ span.lab-glow:not(.ghost):not(.line-ghost) {
       </div>
 
       <div class="form-card glass rev" style="transition-delay:.12s">
-        <form class="form" onsubmit="sendForm(event)">
+        <form class="form" id="quoteForm" onsubmit="sendForm(event)">
           <div class="f2">
             <div class="field">
               <label class="f-lbl" for="fn">Your Name *</label>
-              <input class="f-inp" id="fn" type="text" placeholder="Full name" required>
+              <input class="f-inp" id="fn" name="name" type="text" placeholder="Full name" required>
             </div>
             <div class="field">
               <label class="f-lbl" for="fe">Email *</label>
-              <input class="f-inp" id="fe" type="email" placeholder="you@email.com" required>
+              <input class="f-inp" id="fe" name="email" type="email" placeholder="you@email.com" required>
             </div>
           </div>
           <div class="f2">
             <div class="field">
               <label class="f-lbl" for="fp">Phone (optional)</label>
-              <input class="f-inp" id="fp" type="tel" placeholder="07...">
+              <input class="f-inp" id="fp" name="phone" type="tel" placeholder="07...">
             </div>
             <div class="field">
               <label class="f-lbl" for="fs">Service Needed</label>
-              <select class="f-sel" id="fs">
+              <select class="f-sel" id="fs" name="service">
                 <option value="">— Select —</option>
                 <option>Embroidery</option>
                 <option>Heat Press / Transfers</option>
@@ -4640,7 +4640,7 @@ span.lab-glow:not(.ghost):not(.line-ghost) {
           </div>
           <div class="field">
             <label class="f-lbl" for="fm">Your Project</label>
-            <textarea class="f-inp" id="fm" placeholder="Tell us about your project — garments, quantities, artwork, timeline..."></textarea>
+            <textarea class="f-inp" id="fm" name="message" placeholder="Tell us about your project — garments, quantities, artwork, timeline..."></textarea>
           </div>
           <div id="fmsg" class="f-msg"></div>
           <button type="submit" class="f-submit">Send Enquiry →</button>
@@ -5069,40 +5069,61 @@ function nlSubmit(e) {
 }
 
 /* ── FORM SUBMIT ── */
-function sendForm(e) {
+async function sendForm(e) {
   e.preventDefault();
-  const name = document.getElementById('fn').value.trim();
-  const email= document.getElementById('fe').value.trim();
-  const phone= document.getElementById('fp').value.trim();
-  const svc  = document.getElementById('fs').value;
-  const msg  = document.getElementById('fm').value.trim();
-  const box  = document.getElementById('fmsg');
+  const name  = document.getElementById('fn').value.trim();
+  const email = document.getElementById('fe').value.trim();
+  const phone = document.getElementById('fp').value.trim();
+  const svc   = document.getElementById('fs').value;
+  const msg   = document.getElementById('fm').value.trim();
+  const box   = document.getElementById('fmsg');
+  const btn   = e.target.querySelector('button');
 
-  const sub = encodeURIComponent(`KCL Enquiry — ${svc||'General'} — ${name}`);
-  const bod = encodeURIComponent([
-    `Hi Kent Clothing Lab,`, ``,
-    `I'd like to get a quote.`, ``,
-    `Name:     ${name}`,
-    `Email:    ${email}`,
-    `Phone:    ${phone||'Not given'}`,
-    `Service:  ${svc||'Not specified'}`, ``,
-    `Project:`, msg||'No details yet.', ``,
-    `Thanks, ${name}`,
-  ].join('\n'));
-
-  window.location.href = `mailto:thekentclothinglab@gmail.com?subject=${sub}&body=${bod}`;
-
-  box.style.display = 'block';
-  box.style.background = 'rgba(25,97,255,0.1)';
-  box.style.border = '1px solid rgba(25,97,255,0.25)';
-  box.style.color = 'rgba(100,160,255,0.9)';
-  box.style.borderRadius = '3px';
-  box.textContent = '✓ Your email app should have opened. Hit send to complete your enquiry — we\'ll reply within 24 hours.';
-
-  const btn = e.target.querySelector('button');
-  btn.textContent = 'Email app opened ✓';
+  // Show loading state
+  btn.textContent = 'Sending…';
   btn.disabled = true;
-  btn.style.opacity = '.5';
+  btn.style.opacity = '.6';
+  box.style.display = 'none';
+
+  try {
+    const res = await fetch('/api/quote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, email, phone, service: svc, message: msg }),
+    });
+    const data = await res.json();
+
+    box.style.display = 'block';
+    box.style.borderRadius = '3px';
+
+    if (data.success) {
+      box.style.background = 'rgba(25,97,255,0.1)';
+      box.style.border = '1px solid rgba(25,97,255,0.25)';
+      box.style.color = 'rgba(100,160,255,0.9)';
+      box.textContent = '✓ ' + data.message;
+      btn.textContent = 'Enquiry sent ✓';
+      btn.style.opacity = '.5';
+      e.target.reset();
+    } else {
+      box.style.background = 'rgba(255,60,60,0.08)';
+      box.style.border = '1px solid rgba(255,60,60,0.25)';
+      box.style.color = 'rgba(255,100,100,0.9)';
+      box.textContent = '✗ ' + (data.error || 'Something went wrong. Please try again.');
+      btn.textContent = 'Send Enquiry →';
+      btn.disabled = false;
+      btn.style.opacity = '1';
+    }
+  } catch (err) {
+    box.style.display = 'block';
+    box.style.background = 'rgba(255,60,60,0.08)';
+    box.style.border = '1px solid rgba(255,60,60,0.25)';
+    box.style.color = 'rgba(255,100,100,0.9)';
+    box.style.borderRadius = '3px';
+    box.textContent = '✗ Network error. Please try again or email us directly at kentclothinglab@gmail.com';
+    btn.textContent = 'Send Enquiry →';
+    btn.disabled = false;
+    btn.style.opacity = '1';
+  }
 }
 </script>
 <!-- NEWSLETTER POPUP -->
